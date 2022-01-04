@@ -55,6 +55,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
                         child: TextField(
+                          obscureText: true,
                           controller: pwController,
                           decoration: const InputDecoration(
                             hintText: "Password",
@@ -65,6 +66,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
                         child: TextField(
+                          obscureText: true,
                           controller: pwCheckController,
                           decoration: const InputDecoration(
                             hintText: "Password Check",
@@ -169,6 +171,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                             ])
                          ),
                       Container(
+                        width:MediaQuery.of(context).size.width*0.5,
                         child:ElevatedButton(
                           child:Text("Submit"),
                           onPressed: submit,

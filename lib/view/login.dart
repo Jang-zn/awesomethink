@@ -1,13 +1,14 @@
-import 'package:awesomethink/view/main.dart';
+import 'package:awesomethink/view/memberMain.dart';
 import 'package:awesomethink/view/signUp.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AwesomeThink extends StatelessWidget {
   const AwesomeThink({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'AwesomeThink',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
@@ -42,11 +43,11 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      //키보드가 화면 밀어버리는거 방지
-      resizeToAvoidBottomInset : false,
+      //키보드가 화면 밀게 함. 대신 리스트뷰로 스크롤 가능하게 해야 사용 가능
+      resizeToAvoidBottomInset : true,
 
       body: SafeArea(
-        child:Column(
+        child:ListView(
           children: [
             Container(
               child : const Image(
@@ -71,14 +72,28 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                   controller: pwController,
                   decoration: const InputDecoration(
                     hintText:"Password",
-                  )
+                  ),
+                  obscureText:true,
               ),
 
             ),
-            ElevatedButton(onPressed: login,
-                child: const Text("Login")),
-            ElevatedButton(onPressed: signUp,
-                child: const Text("SignUp")),
+            Container(
+              padding:EdgeInsets.symmetric(horizontal: 30),
+              child:Column(
+                children: [
+                  Container(
+                      width:MediaQuery.of(context).size.width*0.5,
+                      child:ElevatedButton(onPressed: login,
+                          child: const Text("Login")),
+                  ),
+                  Container(
+                      width:MediaQuery.of(context).size.width*0.5,
+                      child:ElevatedButton(onPressed: signUp,
+                          child: const Text("SignUp")),
+                  )
+                ],
+              )
+            )
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
