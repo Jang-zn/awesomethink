@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "872309304309",
+    "project_id": "awesomethink-firebase",
+    "storage_bucket": "awesomethink-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872309304309:android:77612f2bdec9acbae34ebc",
+        "android_client_info": {
+          "package_name": "com.awesome.awesomethink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872309304309-vmdul0h5t0ebrodbuchk2hj3fu23e5i8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.awesome.awesomethink",
+            "certificate_hash": "bf43b1d9112dc73f257da24a57fc2a3c50affa30"
+          }
+        },
+        {
+          "client_id": "872309304309-qvlknopahbk35i4bu7ermaklborh3c2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRGQniH9AAhnkZhFORhQUocar_pJ6oBKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "872309304309-qvlknopahbk35i4bu7ermaklborh3c2p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
