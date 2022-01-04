@@ -1,3 +1,4 @@
+import 'package:awesomethink/view/main.dart';
 import 'package:awesomethink/view/signUp.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   TextEditingController pwController = TextEditingController();
 
   void login(){
-
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>AwesomeMainPage()));
   }
   void signUp(){
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>SignUpPage()));
