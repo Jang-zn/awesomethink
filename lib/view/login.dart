@@ -1,3 +1,4 @@
+import 'package:awesomethink/view/signUp.dart';
 import 'package:flutter/material.dart';
 
 class AwesomeThink extends StatelessWidget {
@@ -32,7 +33,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   }
   void signUp(){
-
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>SignUpPage()));
   }
 
 
@@ -62,7 +63,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                   hintText:"ID",
                 ),
               ),
-
             ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
