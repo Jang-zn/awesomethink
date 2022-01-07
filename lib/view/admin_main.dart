@@ -18,14 +18,30 @@ class AdminWidget extends StatefulWidget {
 }
 
 class _AdminWidgetState extends State<AdminWidget> {
+
+  void tempFunc(){  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:SafeArea(
-        child:Column(
+      appBar: AppBar(
+          //뒤로가기 버튼 삭제
+          automaticallyImplyLeading: false,
+          //타이틀 중앙정렬
+          centerTitle: true,
+          title:Text("Awesome Admin",),
+        actions: [IconButton(onPressed: tempFunc, icon: Icon(Icons.menu))],
+      ),
+      body:ListView(
+        children:[Column(
+          crossAxisAlignment:CrossAxisAlignment.start,
           children:[
-            //TODO 높이 지정하면 리스트뷰 2개 사용 가능한가?
             Container(
+              margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),
+              child:Text("오늘 근무 현황",)
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.1,vertical: MediaQuery.of(context).size.width*0.03 ),
               height:MediaQuery.of(context).size.height*0.35,
               child:ListView(
                 children:[
@@ -58,6 +74,11 @@ class _AdminWidgetState extends State<AdminWidget> {
               )
             ),
             Container(
+                margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),
+                child:Text("주간 근태 현황",)
+            ),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.1,vertical: MediaQuery.of(context).size.width*0.03 ),
                 height:MediaQuery.of(context).size.height*0.35,
                 child:ListView(
                     children:[
@@ -91,7 +112,7 @@ class _AdminWidgetState extends State<AdminWidget> {
             )
           ]
         )
-      )
+      ])
     );
   }
 }
