@@ -41,32 +41,53 @@ class _AdminWidgetState extends State<AdminWidget> {
               child:Text("오늘 근무 현황",)
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.1,vertical: MediaQuery.of(context).size.width*0.03 ),
-              height:MediaQuery.of(context).size.height*0.35,
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
+              height:MediaQuery.of(context).size.height*0.3,
               child:ListView(
                 children:[
                   Container(
-                    margin:EdgeInsets.symmetric(vertical:3),
-                    height: MediaQuery.of(context).size.height*0.1,
-                    decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                    )
-                  ),
-                  Container(
                       margin:EdgeInsets.symmetric(vertical:3),
+                      padding:EdgeInsets.symmetric(horizontal:5),
                       height: MediaQuery.of(context).size.height*0.1,
                       decoration: BoxDecoration(border: Border.all(color:Colors.black)
+                      ),
+                      child : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children:[
+                            Flexible(
+                              child: Container(
+                                child:Icon(Icons.person,size: MediaQuery.of(context).size.width*0.12,),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color:Colors.black),
+                                  borderRadius: BorderRadius.circular(100),
+                                )
+                              )
+                            ),
+                            Flexible(child: Column()),
+                            Flexible(child: Text("출근")),
+                          ]
                       )
                   ),
                   Container(
                       margin:EdgeInsets.symmetric(vertical:3),
+                      padding:EdgeInsets.symmetric(horizontal:5),
                       height: MediaQuery.of(context).size.height*0.1,
                       decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                      )
-                  ),
-                  Container(
-                      margin:EdgeInsets.symmetric(vertical:3),
-                      height: MediaQuery.of(context).size.height*0.1,
-                      decoration: BoxDecoration(border: Border.all(color:Colors.black)
+                      ),
+                      child : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children:[
+                            Flexible(
+                                child: Container(
+                                    child:Icon(Icons.person),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color:Colors.black)
+                                    )
+                                )
+                            ),
+                            Flexible(child: Column()),
+                            Flexible(child: Text("출근")),
+                          ]
                       )
                   ),
                 ]
@@ -78,34 +99,34 @@ class _AdminWidgetState extends State<AdminWidget> {
                 child:Text("주간 근태 현황",)
             ),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.1,vertical: MediaQuery.of(context).size.width*0.03 ),
-                height:MediaQuery.of(context).size.height*0.35,
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
+                height:MediaQuery.of(context).size.height*0.3,
                 child:ListView(
                     children:[
                       Container(
                           margin:EdgeInsets.symmetric(vertical:3),
+                          padding:EdgeInsets.symmetric(horizontal:5),
                           height: MediaQuery.of(context).size.height*0.1,
                           decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                          )
+                          ),
+                        child : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children:[
+                              Flexible(
+                                  child: Container(
+                                      child:Icon(Icons.person,size: MediaQuery.of(context).size.width*0.12,),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color:Colors.black),
+                                        borderRadius: BorderRadius.circular(100),
+                                      )
+                                  )
+                              ),
+                            Flexible(child: Column()),
+                            Flexible(child: Icon(Icons.arrow_forward_ios)),
+                          ]
+                        )
                       ),
-                      Container(
-                          margin:EdgeInsets.symmetric(vertical:3),
-                          height: MediaQuery.of(context).size.height*0.1,
-                          decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                          )
-                      ),
-                      Container(
-                          margin:EdgeInsets.symmetric(vertical:3),
-                          height: MediaQuery.of(context).size.height*0.1,
-                          decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                          )
-                      ),
-                      Container(
-                          margin:EdgeInsets.symmetric(vertical:3),
-                          height: MediaQuery.of(context).size.height*0.1,
-                          decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                          )
-                      ),
+
                     ]
 
                 )
