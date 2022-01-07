@@ -1,4 +1,5 @@
-import 'package:awesomethink/view/memberMain.dart';
+import 'package:awesomethink/view/admin_main.dart';
+import 'package:awesomethink/view/member_main.dart';
 import 'package:awesomethink/view/signUp.dart';
 import 'package:awesomethink/view/test.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,9 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   }
   void test(){
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>TestPage()));
+  }
+  void admin(){
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>AdminMainPage()));
   }
 
 
@@ -99,6 +103,11 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                     width:MediaQuery.of(context).size.width*0.5,
                     child:ElevatedButton(onPressed: test,
                         child: const Text("Test")),
+                  ),
+                  Container(
+                    width:MediaQuery.of(context).size.width*0.5,
+                    child:ElevatedButton(onPressed: admin,
+                        child: const Text("Admin")),
                   )
                 ],
               )
