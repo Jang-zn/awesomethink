@@ -56,15 +56,12 @@ class AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     fp = Provider.of<FirebaseProvider>(context);
-
-    logger.d("user: ${fp.getUser()}");
-
     //최근 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp.getUser() != null && fp
         .getUser()?.emailVerified == true) {
-      return AwesomeThinkLoginPage(title: 'AwesomeThink');
-    } else {
       return AwesomeMainPage();
+    } else {
+      return  AwesomeThinkLoginPage(title: 'AwesomeThink');
     }
   }
 }
