@@ -1,8 +1,6 @@
 
 
 class Member{
-
-  String? memberId;
   int? memberNo;
   String? memberPw;
   String? name;
@@ -15,7 +13,6 @@ class Member{
   DateTime? retiredDate;
 
   Member(
-      this.memberId,
       this.memberNo,
       this.memberPw,
       this.name,
@@ -26,4 +23,7 @@ class Member{
       this.state,
       this.joinedDate,
       this.retiredDate);
+
+
+
 }

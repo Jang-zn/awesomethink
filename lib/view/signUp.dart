@@ -17,7 +17,7 @@ class SignUpWidget extends StatefulWidget {
 }
 
 class _SignUpWidgetState extends State<SignUpWidget> {
-  TextEditingController idController = TextEditingController();
+
   TextEditingController pwController = TextEditingController();
   TextEditingController pwCheckController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -43,14 +43,36 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                     margin: EdgeInsets.symmetric(vertical: 50),
                     child: Column(children: [
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
-                        child: TextField(
-                          controller: idController,
-                          decoration: const InputDecoration(
-                            hintText: "ID",
-                              hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
-                          ),
-                        ),
+                        margin: EdgeInsets.symmetric(vertical: 15, horizontal:70),
+                        child:
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: 90,
+                                child: TextField(
+                                  controller: emailController1,
+                                  decoration: const InputDecoration(
+                                      hintText: "000",
+                                      hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                child: Text("@"),
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                              ),
+                              Container(
+                                width: 90,
+                                child: TextField(
+                                  controller: emailController2,
+                                  decoration: const InputDecoration(
+                                      hintText: "000",
+                                      hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
+                                  ),
+                                ),
+                              ),
+                            ]),
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
@@ -93,38 +115,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                               hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 15, horizontal:70),
-                        child:
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                            Container(
-                              width: 90,
-                              child: TextField(
-                                controller: emailController1,
-                                decoration: const InputDecoration(
-                                  hintText: "000",
-                                    hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: Text("@"),
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                            ),
-                            Container(
-                              width: 90,
-                              child: TextField(
-                                controller: emailController2,
-                                decoration: const InputDecoration(
-                                  hintText: "000",
-                                    hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
-                                ),
-                              ),
-                            ),
-                          ]),
                       ),
                       Container(
                           margin: EdgeInsets.only(top: 15, left:70, right:70, bottom:40),

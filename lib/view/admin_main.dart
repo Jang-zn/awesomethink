@@ -96,7 +96,7 @@ class _AdminWidgetState extends State<AdminWidget> {
             ),
             Container(
                 margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),
-                child:Text("주간 근태 현황",)
+                child:Text("주간 근무 현황",)
             ),
             Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
