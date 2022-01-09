@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class FirebaseProvider with ChangeNotifier{
+
+
   Logger logger = Logger();
   final FirebaseAuth fAuth = FirebaseAuth.instance; //firebase 인증 인스턴스
 
@@ -27,8 +29,8 @@ class FirebaseProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  User getUser() {
-    return _user!;
+  User? getUser() {
+    return _user;
   }
 
   Future<bool> signUpWithEmail(String email, String password) async {
@@ -56,12 +58,9 @@ class FirebaseProvider with ChangeNotifier{
     try {
       var result = await fAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      if (result != null) {
         setUser(result.user);
         logger.d(getUser());
         return true;
-      }
-      return false;
     } on Exception catch (e) {
       logger.e(e.toString());
       List<String> result = e.toString().split(", ");
@@ -87,16 +86,16 @@ class FirebaseProvider with ChangeNotifier{
     setUser(null);
   }
 
-  // 사용자에게 비밀번호 재설정 메일을 한글로 전송 시도
-  sendPasswordResetEmailByKorean() async {
-    await fAuth.setLanguageCode("ko");
-    sendPasswordResetEmail();
-  }
-
-  // 사용자에게 비밀번호 재설정 메일을 전송
-  sendPasswordResetEmail() async {
-    var sendPasswordResetEmail = fAuth.sendPasswordResetEmail(
-        email: getUser().email!);
-  }
+  // // 사용자에게 비밀번호 재설정 메일을 한글로 전송 시도
+  // sendPasswordResetEmailByKorean() async {
+  //   await fAuth.setLanguageCode("ko");
+  //   sendPasswordResetEmail();
+  // }
+  //
+  // // 사용자에게 비밀번호 재설정 메일을 전송
+  // sendPasswordResetEmail() async {
+  //   var sendPasswordResetEmail = fAuth.sendPasswordResetEmail(
+  //       email: getUser().email);
+  // }
 
 }

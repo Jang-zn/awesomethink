@@ -1,22 +1,18 @@
+import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+late SignUpPageState pageState;
 
+class SignUpPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return const SignUpWidget();
+  SignUpPageState createState() {
+    pageState = SignUpPageState();
+    return pageState;
   }
 }
 
-class SignUpWidget extends StatefulWidget {
-  const SignUpWidget({Key? key}) : super(key: key);
-
-  @override
-  _SignUpWidgetState createState() => _SignUpWidgetState();
-}
-
-class _SignUpWidgetState extends State<SignUpWidget> {
+class SignUpPageState extends State<SignUpPage> {
 
   TextEditingController pwController = TextEditingController();
   TextEditingController pwCheckController = TextEditingController();
@@ -31,11 +27,19 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   void submit(){
     Navigator.of(context).pop();
   }
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late FirebaseProvider fp;
+
+  @override
+  void didChangeDependencies() {
+    fp= Provider.of<FirebaseProvider>(context);
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         body: SafeArea(
             child: ListView(
                 children: [
@@ -54,7 +58,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                   controller: emailController1,
                                   decoration: const InputDecoration(
                                       hintText: "000",
-                                      hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
+                                      hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100),
+                                      )
                                   ),
                                 ),
                               ),
