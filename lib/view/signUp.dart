@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -171,8 +173,33 @@ class SignUpPageState extends State<SignUpPage> {
                           child:Text("Submit"),
                           onPressed: submit,
                         )
-                      )
+                      ),
+                      //TODO 프사 등록, 안하면 기본이미지
                     ]))
     ])));
   }
+
+  void _signUp() async {
+    Map<String, String> member = Map();
+
+
+      ScaffoldMessenger.hideCurrentSnackBar
+      ScaffoldMessenger.showSnackBar(SnackBar(
+        duration: Duration(seconds: 10),
+        content: Row(
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Text("   Signing-Up...")
+          ],
+        ),
+      ));
+    bool result = await fp.signUpWithEmail(_mailCon.text, _pwCon.text);
+    _scaffoldKey.currentState.hideCurrentSnackBar();
+    if (result) {
+      Navigator.pop(context);
+    } else {
+      showLastFBMessage();
+    }
+  }
+
 }
