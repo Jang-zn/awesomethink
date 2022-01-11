@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/service/signup_validation.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +14,10 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage> {
   TextEditingController pwController = TextEditingController();
   TextEditingController pwCheckController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController positionController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController1 = TextEditingController();
-  TextEditingController phoneController2 = TextEditingController();
-  TextEditingController phoneController3 = TextEditingController();
+
+
+  Map<String, String> member = HashMap();
 
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
@@ -65,8 +62,13 @@ class SignUpPageState extends State<SignUpPage> {
                   focusNode: _emailFocus,
                   keyboardType: TextInputType.emailAddress,
                   autovalidateMode: AutovalidateMode.always,
-                  decoration: InputDecoration(hintText: 'Email'),
+                  decoration: InputDecoration(
+                      hintText: 'Email',
+                      hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                   validator: (value) => SignUpValidation().validateEmail(_emailFocus, value),
+                  onSaved: (value)=>{
+                    member.putIfAbsent("email", () => emailController.text)
+                  },
                 ),
             ),
 
@@ -78,8 +80,13 @@ class SignUpPageState extends State<SignUpPage> {
                 controller: pwController,
                 focusNode: _passwordFocus,
                 autovalidateMode: AutovalidateMode.always,
-                decoration: InputDecoration(hintText: 'Password'),
+                decoration: InputDecoration(
+                    hintText: 'Password',
+                    hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                 validator: (value) => SignUpValidation().validatePassword(_passwordFocus, value),
+                onSaved: (value)=>{
+                  member.putIfAbsent("password", () => pwController.text)
+                },
               ),
             ),
 
@@ -91,25 +98,33 @@ class SignUpPageState extends State<SignUpPage> {
                 controller: pwCheckController,
                 focusNode: _passwordCheckFocus,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(hintText: 'Password'),
+                decoration: InputDecoration(
+                    hintText: 'Password Check',
+                    hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                 validator: (value) => SignUpValidation().validatePasswordCheck(_passwordCheckFocus,pwController.text, value),
+              ),
+            ),
+
+            //이름
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
+              child: TextFormField(
+                keyboardType: TextInputType.name,
+                decoration: const InputDecoration(
+                    hintText: "Name",
+                    hintStyle:
+                        TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
+                onSaved: (value)=>{
+                  member.putIfAbsent("name", () => value!)
+                },
+                autovalidateMode: AutovalidateMode.always,
+                validator: (value)=>SignUpValidation().validateName(value),
               ),
             ),
 
             Container(
               margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
-              child: TextFormField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                    hintText: "Name",
-                    hintStyle:
-                        TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
               child: TextField(
-                controller: positionController,
                 decoration: const InputDecoration(
                     hintText: "Position",
                     hintStyle:
@@ -119,48 +134,10 @@ class SignUpPageState extends State<SignUpPage> {
             Container(
                 margin:
                     EdgeInsets.only(top: 15, left: 70, right: 70, bottom: 40),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 40,
-                        child: TextField(
-                          controller: phoneController1,
-                          decoration: const InputDecoration(
-                              hintText: "000",
-                              hintStyle: TextStyle(
-                                  color: Color.fromRGBO(180, 180, 180, 100))),
-                        ),
-                      ),
-                      Container(
-                        child: Text("-"),
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                      ),
-                      Container(
-                        width: 40,
-                        child: TextField(
-                          controller: phoneController2,
-                          decoration: const InputDecoration(
-                              hintText: "0000",
-                              hintStyle: TextStyle(
-                                  color: Color.fromRGBO(180, 180, 180, 100))),
-                        ),
-                      ),
-                      Container(
-                        child: Text("-"),
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                      ),
-                      Container(
-                        width: 40,
-                        child: TextField(
-                          controller: phoneController3,
-                          decoration: const InputDecoration(
-                              hintText: "0000",
-                              hintStyle: TextStyle(
-                                  color: Color.fromRGBO(180, 180, 180, 100))),
-                        ),
-                      ),
-                    ])),
+                child: TextFormField(
+
+                    ),
+            ),
             Container(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: ElevatedButton(
@@ -174,16 +151,6 @@ class SignUpPageState extends State<SignUpPage> {
 
   //TODO 비밀번호, 입력양식 validation 통과해야 버튼 누를수 있음
   void _signUp() async {
-    Map<String, String> member = HashMap();
-    member.putIfAbsent("email", () => emailController.text);
-    member.putIfAbsent("password", () => pwController.text);
-    member.putIfAbsent("name", () => nameController.text);
-    member.putIfAbsent("position", () => positionController.text);
-    member.putIfAbsent("phone", () =>
-    phoneController1.text + "-" + phoneController2.text + "-" +
-        phoneController3.text);
-
-
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       duration: Duration(seconds: 10),
       content: Row(
@@ -201,7 +168,6 @@ class SignUpPageState extends State<SignUpPage> {
 
     }
   }
-
 
 }
 
