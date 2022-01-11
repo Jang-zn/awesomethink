@@ -10,6 +10,7 @@ class SignUpPage extends StatefulWidget {
   SignUpPageState createState() {
     return SignUpPageState();
   }
+
 }
 
 class SignUpPageState extends State<SignUpPage> {
@@ -35,6 +36,7 @@ class SignUpPageState extends State<SignUpPage> {
   @override
   void didChangeDependencies() {
     fp = Provider.of<FirebaseProvider>(context);
+    member["position"]=selectedValue as String;
   }
 
 
@@ -59,7 +61,7 @@ class SignUpPageState extends State<SignUpPage> {
 
             //이메일 입력
             Container(
-              margin: EdgeInsets.symmetric(vertical: 0, horizontal: 70),
+              margin: EdgeInsets.symmetric(vertical: 7, horizontal: 70),
               child:  TextFormField(
                   controller: emailController,
                   focusNode: _emailFocus,
@@ -77,7 +79,7 @@ class SignUpPageState extends State<SignUpPage> {
 
             //비밀번호 입력
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 0),
+              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 obscureText: true,
                 controller: pwController,
@@ -95,7 +97,7 @@ class SignUpPageState extends State<SignUpPage> {
 
           //비밀번호 체크
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
+              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 obscureText: true,
                 controller: pwCheckController,
@@ -110,7 +112,7 @@ class SignUpPageState extends State<SignUpPage> {
 
             //이름
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
+              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 keyboardType: TextInputType.name,
                 decoration: const InputDecoration(
@@ -127,7 +129,7 @@ class SignUpPageState extends State<SignUpPage> {
 
             //연락처
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
+              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 decoration: const InputDecoration(
                     hintText: "Phone (000-0000-0000)",
@@ -143,7 +145,7 @@ class SignUpPageState extends State<SignUpPage> {
             //직급
             Container(
                 margin:
-                    EdgeInsets.only(top: 15, left: 70, right: 70, bottom: 40),
+                    EdgeInsets.only(top: 7, left: 70, right: 70, bottom: 40),
                 child: DropdownButtonFormField(
                   value: selectedValue,
                   items: position.map(
@@ -157,6 +159,7 @@ class SignUpPageState extends State<SignUpPage> {
                     setState(() {
                       if(value!=null) {
                         selectedValue = value as String?;
+                        member["position"]=value as String;
                       }
                     });
                   },
@@ -175,7 +178,20 @@ class SignUpPageState extends State<SignUpPage> {
 
   void submit() async {
     if(this._formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       print(member);
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("입력양식을 확인해주세요", style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold)),
+            backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(milliseconds: 500),
+            margin:EdgeInsets.only(
+              bottom:520,
+            ),
+        )
+      );
     }
   //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
   //     duration: Duration(seconds: 10),

@@ -3,6 +3,7 @@ import 'package:awesomethink/view/member_main.dart';
 import 'package:firebase/firebase_io.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase/firebase_provider.dart';
