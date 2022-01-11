@@ -41,7 +41,6 @@ class SignUpValidation {
     }
   }
 
-//TODO 비밀번호 체크랑 비밀번호랑 같은지 확인
   String? validatePasswordCheck(FocusNode focusNode, String? pw,
       String? value) {
     if (pw != value) {
@@ -52,6 +51,18 @@ class SignUpValidation {
   }
 
 //TODO 핸드폰번호 양식 확인
-
+  String? validatePhoneNumber(String? value) {
+    if (value!.isEmpty||value.length<11) {
+      return '전화번호를 입력하세요. \'-\' 포함';
+    } else {
+      RegExp regExp = RegExp(
+          r'^\d{3}-\d{3,4}-\d{4}$');
+      if (!regExp.hasMatch(value)) {
+        return '잘못된 전화번호 형식입니다.';
+      } else {
+        return null;
+      }
+    }
+  }
 
 }

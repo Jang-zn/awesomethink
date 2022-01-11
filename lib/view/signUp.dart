@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/service/signup_validation.dart';
 import 'package:flutter/material.dart';
@@ -12,23 +13,23 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
+
   TextEditingController pwController = TextEditingController();
   TextEditingController pwCheckController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-
-
   Map<String, String> member = HashMap();
+  List<String> position = ["사원","팀장","사장"];
+  String? selectedValue;
+
+  SignUpPageState(){
+    selectedValue= position[0];
+  }
 
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _passwordCheckFocus = FocusNode();
-  GlobalKey<SignUpPageState> formKey = GlobalKey<SignUpPageState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  void submit() {
-    Navigator.of(context).pop();
-  }
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late FirebaseProvider fp;
 
   @override
@@ -46,6 +47,8 @@ class SignUpPageState extends State<SignUpPage> {
         )
     );
   }
+
+
 
   Widget SignUpForm() {
     return SafeArea(
@@ -122,20 +125,41 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
 
+            //연락처
             Container(
               margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
-              child: TextField(
+              child: TextFormField(
                 decoration: const InputDecoration(
-                    hintText: "Position",
-                    hintStyle:
-                        TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
+                    hintText: "Phone (000-0000-0000)",
+                    hintStyle: TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value)=>SignUpValidation().validatePhoneNumber(value),
+                onSaved: (value)=>{
+                  member.putIfAbsent("phone", () => value!)
+                },
               ),
             ),
+
+            //직급
             Container(
                 margin:
                     EdgeInsets.only(top: 15, left: 70, right: 70, bottom: 40),
-                child: TextFormField(
-
+                child: DropdownButtonFormField(
+                  value: selectedValue,
+                  items: position.map(
+                    (value) {
+                      return DropdownMenuItem(
+                        value:value,
+                        child:Text(value)
+                      );
+                    }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      if(value!=null) {
+                        selectedValue = value as String?;
+                      }
+                    });
+                  },
                     ),
             ),
             Container(
@@ -149,26 +173,27 @@ class SignUpPageState extends State<SignUpPage> {
     ]));
   }
 
-  //TODO 비밀번호, 입력양식 validation 통과해야 버튼 누를수 있음
-  void _signUp() async {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      duration: Duration(seconds: 10),
-      content: Row(
-        children: <Widget>[
-          CircularProgressIndicator(),
-          Text("   Signing-Up...")
-        ],
-      ),
-    ));
-     bool result = await fp.signUpWithEmail(
-         emailController.text, pwController.text);
-    if (result) {
-      Navigator.pop(context);
-    } else {
-
+  void submit() async {
+    if(this.formKey.currentState!.validate()) {
+      print(member);
     }
-  }
-
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //     duration: Duration(seconds: 10),
+  //     content: Row(
+  //       children: <Widget>[
+  //         CircularProgressIndicator(),
+  //         Text("   Signing-Up...")
+  //       ],
+  //     ),
+  //   ));
+  //    bool result = await fp.signUpWithEmail(
+  //        emailController.text, pwController.text);
+  //   if (result) {
+  //     Navigator.pop(context);
+  //   } else {
+  //
+  //   }
+   }
 }
 
 
