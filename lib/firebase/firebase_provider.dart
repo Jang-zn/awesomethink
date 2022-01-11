@@ -38,8 +38,6 @@ class FirebaseProvider with ChangeNotifier{
       UserCredential result = await fAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       if (result.user != null) {
-        // 인증 메일 발송
-        result.user!.sendEmailVerification();
         // 새로운 계정 생성이 성공하였으므로 기존 계정이 있을 경우 로그아웃 시킴
         signOut();
         return true;
@@ -63,8 +61,6 @@ class FirebaseProvider with ChangeNotifier{
         return true;
     } on Exception catch (e) {
       logger.e(e.toString());
-      List<String> result = e.toString().split(", ");
-      setLastFBMessage(result[1]);
       return false;
     }
   }

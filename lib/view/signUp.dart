@@ -179,7 +179,36 @@ class SignUpPageState extends State<SignUpPage> {
   void submit() async {
     if(this._formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: Duration(seconds: 10),
+        content: Row(
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Text("   Signing-Up...")
+          ],
+        ),
+      ));
       print(member);
+      bool result =
+           await fp.signUpWithEmail(member["email"] as String, member["password"] as String);
+       if (result) {
+         Navigator.pop(context);
+       } else {
+         ScaffoldMessenger.of(context)
+             ..hideCurrentSnackBar()
+             ..showSnackBar(
+                 const SnackBar(
+                   content: Text("이미 가입된 계정입니다.", style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold)),
+                   backgroundColor: Colors.redAccent,
+                   behavior: SnackBarBehavior.floating,
+                   duration: Duration(milliseconds: 1000),
+                   margin:EdgeInsets.only(
+                     bottom:520,
+                   ),
+                 )
+             );
+         Navigator.pop(context);
+       }
     }else{
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -193,22 +222,6 @@ class SignUpPageState extends State<SignUpPage> {
         )
       );
     }
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //     duration: Duration(seconds: 10),
-  //     content: Row(
-  //       children: <Widget>[
-  //         CircularProgressIndicator(),
-  //         Text("   Signing-Up...")
-  //       ],
-  //     ),
-  //   ));
-  //    bool result = await fp.signUpWithEmail(
-  //        emailController.text, pwController.text);
-  //   if (result) {
-  //     Navigator.pop(context);
-  //   } else {
-  //
-  //   }
    }
 }
 
