@@ -42,7 +42,6 @@ class SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
         body: Form(
             key: formKey,
             child: SignUpForm()
@@ -58,16 +57,14 @@ class SignUpPageState extends State<SignUpPage> {
           child: Column(children: [
             Container(
               margin: EdgeInsets.symmetric(vertical: 15, horizontal: 70),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: TextFormField(
+              child:  TextFormField(
                   controller: emailController,
                   focusNode: _emailFocus,
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) => SignUpValidation().validateEmail(_emailFocus, value),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: _textFormDecoration('이메일', '이메일을 입력해주세요'),
+                  validator: (value) => SignUpValidation().validateEmail(_emailFocus, value),
                 ),
-              ),
             ),
 
             Container(

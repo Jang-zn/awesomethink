@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class SignUpValidation{
 //TODO 이메일 양식 확인
-  String validateEmail(FocusNode focusNode, String? value){
-    if(value==null){
+  String? validateEmail(FocusNode focusNode, String? value){
+    if(value!.isEmpty){
       focusNode.requestFocus();
       return '이메일을 입력하세요.';
     }else {
