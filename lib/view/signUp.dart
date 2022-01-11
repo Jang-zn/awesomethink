@@ -28,7 +28,7 @@ class SignUpPageState extends State<SignUpPage> {
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _passwordCheckFocus = FocusNode();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late FirebaseProvider fp;
 
@@ -42,7 +42,7 @@ class SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Form(
-            key: formKey,
+            key: _formKey,
             child: SignUpForm()
         )
     );
@@ -174,7 +174,7 @@ class SignUpPageState extends State<SignUpPage> {
   }
 
   void submit() async {
-    if(this.formKey.currentState!.validate()) {
+    if(this._formKey.currentState!.validate()) {
       print(member);
     }
   //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
