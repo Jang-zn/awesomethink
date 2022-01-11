@@ -19,7 +19,7 @@ class SignUpPageState extends State<SignUpPage> {
   TextEditingController pwController = TextEditingController();
   TextEditingController pwCheckController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController rankController = TextEditingController();
+  TextEditingController positionController = TextEditingController();
   TextEditingController emailController1 = TextEditingController();
   TextEditingController emailController2 = TextEditingController();
   TextEditingController phoneController1 = TextEditingController();
@@ -116,7 +116,7 @@ class SignUpPageState extends State<SignUpPage> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
                         child: TextField(
-                          controller: rankController,
+                          controller: positionController,
                           decoration: const InputDecoration(
                             hintText: "Position",
                               hintStyle: TextStyle(color:Color.fromRGBO(180, 180, 180, 100))
@@ -179,12 +179,20 @@ class SignUpPageState extends State<SignUpPage> {
     ])));
   }
 
+
+  //TODO 비밀번호, 입력양식 validation 통과해야 버튼 누를수 있음
   void _signUp() async {
-    Map<String, String> member = Map();
+    Map<String, String> member = HashMap();
+    member.putIfAbsent("email", () => emailController1.text+"@"+emailController2.text);
+    member.putIfAbsent("password", () => pwController.text);
+    member.putIfAbsent("name", () => nameController.text);
+    member.putIfAbsent("position", () => positionController.text);
+    member.putIfAbsent("phone", () => phoneController1.text+"-"+phoneController2.text+"-"+phoneController3.text);
 
 
-      ScaffoldMessenger.hideCurrentSnackBar
-      ScaffoldMessenger.showSnackBar(SnackBar(
+
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: Duration(seconds: 10),
         content: Row(
           children: <Widget>[
