@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:awesomethink/firebase/firebase_provider.dart';
+import 'package:awesomethink/model/user.dart';
 import 'package:awesomethink/service/signup_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class SignUpPageState extends State<SignUpPage> {
   TextEditingController pwController = TextEditingController();
   TextEditingController pwCheckController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  Map<String, String> member = HashMap();
+  Map<String, String> userMap = HashMap();
   List<String> position = ["사원","팀장","사장"];
   String? selectedValue;
 
@@ -36,7 +37,7 @@ class SignUpPageState extends State<SignUpPage> {
   @override
   void didChangeDependencies() {
     fp = Provider.of<FirebaseProvider>(context);
-    member["position"]=selectedValue as String;
+    userMap["position"]=selectedValue as String;
   }
 
 
@@ -72,7 +73,7 @@ class SignUpPageState extends State<SignUpPage> {
                       hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                   validator: (value) => SignUpValidation().validateEmail(_emailFocus, value),
                   onSaved: (value)=>{
-                    member.putIfAbsent("email", () => emailController.text)
+                    userMap.putIfAbsent("email", () => emailController.text)
                   },
                 ),
             ),
@@ -90,7 +91,7 @@ class SignUpPageState extends State<SignUpPage> {
                     hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                 validator: (value) => SignUpValidation().validatePassword(_passwordFocus, value),
                 onSaved: (value)=>{
-                  member.putIfAbsent("password", () => pwController.text)
+                  userMap.putIfAbsent("password", () => pwController.text)
                 },
               ),
             ),
@@ -120,7 +121,7 @@ class SignUpPageState extends State<SignUpPage> {
                     hintStyle:
                         TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                 onSaved: (value)=>{
-                  member.putIfAbsent("name", () => value!)
+                  userMap.putIfAbsent("name", () => value!)
                 },
                 autovalidateMode: AutovalidateMode.always,
                 validator: (value)=>SignUpValidation().validateName(value),
@@ -137,7 +138,7 @@ class SignUpPageState extends State<SignUpPage> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value)=>SignUpValidation().validatePhoneNumber(value),
                 onSaved: (value)=>{
-                  member.putIfAbsent("phone", () => value!)
+                  userMap.putIfAbsent("phone", () => value!)
                 },
               ),
             ),
@@ -159,7 +160,7 @@ class SignUpPageState extends State<SignUpPage> {
                     setState(() {
                       if(value!=null) {
                         selectedValue = value as String?;
-                        member["position"]=value as String;
+                        userMap["position"]=value as String;
                       }
                     });
                   },
@@ -179,6 +180,7 @@ class SignUpPageState extends State<SignUpPage> {
   void submit() async {
     if(this._formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      User user = User().userSignUpData(userMap);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: Duration(seconds: 10),
         content: Row(
@@ -188,10 +190,12 @@ class SignUpPageState extends State<SignUpPage> {
           ],
         ),
       ));
-      print(member);
+      print(user.toString());
       bool result =
-           await fp.signUpWithEmail(member["email"] as String, member["password"] as String);
+           await fp.signUpWithEmail(userMap["email"] as String, userMap["password"] as String);
        if (result) {
+         //TODO 데이터베이스에 user 저장
+
          Navigator.pop(context);
        } else {
          ScaffoldMessenger.of(context)

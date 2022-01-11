@@ -1,4 +1,4 @@
-enum Position{
-  sawon, teamLeader, owner
+enum UserType{
+  normal, admin
 }
 
