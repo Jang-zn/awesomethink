@@ -24,6 +24,7 @@ class SignUpPageState extends State<SignUpPage> {
 
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
+  final FocusNode _passwordCheckFocus = FocusNode();
   GlobalKey<SignUpPageState> formKey = GlobalKey<SignUpPageState>();
 
   void submit() {
@@ -55,43 +56,49 @@ class SignUpPageState extends State<SignUpPage> {
       Container(
           margin: EdgeInsets.symmetric(vertical: 50),
           child: Column(children: [
+
+            //이메일 입력
             Container(
-              margin: EdgeInsets.symmetric(vertical: 15, horizontal: 70),
+              margin: EdgeInsets.symmetric(vertical: 0, horizontal: 70),
               child:  TextFormField(
                   controller: emailController,
                   focusNode: _emailFocus,
                   keyboardType: TextInputType.emailAddress,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: _textFormDecoration('이메일', '이메일을 입력해주세요'),
+                  autovalidateMode: AutovalidateMode.always,
+                  decoration: InputDecoration(hintText: 'Email'),
                   validator: (value) => SignUpValidation().validateEmail(_emailFocus, value),
                 ),
             ),
 
+            //비밀번호 입력
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
-              child: TextField(
+              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 0),
+              child: TextFormField(
                 obscureText: true,
                 controller: pwController,
-                decoration: const InputDecoration(
-                    hintText: "Password",
-                    hintStyle:
-                        TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
+                focusNode: _passwordFocus,
+                autovalidateMode: AutovalidateMode.always,
+                decoration: InputDecoration(hintText: 'Password'),
+                validator: (value) => SignUpValidation().validatePassword(_passwordFocus, value),
               ),
             ),
+
+          //비밀번호 체크
             Container(
               margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
-              child: TextField(
+              child: TextFormField(
                 obscureText: true,
                 controller: pwCheckController,
-                decoration: const InputDecoration(
-                    hintText: "Password Check",
-                    hintStyle:
-                        TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
+                focusNode: _passwordCheckFocus,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: InputDecoration(hintText: 'Password'),
+                validator: (value) => SignUpValidation().validatePasswordCheck(_passwordCheckFocus,pwController.text, value),
               ),
             ),
+
             Container(
               margin: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
-              child: TextField(
+              child: TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(
                     hintText: "Name",
@@ -193,14 +200,6 @@ class SignUpPageState extends State<SignUpPage> {
     } else {
 
     }
-  }
-
-  InputDecoration _textFormDecoration(hintText, helperText) {
-    return InputDecoration(
-      contentPadding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-      hintText: hintText,
-      helperText: helperText,
-    );
   }
 
 
