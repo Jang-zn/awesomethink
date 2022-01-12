@@ -3,7 +3,7 @@ import 'package:awesomethink/view/admin_main.dart';
 import 'package:awesomethink/view/auth_wait_page.dart';
 import 'package:awesomethink/view/login.dart';
 import 'package:awesomethink/view/member_main.dart';
-import 'package:firebase/firebase.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
