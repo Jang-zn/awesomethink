@@ -7,7 +7,7 @@ class UserDatabase{
   final CollectionReference userCollection = FirebaseFirestore.instance.collection("user");
 
   storeUserData(Member user) async{
-    DocumentReference documentReference = userCollection.doc("uid");
+    DocumentReference documentReference = userCollection.doc(user.uid);
 
     var data = user.toJson();
 

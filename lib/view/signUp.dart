@@ -192,15 +192,21 @@ class SignUpPageState extends State<SignUpPage> {
           ],
         ),
       ));
+
+
+      //1. Member 객체 빈거 만들고 (user) signup 성공하면
       Member user = Member();
-      user = user.userSignUpData(userMap);
       bool result =
            await fp.signUpWithEmail(emailController.text, pwController.text);
+      // 스낵바 접어주고, currentUser uid를 userMap에 넣어주고, userSignUpdata로 Member객체에 넣어줌.
        if (result) {
          ScaffoldMessenger.of(context).hideCurrentSnackBar();
          userMap["uid"]=fa.currentUser!.uid;
-         print(fa.currentUser);
+         user = user.userSignUpData(userMap);
+
+         //user 콜렉션에 현재 가입한 uid를 가지는 document 생성
          UserDatabase().storeUserData(user);
+         //페이지 닫음
          Navigator.pop(context);
        } else {
          ScaffoldMessenger.of(context)
