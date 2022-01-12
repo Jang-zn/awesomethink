@@ -24,31 +24,26 @@ class UserDatabase{
     return queryUsers;
   }
 
-  Iterable<Member> getUserByUid(String uid){
-    Iterable<Member> queryUserByUid = userCollection
-        .where("uid",isEqualTo: uid)
-        .snapshots().map(_snapShotToMember) as Iterable<Member>;
-
-    return queryUserByUid;
-  }
-
-  Iterable<Member> _snapShotToMember(QuerySnapshot snapshot){
-    return snapshot.docs.map((doc) {
-        return Member(
-          uid: doc.get("uid"),
-          email: doc.get("email"),
-          name:doc.get("name"),
-          position: doc.get("position"),
-          phone:doc.get("phone"),
-          joinedDate: doc.get("joinedDate"),
-          retiredDate: doc.get("retiredDate"),
-          type: doc.get("type"),
-          state:doc.get("state")
-        );
+  Member getUserByUid(String uid){
+    Member userSnapshot = Member();
+    firestore.collection("user").doc(uid).get().then(
+        (DocumentSnapshot ds) {
+          Member user = Member();
+          user.uid= ds["uid"];
+          user.email= ds["email"];
+          user.name=ds["name"];
+          user.position= ds["position"];
+          user.phone=ds["phone"];
+          user.joinedDate= ds["joinedDate"].toDate();
+          user.retiredDate= ds["retiredDate"]?.toDate();
+          user.type= ds["type"];
+          user.state=ds["state"];
+          userSnapshot=user;
       }
     );
-  }
+    return userSnapshot;
 
+  }
 
 
 }

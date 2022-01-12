@@ -66,4 +66,8 @@ class Member{
     return user;
   }
 
+  @override
+  String toString() {
+    return 'Member{uid: $uid, email: $email, name: $name, position: $position, phone: $phone, type: $type, state: $state, joinedDate: $joinedDate, retiredDate: $retiredDate}';
+  }
 }
