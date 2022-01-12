@@ -57,40 +57,15 @@ class AuthPage extends StatefulWidget {
 
 class AuthPageState extends State<AuthPage> {
   late FirebaseProvider fp=Provider.of<FirebaseProvider>(context);
-  UserDatabase ud = UserDatabase();
-  Member user = Member();
+  late Member user = UserDatabase().getUserByUid(fp.getUser()!.uid);
   get logger => null;
-
-
-  @override
-  void initState() {
-    print("initState in here");
-    checkUser();
-    sleep(Duration(seconds: 2))
-  }
-
-  Future<void> checkUser() async {
-    await UserDatabase().getUserByUid(fp.getUser()!.uid).then(
-        (DocumentSnapshot ds){
-          user.uid = ds["uid"];
-          user.name = ds["name"];
-          user.email = ds["email"];
-          user.type = ds["type"];
-          user.state = ds["state"];
-          user.phone = ds["phone"];
-          user.position = ds["position"];
-          user.joinedDate = ds["joinedDate"]?.toDate();
-          user.retiredDate = ds["retiredDate"]?.toDate();
-          print("user ssibal : "+user.toString());
-        }
-    );
-  }
 
   @override
   Widget build (BuildContext context) {
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp.getUser() != null ) {
       print(fp.getUser());
+      print(user.toString());
 
       if(user.state=false){
         return AuthWaitPage();
