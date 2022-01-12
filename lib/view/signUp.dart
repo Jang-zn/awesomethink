@@ -35,6 +35,7 @@ class SignUpPageState extends State<SignUpPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late FirebaseProvider fp;
+  FirebaseAuth fa = FirebaseAuth.instance;
 
   @override
   void didChangeDependencies() {
@@ -196,6 +197,9 @@ class SignUpPageState extends State<SignUpPage> {
       bool result =
            await fp.signUpWithEmail(emailController.text, pwController.text);
        if (result) {
+         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+         userMap["uid"]=fa.currentUser!.uid;
+         print(fa.currentUser);
          UserDatabase().storeUserData(user);
          Navigator.pop(context);
        } else {
