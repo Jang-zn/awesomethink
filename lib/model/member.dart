@@ -3,7 +3,7 @@
 import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/widgets.dart';
 
-class User{
+class Member{
   String? uid;
   String? email;
   String? name;
@@ -14,7 +14,7 @@ class User{
   DateTime? joinedDate;
   DateTime? retiredDate;
 
-  User({
+  Member({
       this.uid,
       this.name,
       this.position,
@@ -25,7 +25,7 @@ class User{
       this.joinedDate,
       this.retiredDate});
 
-  User.fromJson(Map<String, dynamic> json){
+  Member.fromJson(Map<String, dynamic> json){
     uid=json['uid'];
     name=json['name'];
     position=json['position'];
@@ -52,8 +52,9 @@ class User{
     return data;
   }
 
-  User userSignUpData(Map<String, String>userMap){
-    User user=User();
+  Member userSignUpData(Map<String, String>userMap){
+    Member user=Member();
+    user.uid = userMap["uid"];
     user.name = userMap["name"];
     user.position = userMap["position"];
     user.email = userMap["email"];

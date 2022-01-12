@@ -1,4 +1,4 @@
-import 'package:awesomethink/model/user.dart';
+import 'package:awesomethink/model/member.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -6,7 +6,7 @@ class UserDatabase{
 
   final CollectionReference userCollection = FirebaseFirestore.instance.collection("user");
 
-  storeUserData(User user) async{
+  storeUserData(Member user) async{
     DocumentReference documentReference = userCollection.doc("uid");
 
     var data = user.toJson();

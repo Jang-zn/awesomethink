@@ -1,8 +1,10 @@
 import 'dart:collection';
 
 import 'package:awesomethink/firebase/firebase_provider.dart';
-import 'package:awesomethink/model/user.dart';
+import 'package:awesomethink/firebase/user_database.dart';
+import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/service/signup_validation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -180,7 +182,6 @@ class SignUpPageState extends State<SignUpPage> {
   void submit() async {
     if(this._formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      User user = User().userSignUpData(userMap);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: Duration(seconds: 10),
         content: Row(
@@ -190,12 +191,12 @@ class SignUpPageState extends State<SignUpPage> {
           ],
         ),
       ));
-      print(user.toString());
+      Member user = Member();
+      user = user.userSignUpData(userMap);
       bool result =
-           await fp.signUpWithEmail(userMap["email"] as String, userMap["password"] as String);
+           await fp.signUpWithEmail(emailController.text, pwController.text);
        if (result) {
-         //TODO 데이터베이스에 user 저장
-
+         UserDatabase().storeUserData(user);
          Navigator.pop(context);
        } else {
          ScaffoldMessenger.of(context)
