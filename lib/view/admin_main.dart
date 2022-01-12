@@ -1,25 +1,22 @@
+import 'package:awesomethink/view/new_member_auth.dart';
 import 'package:flutter/material.dart';
 
-
-class AdminMainPage extends StatelessWidget {
+class AdminMainPage extends StatefulWidget {
   const AdminMainPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return AdminWidget();
-  }
+  _AdminMainPageState createState() => _AdminMainPageState();
 }
 
-class AdminWidget extends StatefulWidget {
-  const AdminWidget({Key? key}) : super(key: key);
-
-  @override
-  _AdminWidgetState createState() => _AdminWidgetState();
-}
-
-class _AdminWidgetState extends State<AdminWidget> {
-
+class _AdminMainPageState extends State<AdminMainPage> {
+  var scaffoldKey = GlobalKey<ScaffoldState>();
   void tempFunc(){  }
+
+  void newMemberAuthCheck(){
+    Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NewMemberAuthPage()));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +27,28 @@ class _AdminWidgetState extends State<AdminWidget> {
           //타이틀 중앙정렬
           centerTitle: true,
           title:Text("Awesome Admin",),
-        actions: [IconButton(onPressed: tempFunc, icon: Icon(Icons.menu))],
+        actions: [
+          Builder(
+             builder: (context) {
+                return IconButton(
+                  onPressed: (){
+                    print("open");
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  icon: Icon(Icons.menu)
+                );
+              }
+          )],
+      ),
+      endDrawer: Drawer(
+        child:ListView(
+          children:[
+            ListTile(
+              title:Text("신규가입 신청"),
+              onTap: newMemberAuthCheck
+            ),
+          ]
+        ),
       ),
       body:ListView(
         children:[Column(

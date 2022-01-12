@@ -44,5 +44,21 @@ class UserDatabase{
     return user;
   }
 
-
+  List<Member> getNewbie() {
+    List<Member> list = [];
+    firestore.collection("user").doc().get().then((DocumentSnapshot ds) {
+      Member user = Member();
+      user.uid = ds["uid"];
+      user.name = ds["name"];
+      user.email = ds["email"];
+      user.type = ds["type"];
+      user.state = ds["state"];
+      user.phone = ds["phone"];
+      user.position = ds["position"];
+      user.joinedDate = ds["joinedDate"]?.toDate();
+      user.retiredDate = ds["retiredDate"]?.toDate();
+      list.add(user);
+    });
+    return list;
+  }
 }
