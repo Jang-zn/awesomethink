@@ -62,15 +62,19 @@ class AuthPageState extends State<AuthPage> {
     fp = Provider.of<FirebaseProvider>(context);
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp.getUser() != null ) {
-      Member _user = UserDatabase().getUserByUid(fp.getUser()!.uid);
+      Future<Member> future = UserDatabase().getUserByUid(fp.getUser()!.uid);
+      Member? _user;
       print(fp.getUser());
-      print(_user.toString());
-
-      if(_user.state!=false){
+      future.then((value){
+          _user = value;
+        }
+      );
+      print("user "+_user.toString());
+      if(_user?.state!=false){
         return AuthWaitPage();
       }
 
-      if(_user.type==1){
+      if(_user?.type==1){
         return AdminMainPage();
       }
 

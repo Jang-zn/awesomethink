@@ -24,11 +24,10 @@ class UserDatabase{
     return queryUsers;
   }
 
-  Member getUserByUid(String uid){
-    Member userSnapshot = Member();
+  Future<Member> getUserByUid (String uid) async {
+    Member user = Member();
     firestore.collection("user").doc(uid).get().then(
         (DocumentSnapshot ds) {
-          Member user = Member();
           user.uid= ds["uid"];
           user.email= ds["email"];
           user.name=ds["name"];
@@ -38,11 +37,9 @@ class UserDatabase{
           user.retiredDate= ds["retiredDate"]?.toDate();
           user.type= ds["type"];
           user.state=ds["state"];
-          userSnapshot=user;
       }
     );
-    return userSnapshot;
-
+    return user;
   }
 
 
