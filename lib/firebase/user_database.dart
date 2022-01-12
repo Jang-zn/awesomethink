@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesomethink/model/member.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -24,22 +26,8 @@ class UserDatabase{
     return queryUsers;
   }
 
-  Future<Member> getUserByUid (String uid) async {
-    Member user = Member();
-    firestore.collection("user").doc(uid).get().then(
-        (DocumentSnapshot ds) {
-          user.uid= ds["uid"];
-          user.email= ds["email"];
-          user.name=ds["name"];
-          user.position= ds["position"];
-          user.phone=ds["phone"];
-          user.joinedDate= ds["joinedDate"].toDate();
-          user.retiredDate= ds["retiredDate"]?.toDate();
-          user.type= ds["type"];
-          user.state=ds["state"];
-      }
-    );
-    return user;
+  Future<DocumentSnapshot> getUserByUid (String uid) async{
+    return await firestore.collection("user").doc(uid).get();
   }
 
 

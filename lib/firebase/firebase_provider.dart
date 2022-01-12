@@ -1,3 +1,5 @@
+import 'package:awesomethink/firebase/user_database.dart';
+import 'package:awesomethink/model/member.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -9,6 +11,7 @@ class FirebaseProvider with ChangeNotifier{
   final FirebaseAuth fAuth = FirebaseAuth.instance; //firebase 인증 인스턴스
 
   User? _user; //FirebaseUser -> User 로 바뀜
+
 
   String _lastFirebaseResponse = ""; //에러처리용 String
 
@@ -32,6 +35,8 @@ class FirebaseProvider with ChangeNotifier{
   User? getUser() {
     return _user;
   }
+
+
 
   Future<bool> signUpWithEmail(String email, String password) async {
     try {

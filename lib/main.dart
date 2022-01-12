@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/view/admin_main.dart';
 import 'package:awesomethink/view/auth_wait_page.dart';
 import 'package:awesomethink/view/login.dart';
 import 'package:awesomethink/view/member_main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -53,35 +56,52 @@ class AuthPage extends StatefulWidget {
 }
 
 class AuthPageState extends State<AuthPage> {
-  late FirebaseProvider fp;
-
+  late FirebaseProvider fp=Provider.of<FirebaseProvider>(context);
+  UserDatabase ud = UserDatabase();
+  Member user = Member();
   get logger => null;
 
+
   @override
-  Widget build(BuildContext context) {
-    fp = Provider.of<FirebaseProvider>(context);
+  void initState() {
+    print("initState in here");
+    checkUser();
+    sleep(Duration(seconds: 2))
+  }
+
+  Future<void> checkUser() async {
+    await UserDatabase().getUserByUid(fp.getUser()!.uid).then(
+        (DocumentSnapshot ds){
+          user.uid = ds["uid"];
+          user.name = ds["name"];
+          user.email = ds["email"];
+          user.type = ds["type"];
+          user.state = ds["state"];
+          user.phone = ds["phone"];
+          user.position = ds["position"];
+          user.joinedDate = ds["joinedDate"]?.toDate();
+          user.retiredDate = ds["retiredDate"]?.toDate();
+          print("user ssibal : "+user.toString());
+        }
+    );
+  }
+
+  @override
+  Widget build (BuildContext context) {
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp.getUser() != null ) {
-      Future<Member> future = UserDatabase().getUserByUid(fp.getUser()!.uid);
-      Member? _user;
       print(fp.getUser());
-      future.then((value){
-          _user = value;
-        }
-      );
-      print("user "+_user.toString());
-      if(_user?.state!=false){
+
+      if(user.state=false){
         return AuthWaitPage();
       }
-
-      if(_user?.type==1){
+      if(user.type==1){
         return AdminMainPage();
       }
-
       return AwesomeMainPage();
-
     } else {
       return  AwesomeThinkLoginPage(title: 'AwesomeThink');
     }
   }
 }
+
