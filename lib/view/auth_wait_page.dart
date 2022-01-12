@@ -4,31 +4,15 @@ import 'package:awesomethink/view/test.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AwesomeThink extends StatelessWidget {
-  const AwesomeThink({Key? key}) : super(key: key);
+
+class AuthWaitPage extends StatefulWidget {
+  const AuthWaitPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'AwesomeThink',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
-      home: const AwesomeThinkLoginPage(title: 'AwesomeThink'),
-    );
-  }
+  State<AuthWaitPage> createState() => _AuthWaitPageState();
 }
 
-class AwesomeThinkLoginPage extends StatefulWidget {
-  const AwesomeThinkLoginPage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<AwesomeThinkLoginPage> createState() => _AwesomeThinkLoginPageState();
-}
-
-class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
+class _AuthWaitPageState extends State<AuthWaitPage> {
 
   @override
   Widget build(BuildContext context) {
