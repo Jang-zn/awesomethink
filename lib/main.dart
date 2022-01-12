@@ -64,16 +64,15 @@ class AuthPageState extends State<AuthPage> {
   Widget build (BuildContext context) {
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp.getUser() != null ) {
-      print(fp.getUser());
-      print(user.toString());
-
-      if(user.state=false){
-        return AuthWaitPage();
+      print("user : "+user.toString());
+      if(user.state==false){
+        return AdminMainPage();
       }
       if(user.type==1){
         return AdminMainPage();
       }
       return AwesomeMainPage();
+
     } else {
       return  AwesomeThinkLoginPage(title: 'AwesomeThink');
     }

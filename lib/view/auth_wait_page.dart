@@ -24,10 +24,18 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
                 width:200,
                 height:200,
               ),
-              margin:const EdgeInsets.only(top:100, bottom:20),
+              margin:const EdgeInsets.only(top:150, bottom:20),
             ),
             Container(
-              child: Text("가입 승인 대기중"),
+              padding:EdgeInsets.symmetric(horizontal: 50),
+                child:const LinearProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
+                )
+            ),
+            Container(
+              margin: EdgeInsets.only(top:20),
+              alignment: Alignment.center,
+              child: Text("가입 승인 대기중", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             )
           ],
         ),
