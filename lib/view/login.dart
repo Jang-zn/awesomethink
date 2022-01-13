@@ -54,9 +54,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   void signUp(){
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>SignUpPage()));
   }
-  void test(){
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>TestPage()));
-  }
   void admin(){
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>AdminMainPage()));
   }
@@ -115,11 +112,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                       width:MediaQuery.of(context).size.width*0.5,
                       child:ElevatedButton(onPressed: signUp,
                           child: const Text("SignUp")),
-                  ),
-                  Container(
-                    width:MediaQuery.of(context).size.width*0.5,
-                    child:ElevatedButton(onPressed: test,
-                        child: const Text("Test")),
                   ),
                   Container(
                     width:MediaQuery.of(context).size.width*0.5,

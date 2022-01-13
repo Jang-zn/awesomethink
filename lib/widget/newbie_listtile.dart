@@ -5,7 +5,8 @@ class NewbieListTile extends StatelessWidget {
   late final DocumentSnapshot documentData;
   NewbieListTile(this.documentData);
 
-
+  //firestore data update 과정
+  //Stream이라서 업데이트 되면 알아서 화면에서 지워짐
   void newbieAuth(){
     print(documentData["email"]);
     FirebaseFirestore.instance.collection("user").where("email", isEqualTo:documentData["email"]).get()

@@ -36,29 +36,33 @@ class AwesomeThink extends StatelessWidget {
 }
 
 
-//인증서비스 첫페이지 --> 로그인 화면에서 singUp 하면 여기로 넘어옴
-
-
+late AuthPageState pageState;
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
 
   @override
   AuthPageState createState() {
-    return AuthPageState();
+    pageState = AuthPageState();
+    return pageState;
   }
 }
 
 class AuthPageState extends State<AuthPage> {
-  late FirebaseProvider fp=Provider.of<FirebaseProvider>(context);
-  late Member user = UserDatabase().getUserByUid(fp.getUser()!.uid);
+  FirebaseProvider? fp;
   get logger => null;
+
 
   @override
   Widget build (BuildContext context) {
+    fp=Provider.of<FirebaseProvider>(context);
+
+    late Member user = UserDatabase().getUserByUid(fp!.getUser()!.uid);
+
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
-    if (fp.getUser() != null ) {
-      print("user : "+user.toString());
+    if (fp!.getUser() != null ) {
+      print("user??? : "+user.toString());
+      print("user? : "+fp!.getUser().toString());
       if(user.state==false){
         return const AuthWaitPage();
       }
