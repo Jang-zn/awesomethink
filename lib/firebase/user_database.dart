@@ -55,25 +55,24 @@ class UserDatabase{
     DateTime lastSunday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
     print(lastSunday.toString());
     return firestore.collection("work")
-        .where("uid",isEqualTo: uid)//User id에 해당하는 work들
+        .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime",isGreaterThanOrEqualTo: lastSunday)//중에서 일요일 기준으로 현재까지
         .snapshots();
   }
 
 
   //중복체크... List 길이 이용하면 되네
-  Future<bool> checkDuplication(String uid) async {
+  Future<bool> checkDuplication(String useruid) async {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     int total=0;
     await firestore.collection('work')
-             .where("uid",isEqualTo: uid)
+             .where("userUid",isEqualTo: useruid)
              .where("startTime",isGreaterThanOrEqualTo: today)
              .get()
              .then((snapShot) {
         total = snapShot.docs.length;
     });
     return total==0?true:false;
-
   }
 }

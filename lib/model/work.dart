@@ -3,17 +3,19 @@
 import 'package:awesomethink/utils/constants.dart';
 
 class Work{
-  String? uid; //User uid
+  String? userUid; //User uid
+  String? workUid;
   DateTime? startTime;
   DateTime? endTime;
   int? workingTimeState;
   DateTime? updateDate;
 
 
-  Work({this.uid, this.startTime, this.endTime, this.workingTimeState, this.updateDate});
+  Work({this.workUid,this.userUid, this.startTime, this.endTime, this.workingTimeState, this.updateDate});
 
   Work.fromJson(Map<String, dynamic> json){
-    uid=json['uid'];
+    userUid=json['userUid'];
+    workUid=json['workUid'];
     startTime=json['startTime'].toDate();
     endTime=json['endTime']?.toDate();
     workingTimeState=json['workingTimeState'];
@@ -22,22 +24,13 @@ class Work{
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['uid']=uid;
+    data['userUid']=userUid;
+    data['workUid']=null;
     data['startTime']=startTime;
     data['endTime']=endTime;
     data['workingTimeState']=workingTimeState;
     data['updateDate']=updateDate;
     return data;
-  }
-
-  Work createWork(String uid){
-    Work work=Work();
-    work.uid = uid;
-    work.startTime = DateTime.now();
-    work.endTime = null;
-    work.workingTimeState = WorkingTimeState.wait.index;
-    work.updateDate = DateTime.now();
-    return work;
   }
 
   String createTimeToMMDDW(){
@@ -82,8 +75,19 @@ class Work{
     return result;
   }
 
+  Work createWork(String uid) {
+    Work work=Work();
+    work.userUid = uid;
+    work.startTime = DateTime.now();
+    work.endTime = null;
+    work.workingTimeState = WorkingTimeState.wait.index;
+    work.updateDate = DateTime.now();
+    return work;
+  }
+
+
   @override
   String toString() {
-    return 'Work{uid: $uid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate}';
+    return 'Work{userUid: $userUid, workUid: $workUid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate}';
   }
 }

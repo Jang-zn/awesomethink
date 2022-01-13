@@ -32,6 +32,7 @@ void tempFunction(){
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   FirebaseProvider? fp;
+  Stream<QuerySnapshot>? workStream;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool workInOut = false; //false : 퇴근상태 / true : 출근상태
   Work? todayWork;
@@ -44,11 +45,23 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     todayWork = Work().createWork(fp!.getUser()!.uid);
     workInOut = workInOut==false?true:false;
       //당일 중복등록 못하게 validation
-      bool checkDuplication = await UserDatabase().checkDuplication(todayWork!.uid!);
+      bool checkDuplication = await UserDatabase().checkDuplication(todayWork!.userUid!);
       //첫출근인경우
       if(checkDuplication) {
-        FirebaseFirestore.instance.collection("work").doc()
-            .set(todayWork!.toJson());
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        //work doc 생성
+        firestore.collection("work").doc().set(todayWork!.toJson());
+
+        //한김에 workUid 없는애들 다 넣어줌
+        firestore.collection("work")
+            .where("workUid",isNull: true)
+            .get().then(
+                (value) {
+              value.docs.forEach((doc) {
+                doc.reference.update({"workUid":doc.id});
+              });
+            }
+        );
       //당일에 퇴근후 출근 또누른경우
       }else{
         workInOut=false; //
@@ -72,8 +85,15 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     //TODO work 관련한건 provider로 교체
     workInOut = workInOut==false?true:false;
     todayWork!.endTime = DateTime.now();
-    FirebaseFirestore.instance.collection("work").doc()
-          .update(todayWork!.toJson());
+    FirebaseFirestore.instance.collection("work")
+        .where("userUid",isEqualTo: todayWork!.userUid)
+        .where("endTime",isNull: true).get().then(
+            (value) {
+              value.docs.forEach((doc) {
+                doc.reference.update(todayWork!.toJson());
+              });
+            }
+        );
     //당일에 퇴근후 출근 또누른경우
     setState(() {}); //button 바꾸기 위해 호출 나중에 바꾸든가..
   }
@@ -93,7 +113,8 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   Widget MemberMainWidget(){
     print("main state build");
     fp = Provider.of<FirebaseProvider>(context);
-    Stream<QuerySnapshot> workStream = UserDatabase().getWeeklyWorkStream(fp!.getUser()!.uid);
+    workStream = UserDatabase().getWeeklyWorkStream(fp!.getUser()!.uid);
+
     Member? user = fp!.getUserInfo();
     return SafeArea(
         child:ListView(
