@@ -1,4 +1,6 @@
+import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class AuthWaitPage extends StatefulWidget {
@@ -9,9 +11,16 @@ class AuthWaitPage extends StatefulWidget {
 }
 
 class _AuthWaitPageState extends State<AuthWaitPage> {
+  FirebaseProvider? fp;
+
+  void logout() {
+    fp!.signOut();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    fp = Provider.of<FirebaseProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset : true,
@@ -36,6 +45,10 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
               margin: EdgeInsets.only(top:20),
               alignment: Alignment.center,
               child: Text("가입 승인 대기중", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            ),
+            TextButton(
+              onPressed: logout,
+              child: Text("뒤로가기"),
             )
           ],
         ),
