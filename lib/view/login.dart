@@ -28,7 +28,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
-        duration: Duration(seconds: 10),
+        duration: Duration(seconds: 5),
         content: Row(
           children: <Widget>[
             CircularProgressIndicator(),
@@ -36,20 +36,21 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
           ],
         ),
       ));
-    bool result = await fp.signInWithEmail(emailController.text, pwController.text);
-    if(result != true){
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-          duration: Duration(seconds: 1),
-          content: Row(
-            children: [
-              Text("이메일 또는 비밀번호를 확인해주세요")
-            ],
-          ),
-        ));
-    }
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      bool result = await fp.signInWithEmail(
+          emailController.text, pwController.text);
+      if (result != true) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+            duration: Duration(seconds: 1),
+            content: Row(
+              children: [
+                Text("이메일 또는 비밀번호를 확인해주세요")
+              ],
+            ),
+          ));
+      }
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
   void signUp(){
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>SignUpPage()));

@@ -1,7 +1,10 @@
 
+import 'dart:io';
+
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/view/admin_main.dart';
 import 'package:awesomethink/view/auth_wait_page.dart';
+import 'package:awesomethink/view/loading_page.dart';
 import 'package:awesomethink/view/login.dart';
 import 'package:awesomethink/view/member_main.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,13 +28,13 @@ class AwesomeThink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AwesomeThink',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
-      home: const AuthPage(),
-    );
+      return MaterialApp(
+        title: 'AwesomeThink',
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
+        home: const AuthPage(),
+      );
   }
 }
 
@@ -43,8 +46,8 @@ class AuthPage extends StatefulWidget {
 
   @override
   AuthPageState createState() {
-    pageState = AuthPageState();
-    return pageState;
+      pageState = AuthPageState();
+      return pageState;
   }
 }
 
@@ -52,24 +55,18 @@ class AuthPageState extends State<AuthPage> {
   FirebaseProvider? fp;
   get logger => null;
 
-
   @override
   Widget build (BuildContext context) {
     fp=Provider.of<FirebaseProvider>(context);
-
-    late Member user = UserDatabase().getUserByUid(fp!.getUser()!.uid);
-
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp!.getUser() != null ) {
-      print("user??? : "+user.toString());
-      print("user? : "+fp!.getUser().toString());
-      if(user.state==false){
-        return const AuthWaitPage();
-      }
-      if(user.type==1){
-        return const AdminMainPage();
-      }
-      return const AwesomeMainPage();
+        if (fp!.getUserInfo()!.state == false) {
+          return const AuthWaitPage();
+        }
+        if (fp!.getUserInfo()!.type == 1) {
+          return const AdminMainPage();
+        }
+        return const AwesomeMainPage();
     } else {
       return  const AwesomeThinkLoginPage(title: 'AwesomeThink');
     }

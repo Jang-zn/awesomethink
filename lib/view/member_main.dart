@@ -1,5 +1,7 @@
+import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/utils/time_format_converter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AwesomeMainPage extends StatelessWidget {
   const AwesomeMainPage({Key? key}) : super(key: key);
@@ -21,9 +23,19 @@ void tempFunction(){
 
 }
 
+
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
+
+  FirebaseProvider? fp;
+
+  void logout(){
+    fp!.signOut();
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    fp = Provider.of<FirebaseProvider>(context);
     return Scaffold(
       body:SafeArea(
         child:ListView(
@@ -36,7 +48,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 children: [
                   //TODO 출퇴근기능
                   SizedBox(
-                      width:MediaQuery.of(context).size.width*0.4,
+                      width:MediaQuery.of(context).size.width*0.25,
                       child : const ElevatedButton(
                         onPressed: tempFunction,
                         child: Text("출근"),
@@ -45,10 +57,17 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
                   //TODO 휴무신청
                   SizedBox(
-                      width:MediaQuery.of(context).size.width*0.4,
+                      width:MediaQuery.of(context).size.width*0.25,
                       child : const ElevatedButton(
                         onPressed: tempFunction,
                         child: Text("휴무신청"),
+                      )
+                  ),
+                  SizedBox(
+                      width:MediaQuery.of(context).size.width*0.25,
+                      child : ElevatedButton(
+                        onPressed: logout,
+                        child: Text("로그아웃"),
                       )
                   )
                 ],

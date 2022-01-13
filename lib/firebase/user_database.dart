@@ -26,9 +26,9 @@ class UserDatabase{
     return queryUsers;
   }
 
-  Member getUserByUid (String uid) {
+  Future<Member> getUserByUid (String uid) async {
     Member user = Member();
-    firestore.collection("user").doc(uid).get().then(
+    await firestore.collection("user").doc(uid).get().then(
             (DocumentSnapshot ds){
           user.uid = ds["uid"];
           user.name = ds["name"];
