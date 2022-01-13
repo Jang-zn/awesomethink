@@ -53,11 +53,11 @@ class AuthPageState extends State<AuthPage> {
   Widget build (BuildContext context) {
     fp=Provider.of<FirebaseProvider>(context);
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
-    if (fp!.getUser() != null ) {
-        if (fp!.getUserInfo()!.state == false) {
+    if (fp!.getUserInfo()?.uid != null ) {
+        if (fp!.getUserInfo()?.state == false) {
           return const AuthWaitPage();
         }
-        if (fp!.getUserInfo()!.type == 1) {
+        if (fp!.getUserInfo()?.type == 1) {
           return const AdminMainPage();
         }
         return const AwesomeMainPage();

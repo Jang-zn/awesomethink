@@ -44,7 +44,19 @@ class UserDatabase{
     return user;
   }
 
-  Stream<QuerySnapshot>  getNewbieStream() {
+  Stream<QuerySnapshot> getNewbieStream() {
     return firestore.collection("user").where("state",isEqualTo: false).snapshots();
+  }
+
+  //TODO 주단위로 어케 꺼내오지??
+  Stream<QuerySnapshot> getWeeklyWorkStream(String uid) {
+    //현재 기준으로 지난 일요일 날짜 구하기
+    DateTime now = DateTime.now();
+    DateTime lastSunday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+    print(lastSunday.toString());
+    return firestore.collection("work")
+        .where("uid",isEqualTo: uid)//User id에 해당하는 work들
+        .where("startTime",isGreaterThanOrEqualTo: lastSunday)//중에서 일요일 기준으로 현재까지
+        .snapshots();
   }
 }

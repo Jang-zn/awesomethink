@@ -3,7 +3,7 @@
 import 'package:awesomethink/utils/constants.dart';
 
 class Work{
-  String? uid;
+  String? uid; //User uid
   DateTime? startTime;
   DateTime? endTime;
   int? workingTimeState;
@@ -14,25 +14,25 @@ class Work{
 
   Work.fromJson(Map<String, dynamic> json){
     uid=json['uid'];
-    startTime=json['startTime'];
-    endTime=json['endTime'];
+    startTime=json['startTime'].toDate();
+    endTime=json['endTime']?.toDate();
     workingTimeState=json['workingTimeState'];
-    updateDate=json['updateDate'];
+    updateDate=json['updateDate'].toDate();
   }
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['uid']=uid;
-    data['createTime']=startTime;
+    data['startTime']=startTime;
     data['endTime']=endTime;
     data['workingTimeState']=workingTimeState;
     data['updateDate']=updateDate;
     return data;
   }
 
-  Work createWork(Map<String, String>workMap){
+  Work createWork(String uid){
     Work work=Work();
-    work.uid = workMap["uid"];
+    work.uid = uid;
     work.startTime = DateTime.now();
     work.endTime = null;
     work.workingTimeState = WorkingTimeState.wait.index;
@@ -82,5 +82,8 @@ class Work{
     return result;
   }
 
-
+  @override
+  String toString() {
+    return 'Work{uid: $uid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate}';
+  }
 }

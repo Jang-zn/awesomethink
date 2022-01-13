@@ -1,5 +1,4 @@
 import 'package:awesomethink/firebase/user_database.dart';
-import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/widget/newbie_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +38,7 @@ class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
                 child: StreamBuilder(
                   stream : newbieList,
+
                   //snapshot type 지정 안하면 docs 못꺼내옴
                   builder: (BuildContext context, AsyncSnapshot snapshot){
                     if(!snapshot.hasData){
@@ -49,7 +49,6 @@ class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
                       children:
                         documentsList.map((eachDocument) => NewbieListTile(eachDocument)).toList(),
                     );
-
                   },
                 )
 

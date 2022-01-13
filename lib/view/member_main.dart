@@ -1,5 +1,10 @@
 import 'package:awesomethink/firebase/firebase_provider.dart';
+import 'package:awesomethink/firebase/user_database.dart';
+import 'package:awesomethink/model/member.dart';
+import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/utils/time_format_converter.dart';
+import 'package:awesomethink/widget/work_listtile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,10 +37,23 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     fp!.signOut();
   }
 
+  void setTodayWorkingTime(){
+    Work work = Work().createWork(fp!.getUser()!.uid);
+    print(work.toString());
+    FirebaseFirestore.instance.collection("work").doc()
+        .set(work.toJson());
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    print("main state build");
     fp = Provider.of<FirebaseProvider>(context);
+    Stream<QuerySnapshot> workStream = UserDatabase().getWeeklyWorkStream(fp!.getUser()!.uid);
+
+    Member? user = fp!.getUserInfo();
+
+
     return Scaffold(
       body:SafeArea(
         child:ListView(
@@ -49,9 +67,9 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   //TODO 출퇴근기능
                   SizedBox(
                       width:MediaQuery.of(context).size.width*0.25,
-                      child : const ElevatedButton(
-                        onPressed: tempFunction,
+                      child : ElevatedButton(
                         child: Text("출근"),
+                        onPressed: setTodayWorkingTime,
                       )
                   ),
 
@@ -77,10 +95,54 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
             //TODO XXX 사원님 이번주 근무시간은 xx시간 xx분, 잔여 의무 근로시간은 xx시간 xx분 남았습니다 멘트치는곳
             Container(
               margin:const EdgeInsets.symmetric(horizontal: 20),
-              height: MediaQuery.of(context).size.height*0.25,
+              padding:const EdgeInsets.all(10),
+              height: MediaQuery.of(context).size.height*0.22,
               decoration: BoxDecoration(
-                border: Border.all(color:Colors.black)
+                border: Border.all(color:Colors.grey)
               ),
+              child:Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin:EdgeInsets.only(bottom: 7),
+                    child:Row(
+                    children: [
+                      Text("${user?.name} ",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+                      Text("${user?.position} 님",style:TextStyle(fontSize: 18))
+                    ],
+                  )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                              margin:EdgeInsets.symmetric(vertical: 4),
+                              child:Text("이번주 근무시간 ")
+                          ),
+                          //TODO 주간 근무시간 계산로직..
+                          Container(
+                              margin:EdgeInsets.symmetric(vertical: 4),
+                              child:Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                              margin:EdgeInsets.symmetric(vertical: 4),
+                              child:Text("잔여 근로시간 ")
+                          ),
+                          Container(
+                              margin:EdgeInsets.symmetric(vertical: 4),
+                              child:Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                          )
+                        ],
+                      )
+                    ]
+                    ,),
+                ],
+              )
             ),
 
 
@@ -97,66 +159,22 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
               )
             ),
 
-            //TODO 이게 근태현황 넣어줄 위젯 context에서 리스트뷰 써서 컬럼으로 처리해도 된다.
-            Container(
-                margin:const EdgeInsets.symmetric(horizontal: 20,),
-                child:Column(
-                  children: [
-                    //TODO 근태 Data 처리영역
-                    Container(
-                      margin:EdgeInsets.symmetric(vertical:3),
-                      height: MediaQuery.of(context).size.height*0.1,
-                      decoration: BoxDecoration(
-                          border: Border.all(color:Colors.black)
-                      ),
-                      child:Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          //TODO 출근일, 출근시간 ~ 퇴근시간 찍힐곳
-                          Flexible(
-                            fit:FlexFit.tight,
-                            child:
-                              Column(
-                                children:[
-                                  Text(TimeFormatConverter.dateTimeToMMDDW(DateTime.now())),
-                                  Row(
-                                    children:[
-                                      Text(TimeFormatConverter.dateTimeToHHMM(DateTime.now())),
-                                      Text(" ~ "),
-                                      Text(TimeFormatConverter.dateTimeToHHMM(DateTime.now().add(const Duration(hours: 3)))),
-                                    ]
-                                  )
-                                ]
-                              ),
-                          ),
+            StreamBuilder(
+              stream:workStream,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if(!snapshot.hasData){
+                  return Container();
+                }
+                List<DocumentSnapshot> documentsList = snapshot.data!.docs;
+                return ListView(
 
-                          //TODO 출-퇴근 시간계산 00시간 00분 형태
-                          Flexible(
-                              fit:FlexFit.tight,
-                              child:
-                                Column(
-                                  children:[
-                                    Text("3시간 00분"),
-                                  ]
-                                ),
-                          ),
+                  //ListView안에 ListView 넣을수 있게 설정함. children 크기만큼 높이/길이를 갖게 만든다.
+                  shrinkWrap: true,
 
-                          //TODO '확정' 버튼
-                          Flexible(
-                              fit:FlexFit.tight,
-                              child:
-                                Column(
-                                  children: const [
-                                    ElevatedButton(onPressed: tempFunction, child: Text("확정"))
-                                  ],
-                                )
-                          )
-                        ],
-                      )
-                    ),
-
-                  ],
-                )
+                  children:
+                    documentsList.map((eachDocument) => WorkListTile(eachDocument)).toList(),
+                );
+              },
             )
           ],
         )
