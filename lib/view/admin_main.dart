@@ -1,5 +1,8 @@
+import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/view/new_member_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AdminMainPage extends StatefulWidget {
   const AdminMainPage({Key? key}) : super(key: key);
@@ -10,6 +13,8 @@ class AdminMainPage extends StatefulWidget {
 
 class _AdminMainPageState extends State<AdminMainPage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  late FirebaseProvider fp=Provider.of<FirebaseProvider>(context,listen:false);
+
   void tempFunc(){  }
 
   void newMemberAuthCheck(){
@@ -17,6 +22,9 @@ class _AdminMainPageState extends State<AdminMainPage> {
     Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NewMemberAuthPage()));
   }
 
+  void logout(){
+    fp.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +55,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
               title:Text("신규가입 신청"),
               onTap: newMemberAuthCheck
             ),
+            ListTile(
+                title:Text("로그아웃"),
+                onTap: logout
+            )
           ]
         ),
       ),

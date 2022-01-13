@@ -18,9 +18,6 @@ class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
     Navigator.of(context).pop();
   }
 
-  void click(){
-    print(newbieList.toString());
-  }
 
 
   @override
@@ -39,7 +36,7 @@ class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
         ),
         body: SafeArea(
             child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
                 child: StreamBuilder(
                   stream : newbieList,
                   //snapshot type 지정 안하면 docs 못꺼내옴

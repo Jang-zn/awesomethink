@@ -1,6 +1,7 @@
 
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/view/admin_main.dart';
+import 'package:awesomethink/view/auth_wait_page.dart';
 import 'package:awesomethink/view/login.dart';
 import 'package:awesomethink/view/member_main.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -59,13 +60,12 @@ class AuthPageState extends State<AuthPage> {
     if (fp.getUser() != null ) {
       print("user : "+user.toString());
       if(user.state==false){
-        return const AdminMainPage();
+        return const AuthWaitPage();
       }
       if(user.type==1){
         return const AdminMainPage();
       }
       return const AwesomeMainPage();
-
     } else {
       return  const AwesomeThinkLoginPage(title: 'AwesomeThink');
     }
