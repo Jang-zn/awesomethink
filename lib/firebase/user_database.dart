@@ -48,7 +48,7 @@ class UserDatabase{
     return firestore.collection("user").where("state",isEqualTo: false).snapshots();
   }
 
-  //TODO 주단위로 어케 꺼내오지??
+
   Stream<QuerySnapshot> getWeeklyWorkStream(String uid) {
     //현재 기준으로 지난 일요일 날짜 구하기
     DateTime now = DateTime.now();
@@ -58,5 +58,22 @@ class UserDatabase{
         .where("uid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime",isGreaterThanOrEqualTo: lastSunday)//중에서 일요일 기준으로 현재까지
         .snapshots();
+  }
+
+
+  //중복체크... List 길이 이용하면 되네
+  Future<bool> checkDuplication(String uid) async {
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    int total=0;
+    await firestore.collection('work')
+             .where("uid",isEqualTo: uid)
+             .where("startTime",isGreaterThanOrEqualTo: today)
+             .get()
+             .then((snapShot) {
+        total = snapShot.docs.length;
+    });
+    return total==0?true:false;
+
   }
 }

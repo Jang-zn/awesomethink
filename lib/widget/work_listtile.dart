@@ -1,6 +1,8 @@
 
 
 import 'package:awesomethink/model/work.dart';
+import 'package:awesomethink/service/work_validation.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -8,18 +10,25 @@ class WorkListTile extends StatelessWidget {
   late final DocumentSnapshot documentData;
   WorkListTile(this.documentData);
 
-  // //firestore data update 과정
-  // //Stream이라서 업데이트 되면 알아서 화면에서 지워짐
-  // void newbieAuth(){
-  //   print(documentData["email"]);
-  //   FirebaseFirestore.instance.collection("user").where("email", isEqualTo:documentData["email"]).get()
-  //       .then((val){
-  //     val.docs.forEach(
-  //             (element) {
-  //           element.reference.update({"state":true});
-  //         });
-  //   });
-  // }
+  //firestore data update 과정
+  //Stream이라서 업데이트 되면 알아서 화면에서 지워짐
+  void workingCheck(){
+    //1. Validation - 출/퇴근시간 찍혔는지 확인
+
+    //2. 확인창 띄우고 확인하면 체크됨.
+
+    //우선 바로 눌리게 해놈
+    if(WorkValidation().checkInOut(documentData)){
+      FirebaseFirestore.instance.collection("work").doc(documentData.id).get()
+          .then((val){
+              val.reference.update({"workingTimeState":WorkingTimeState.check.index});
+      });
+    }else{
+
+    }
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +41,7 @@ class WorkListTile extends StatelessWidget {
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(5.0),
         ),
-        child: ListTile(
+        child: Stack(children:[ListTile(
           title: Container(
               margin:EdgeInsets.only(bottom:8),
               child:Row(
@@ -40,26 +49,6 @@ class WorkListTile extends StatelessWidget {
                     Text(work.createTimeToMMDDW()),
                     SizedBox(width: 10, height: 10),
                     Text(work.workingTimeCalc()),
-                    SizedBox(width: 120, height: 10),
-                    Container(
-                        width:60,
-                        height:20,
-                        child: TextButton(
-                            child: const Text("확정",
-                                style:TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                )
-                            ),
-                            style: TextButton.styleFrom(
-                                primary: Colors.black,
-                                padding:EdgeInsets.zero,
-                                backgroundColor: Colors.lightGreen
-                            ),
-                            onPressed: (){}
-                        )
-                    )
                   ]
               )
           ),
@@ -69,6 +58,27 @@ class WorkListTile extends StatelessWidget {
             ],
           ),
         ),
+          Container(
+              margin:EdgeInsets.only(top:20, left:250),
+              width:60,
+              height:30,
+              child: TextButton(
+                  child: const Text("확정",
+                      style:TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      )
+                  ),
+                  style: TextButton.styleFrom(
+                      primary: Colors.black,
+                      padding:EdgeInsets.zero,
+                      backgroundColor: Colors.lightGreen
+                  ),
+                  onPressed: (){}
+              )
+          )
+        ]),
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
-import 'package:awesomethink/utils/time_format_converter.dart';
+import 'package:awesomethink/service/work_validation.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -32,31 +32,66 @@ void tempFunction(){
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   FirebaseProvider? fp;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void logout(){
+  void logout() {
     fp!.signOut();
   }
 
-  void setTodayWorkingTime(){
+  void setTodayWorkingTime() async{
     Work work = Work().createWork(fp!.getUser()!.uid);
     print(work.toString());
-    FirebaseFirestore.instance.collection("work").doc()
-        .set(work.toJson());
+
+    //당일 중복등록 못하게 방지
+    bool checkDuplication = await UserDatabase().checkDuplication(work.uid!);
+
+    if(checkDuplication) {
+      FirebaseFirestore.instance.collection("work").doc()
+          .set(work.toJson());
+    }else{
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+          const SnackBar(
+            content: Text("당일 중복등록 불가",
+                style:TextStyle(color:Colors.red, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: Colors.black,
+          )
+      );
+    }
   }
 
+  void showSnack(){
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+        const SnackBar(
+          content: Text("퇴근후 가능합니다.",
+              style:TextStyle(color:Colors.red, fontWeight: FontWeight.bold)
+          ),
+          backgroundColor: Colors.black,
+        )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body:MemberMainWidget(),
+      key:_scaffoldKey
+    );
+  }
+
+
+
+  Widget MemberMainWidget(){
     print("main state build");
     fp = Provider.of<FirebaseProvider>(context);
     Stream<QuerySnapshot> workStream = UserDatabase().getWeeklyWorkStream(fp!.getUser()!.uid);
-
     Member? user = fp!.getUserInfo();
-
-
-    return Scaffold(
-      body:SafeArea(
+    return SafeArea(
         child:ListView(
+          shrinkWrap: true,
           children: [
             //출퇴근버튼, 휴무신청버튼
             Container(
@@ -68,7 +103,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   SizedBox(
                       width:MediaQuery.of(context).size.width*0.25,
                       child : ElevatedButton(
-                        child: Text("출근"),
+                        child: const Text("출근"),
                         onPressed: setTodayWorkingTime,
                       )
                   ),
@@ -85,7 +120,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                       width:MediaQuery.of(context).size.width*0.25,
                       child : ElevatedButton(
                         onPressed: logout,
-                        child: Text("로그아웃"),
+                        child: const Text("로그아웃"),
                       )
                   )
                 ],
@@ -104,11 +139,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin:EdgeInsets.only(bottom: 7),
+                    margin:const EdgeInsets.only(bottom: 7),
                     child:Row(
                     children: [
-                      Text("${user?.name} ",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-                      Text("${user?.position} 님",style:TextStyle(fontSize: 18))
+                      Text("${user?.name} ",style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+                      Text("${user?.position} 님",style:const TextStyle(fontSize: 18))
                     ],
                   )),
                   Row(
@@ -117,25 +152,25 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                       Column(
                         children: [
                           Container(
-                              margin:EdgeInsets.symmetric(vertical: 4),
-                              child:Text("이번주 근무시간 ")
+                              margin:const EdgeInsets.symmetric(vertical: 4),
+                              child:const Text("이번주 근무시간 ")
                           ),
                           //TODO 주간 근무시간 계산로직..
                           Container(
-                              margin:EdgeInsets.symmetric(vertical: 4),
-                              child:Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                              margin:const EdgeInsets.symmetric(vertical: 4),
+                              child:const Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                           ),
                         ],
                       ),
                       Column(
                         children: [
                           Container(
-                              margin:EdgeInsets.symmetric(vertical: 4),
-                              child:Text("잔여 근로시간 ")
+                              margin:const EdgeInsets.symmetric(vertical: 4),
+                              child:const Text("잔여 근로시간 ")
                           ),
                           Container(
-                              margin:EdgeInsets.symmetric(vertical: 4),
-                              child:Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                              margin:const EdgeInsets.symmetric(vertical: 4),
+                              child:const Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                           )
                         ],
                       )
@@ -166,20 +201,20 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   return Container();
                 }
                 List<DocumentSnapshot> documentsList = snapshot.data!.docs;
-                return ListView(
-
+                return Container(
+                  margin:const EdgeInsets.symmetric(horizontal: 10),
+                  child:ListView(
+                    shrinkWrap: true,
                   //ListView안에 ListView 넣을수 있게 설정함. children 크기만큼 높이/길이를 갖게 만든다.
-                  shrinkWrap: true,
-
-                  children:
-                    documentsList.map((eachDocument) => WorkListTile(eachDocument)).toList(),
+                    children:
+                      documentsList.map((eachDocument) => WorkListTile(eachDocument)).toList(),
+                    )
                 );
               },
             )
           ],
         )
-      )
-    );
+      );
   }
 }
 
