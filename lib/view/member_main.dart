@@ -49,9 +49,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
       FirebaseFirestore.instance.collection("work").doc()
           .set(work.toJson());
     }else{
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context)
           .showSnackBar(
           const SnackBar(
+            duration: Duration(seconds: 1),
             content: Text("당일 중복등록 불가",
                 style:TextStyle(color:Colors.red, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,

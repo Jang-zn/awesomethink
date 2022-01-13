@@ -25,9 +25,11 @@ class WorkListTile extends StatelessWidget {
               val.reference.update({"workingTimeState":WorkingTimeState.check.index});
       });
     }else{
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context)
           .showSnackBar(
           const SnackBar(
+            duration: Duration(seconds: 1),
             content: Text("퇴근후 가능합니다.",
                 style:TextStyle(color:Colors.red, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
