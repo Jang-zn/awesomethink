@@ -1,8 +1,8 @@
 import 'package:awesomethink/firebase/firebase_provider.dart';
+import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
-import 'package:awesomethink/service/work_validation.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -33,36 +33,52 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   FirebaseProvider? fp;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool workInOut = false; //false : 퇴근상태 / true : 출근상태
+  Work? todayWork;
 
   void logout() {
     fp!.signOut();
   }
 
-  void setTodayWorkingTime() async{
-    Work work = Work().createWork(fp!.getUser()!.uid);
-    print(work.toString());
-
-    //당일 중복등록 못하게 방지
-    bool checkDuplication = await UserDatabase().checkDuplication(work.uid!);
-
-    if(checkDuplication) {
-      FirebaseFirestore.instance.collection("work").doc()
-          .set(work.toJson());
-    }else{
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-          const SnackBar(
-            duration: Duration(seconds: 1),
-            content: Text("당일 중복등록 불가",
+  void startTodayWorkingTime() async{
+    todayWork = Work().createWork(fp!.getUser()!.uid);
+    workInOut = workInOut==false?true:false;
+      //당일 중복등록 못하게 validation
+      bool checkDuplication = await UserDatabase().checkDuplication(todayWork!.uid!);
+      //첫출근인경우
+      if(checkDuplication) {
+        FirebaseFirestore.instance.collection("work").doc()
+            .set(todayWork!.toJson());
+      //당일에 퇴근후 출근 또누른경우
+      }else{
+        workInOut=false; //
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 1),
+              content: Text("당일 중복등록 불가",
                 style:TextStyle(color:Colors.red, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            backgroundColor: Colors.black,
-          )
-      );
-    }
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: Colors.black,
+            )
+        );
+      }
+      setState(() {}); //button 바꾸기 위해 호출 나중에 바꾸든가..
   }
+
+  void endTodayWorkingTime() async{
+    //TODO work 관련한건 provider로 교체
+    workInOut = workInOut==false?true:false;
+    todayWork!.endTime = DateTime.now();
+    FirebaseFirestore.instance.collection("work").doc()
+          .update(todayWork!.toJson());
+    //당일에 퇴근후 출근 또누른경우
+    setState(() {}); //button 바꾸기 위해 호출 나중에 바꾸든가..
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,10 +108,22 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   //TODO 출퇴근기능
                   SizedBox(
                       width:MediaQuery.of(context).size.width*0.25,
-                      child : ElevatedButton(
-                        child: const Text("출근"),
-                        onPressed: setTodayWorkingTime,
-                      )
+                      child :
+                        workInOut==false
+                            ? ElevatedButton(
+                                child: const Text("출근"),
+                                onPressed: startTodayWorkingTime,
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.blueAccent,
+                                ),
+                              )
+                            : ElevatedButton(
+                                child: const Text("퇴근"),
+                                onPressed: endTodayWorkingTime,
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green,
+                                )
+                              )
                   ),
 
                   //TODO 휴무신청
