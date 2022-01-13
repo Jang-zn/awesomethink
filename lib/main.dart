@@ -1,17 +1,12 @@
 
-import 'dart:io';
-
-import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/view/admin_main.dart';
 import 'package:awesomethink/view/auth_wait_page.dart';
-import 'package:awesomethink/view/loading_page.dart';
 import 'package:awesomethink/view/login.dart';
 import 'package:awesomethink/view/member_main.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase/firebase_provider.dart';
-import 'model/member.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,8 +41,7 @@ class AuthPage extends StatefulWidget {
 
   @override
   AuthPageState createState() {
-      pageState = AuthPageState();
-      return pageState;
+      return AuthPageState();
   }
 }
 

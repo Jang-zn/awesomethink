@@ -1,7 +1,6 @@
 
 
 import 'package:awesomethink/utils/constants.dart';
-import 'package:flutter/widgets.dart';
 
 class Member{
   String? uid;
