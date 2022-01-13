@@ -62,18 +62,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     }
   }
 
-  void showSnack(){
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
-        const SnackBar(
-          content: Text("퇴근후 가능합니다.",
-              style:TextStyle(color:Colors.red, fontWeight: FontWeight.bold)
-          ),
-          backgroundColor: Colors.black,
-        )
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,7 +195,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                     shrinkWrap: true,
                   //ListView안에 ListView 넣을수 있게 설정함. children 크기만큼 높이/길이를 갖게 만든다.
                     children:
-                      documentsList.map((eachDocument) => WorkListTile(eachDocument)).toList(),
+                      documentsList.map((eachDocument) => WorkListTile(eachDocument, context)).toList(),
                     )
                 );
               },

@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 
 class WorkListTile extends StatelessWidget {
   late final DocumentSnapshot documentData;
-  WorkListTile(this.documentData);
+  BuildContext context;
+  WorkListTile(this.documentData, this.context);
 
   //firestore data update 과정
   //Stream이라서 업데이트 되면 알아서 화면에서 지워짐
@@ -24,7 +25,16 @@ class WorkListTile extends StatelessWidget {
               val.reference.update({"workingTimeState":WorkingTimeState.check.index});
       });
     }else{
-
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+          const SnackBar(
+            content: Text("퇴근후 가능합니다.",
+                style:TextStyle(color:Colors.red, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+            ),
+            backgroundColor: Colors.black,
+          )
+      );
     }
 
 
@@ -75,7 +85,7 @@ class WorkListTile extends StatelessWidget {
                       padding:EdgeInsets.zero,
                       backgroundColor: Colors.lightGreen
                   ),
-                  onPressed: (){}
+                  onPressed: workingCheck
               )
           )
         ]),
