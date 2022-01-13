@@ -39,15 +39,15 @@ class Member{
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['uid']=this.uid;
-    data['name']=this.name;
-    data['position']=this.position;
-    data['email']=this.email;
-    data['phone']=this.phone;
-    data['type']=this.type;
-    data['state']=this.state;
-    data['joinedDate']=this.joinedDate;
-    data['retiredDate']=this.retiredDate;
+    data['uid']=uid;
+    data['name']=name;
+    data['position']=position;
+    data['email']=email;
+    data['phone']=phone;
+    data['type']=type;
+    data['state']=state;
+    data['joinedDate']=joinedDate;
+    data['retiredDate']=retiredDate;
 
     return data;
   }

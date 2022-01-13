@@ -1,13 +1,13 @@
-import 'dart:io';
-
 import 'package:awesomethink/model/member.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class UserDatabase{
 
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection("user");
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late CollectionReference userCollection = firestore.collection("user");
+  late Stream<QuerySnapshot> currentStream = firestore.collection("user").snapshots();
+
   storeUserData(Member user) async{
     DocumentReference documentReference = userCollection.doc(user.uid);
 
@@ -44,21 +44,7 @@ class UserDatabase{
     return user;
   }
 
-  List<Member> getNewbie() {
-    List<Member> list = [];
-    firestore.collection("user").doc().get().then((DocumentSnapshot ds) {
-      Member user = Member();
-      user.uid = ds["uid"];
-      user.name = ds["name"];
-      user.email = ds["email"];
-      user.type = ds["type"];
-      user.state = ds["state"];
-      user.phone = ds["phone"];
-      user.position = ds["position"];
-      user.joinedDate = ds["joinedDate"]?.toDate();
-      user.retiredDate = ds["retiredDate"]?.toDate();
-      list.add(user);
-    });
-    return list;
+  Stream<QuerySnapshot>  getNewbieStream() {
+    return firestore.collection("user").where("state",isEqualTo: false).snapshots();
   }
 }

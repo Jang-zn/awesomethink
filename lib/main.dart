@@ -1,16 +1,11 @@
-import 'dart:io';
 
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/view/admin_main.dart';
-import 'package:awesomethink/view/auth_wait_page.dart';
 import 'package:awesomethink/view/login.dart';
 import 'package:awesomethink/view/member_main.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'firebase/firebase_provider.dart';
 import 'model/member.dart';
 
@@ -21,7 +16,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => FirebaseProvider()),
       ],
-      child: AwesomeThink()));
+      child: const AwesomeThink()));
 }
 
 class AwesomeThink extends StatelessWidget {
@@ -43,15 +38,13 @@ class AwesomeThink extends StatelessWidget {
 //인증서비스 첫페이지 --> 로그인 화면에서 singUp 하면 여기로 넘어옴
 
 
-late AuthPageState pageState;
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
 
   @override
   AuthPageState createState() {
-    pageState = AuthPageState();
-    return pageState;
+    return AuthPageState();
   }
 }
 
@@ -66,15 +59,15 @@ class AuthPageState extends State<AuthPage> {
     if (fp.getUser() != null ) {
       print("user : "+user.toString());
       if(user.state==false){
-        return AdminMainPage();
+        return const AdminMainPage();
       }
       if(user.type==1){
-        return AdminMainPage();
+        return const AdminMainPage();
       }
-      return AwesomeMainPage();
+      return const AwesomeMainPage();
 
     } else {
-      return  AwesomeThinkLoginPage(title: 'AwesomeThink');
+      return  const AwesomeThinkLoginPage(title: 'AwesomeThink');
     }
   }
 }
