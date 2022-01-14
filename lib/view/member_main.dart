@@ -4,6 +4,7 @@ import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   }
 
   void startTodayWorkingTime() async{
+    workProvider!.setWorkEnd(false);
     todayWork = Work().createWork(firebaseProvider!.getUser()!.uid);
       //당일 중복등록 못하게 validation
       bool checkDuplication = await UserDatabase().checkDuplication(todayWork!.userUid!);
@@ -54,19 +56,23 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
         //work doc 생성
         firestore.collection("work").doc().set(todayWork!.toJson());
 
-        //한김에 workUid 없는애들 다 넣어줌
-        firestore.collection("work")
+        //workUid 넣어줌
+        //await 안쓰면 uid 날라간다.
+        await firestore.collection("work")
+            .where("userUid",isEqualTo: todayWork!.userUid)
             .where("workUid",isNull: true)
             .get().then(
                 (value) {
               value.docs.forEach((doc) {
+                todayWork!.workUid = doc.id;
                 doc.reference.update({"workUid":doc.id});
               });
             }
         );
+
       //당일에 퇴근후 출근 또누른경우
       }else{
-        workEnd=false; //
+        workProvider!.setWorkEnd(false); //
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context)
             .showSnackBar(
@@ -80,11 +86,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
             )
         );
       }
-      setState(() {}); //button 바꾸기 위해 호출 나중에 바꾸든가..
   }
 
   void endTodayWorkingTime() async{
     todayWork!.endTime = DateTime.now();
+    workProvider!.setWorkEnd(true);
     FirebaseFirestore.instance.collection("work")
         .where("userUid",isEqualTo: todayWork!.userUid)
         .where("endTime",isNull: true).get().then(
@@ -94,8 +100,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
               });
             }
         );
-    //당일에 퇴근후 출근 또누른경우
-    setState(() {}); //button 바꾸기 위해 호출 나중에 바꾸든가..
   }
 
 
@@ -111,10 +115,9 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
 
   Widget MemberMainWidget(){
-    print("main state build");
     firebaseProvider = Provider.of<FirebaseProvider>(context);
     workProvider = Provider.of<WorkProvider>(context);
-    workEnd = workProvider!.getWorkInOut()!;
+    workEnd = workProvider!.getWorkEnd()!;
 
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUser()!.uid);
 

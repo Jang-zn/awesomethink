@@ -1,6 +1,5 @@
 import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
-import 'package:awesomethink/service/work_validation.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +27,10 @@ class _WorkListTileState extends State<WorkListTile> {
 
 
   void workingCheck() {
-    //2. 확인창 띄우고 확인하면 체크됨.
-
+    //TODO 2. 확인창 띄우고 확인하면 체크됨.
     //우선 바로 눌리게 해놈
-    if (WorkValidation().checkInOut(documentData)) {
+    if (workProvider!.getWorkEnd()!) {
+      setState(() {});
       FirebaseFirestore.instance
           .collection("work")
           .doc(documentData.id)
@@ -57,7 +56,7 @@ class _WorkListTileState extends State<WorkListTile> {
   @override
   Widget build(BuildContext context) {
     Work work = Work.fromJson((documentData.data()) as Map<String, dynamic>);
-    workEnd = workProvider!.getWorkInOut()!;
+    workEnd = workProvider!.getWorkEnd()!;
 
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),

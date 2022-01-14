@@ -1,4 +1,3 @@
-import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +19,13 @@ class WorkProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool? getWorkInOut(){
+  bool? getWorkEnd(){
     return _workEnd;
+  }
+
+  void setWorkEnd(bool tof){
+    _workEnd=tof;
+    notifyListeners();
   }
 
 

@@ -66,7 +66,7 @@ class Work{
     if(endTime!=null){
      duration=endTime!.difference(startTime!);
      int total = duration.inMinutes;
-     int h = (total-total%60)/60 as int;
+     int h = (total-total%60)~/60;
      int m = total%60;
      String hour = h.toString();
      String minute = m>9?m.toString():"0"+m.toString();
