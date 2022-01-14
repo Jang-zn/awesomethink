@@ -55,9 +55,12 @@ class UserDatabase{
     DateTime now = DateTime.now();
     DateTime lastSunday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
     print(lastSunday.toString());
+
+
     return firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
-        .where("startTime",isGreaterThanOrEqualTo: lastSunday)//중에서 일요일 기준으로 현재까지
+        .where("startTime",isGreaterThanOrEqualTo: lastSunday)
+        .orderBy("startTime",descending: true)//중에서 일요일 기준으로 현재까지
         .snapshots();
   }
 

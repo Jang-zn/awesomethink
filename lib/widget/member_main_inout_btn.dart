@@ -2,7 +2,6 @@ import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +24,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   final FirebaseProvider firebaseProvider;
   final WorkProvider workProvider;
   Work? todayWork;
+  Work? recentWork;
 
   _WorkInOutBtnState(
       {required this.firebaseProvider, required this.workProvider});
@@ -73,7 +73,28 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   }
 
   void endTodayWorkingTime() async {
-    todayWork!.endTime = DateTime.now();
+    //recentWork 퇴근 안한경우 -> 퇴근 안누름
+    if(recentWork!=null&&recentWork?.endTime==null){
+      recentWork?.endTime = DateTime(recentWork!.startTime!.year,recentWork!.startTime!.month,recentWork!.startTime!.day,18,0);
+      FirebaseFirestore.instance.collection("work")
+          .where("workUid", isEqualTo: recentWork!.workUid)
+          .get().then(
+              (value) {
+            value.docs.forEach((doc) {
+              doc.reference.update(recentWork!.toJson());
+            });
+          }
+      ).whenComplete(
+              () {
+            workProvider.setRecentWork(recentWork);
+            todayWork=null;
+          }
+      );
+      return;
+    }
+
+    //recentWork 퇴근 잘 한경우 -> todayWork로 처리
+    todayWork?.endTime = DateTime.now();
     FirebaseFirestore.instance.collection("work")
         .where("userUid", isEqualTo: todayWork!.userUid)
         .where("endTime", isNull: true).get().then(
@@ -92,8 +113,14 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
 
   @override
+  void didChangeDependencies() {
+    recentWork= workProvider.getRecentWork();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (todayWork==null) {
+    if (recentWork==null||recentWork?.endTime!=null) {
+      print(recentWork.toString());
       return ElevatedButton(
         child: const Text("출근"),
         onPressed: startTodayWorkingTime,

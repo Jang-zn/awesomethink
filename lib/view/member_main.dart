@@ -165,15 +165,23 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 if(!snapshot.hasData){
                   return Container();
                 }
+
+                //리스트로 불러와서 처리할 snapshot 가져옴
                 List<DocumentSnapshot> documentsList = snapshot.data!.docs;
+
+                //workProvider에다가 '최근' work 저장 -> recentWork
+                workProvider!.setRecentWork(Work.fromJson(documentsList.first.data() as Map<String, dynamic>));
+
                 return Container(
                   margin:const EdgeInsets.symmetric(horizontal: 10),
                   child:ListView(
+
+                    //ListView안에 ListView 넣을수 있게 설정함. children 크기만큼 높이/길이를 갖게 만든다.
                     shrinkWrap: true,
-                  //ListView안에 ListView 넣을수 있게 설정함. children 크기만큼 높이/길이를 갖게 만든다.
+
                     children:
                       documentsList.map(
-                              (eachDocument) => WorkListTile(eachDocument,workProvider!)).toList(),
+                              (eachDocument) =>WorkListTile(eachDocument,workProvider!)).toList(),
                     )
                 );
               },

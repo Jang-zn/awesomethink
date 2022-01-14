@@ -16,6 +16,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   final Work? work;
   final WorkProvider? workProvider;
+  bool isVisible = true;
 
   _WorkListTileCheckBtnState({required this.work, required this.workProvider});
 
@@ -32,13 +33,20 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
           .update({"workingTimeState": WorkingTimeState.check.index});
     }).whenComplete(() {
       work!.workingTimeState!=WorkingTimeState.check;
-      workProvider!.setTodayWork(work);
+      setState(() {
+        workProvider!.setTodayWork(work);
+        isVisible=false;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if(!isVisible){
+      return Container();
+    }
     if (work?.workingTimeState== WorkingTimeState.wait.index&&work?.endTime!=null) {
+      isVisible=true;
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,

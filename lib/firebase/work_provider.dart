@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 class WorkProvider with ChangeNotifier {
   Member? currentUser;
   Work? todayWork;
+  Work? recentWork;
   Logger logger = Logger();
 
   WorkProvider(Member? user) {
@@ -17,9 +18,17 @@ class WorkProvider with ChangeNotifier {
     return todayWork;
   }
 
+  Work? getRecentWork(){
+    return recentWork;
+  }
+
   void setTodayWork(Work? work){
     todayWork=work;
     notifyListeners();
+  }
+
+  void setRecentWork(Work? work){
+    recentWork=work;
   }
 
 
