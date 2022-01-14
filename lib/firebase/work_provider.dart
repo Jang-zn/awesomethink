@@ -5,17 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class WorkProvider with ChangeNotifier {
-  Member? currentUser = FirebaseProvider().getUserInfo();
+  Member? currentUser;
   late bool _workEnd;
   Logger logger = Logger();
 
-  WorkProvider() {
+  WorkProvider(Member? user) {
+    logger.d("init WorkProvider");
+    currentUser = user;
     _isWorkEnd();
   }
 
   Future<void> _isWorkEnd() async {
     _workEnd=await UserDatabase().isWorkEnd(currentUser?.uid);
-    logger.d("init WorkProvider");
     notifyListeners();
   }
 

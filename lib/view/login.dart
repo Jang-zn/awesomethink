@@ -50,7 +50,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
             ),
           ));
       }
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
   void signUp(){
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>SignUpPage()));
