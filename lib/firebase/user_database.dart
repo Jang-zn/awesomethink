@@ -62,12 +62,12 @@ class UserDatabase{
 
 
   //중복체크... List 길이 이용하면 되네
-  Future<bool> checkDuplication(String useruid) async {
+  Future<bool> checkDuplication(String userUid) async {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     int total=0;
     await firestore.collection('work')
-             .where("userUid",isEqualTo: useruid)
+             .where("userUid",isEqualTo: userUid)
              .where("startTime",isGreaterThanOrEqualTo: today)
              .get()
              .then((snapShot) {
@@ -75,4 +75,21 @@ class UserDatabase{
     });
     return total==0?true:false;
   }
+
+
+  //퇴근 안눌렀는지 체크
+  Future<bool> isWorkEnd(String? userUid) async {
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    int total=0;
+    await firestore.collection('work')
+        .where("userUid",isEqualTo: userUid)
+        .where("endTime",isNull: true)
+        .get()
+        .then((snapShot) {
+      total = snapShot.docs.length;
+    });
+    return total==0?true:false;
+  }
+
 }

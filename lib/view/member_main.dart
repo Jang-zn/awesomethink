@@ -1,6 +1,7 @@
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
+import 'package:awesomethink/firebase/work_controller.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
@@ -31,19 +32,20 @@ void tempFunction(){
 
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
-  FirebaseProvider? fp;
+  FirebaseProvider? firebaseProvider;
   Stream<QuerySnapshot>? workStream;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool workInOut = false; //false : 퇴근상태 / true : 출근상태
+  WorkProvider? workProvider;
   Work? todayWork;
+  bool? workInOut;
+
 
   void logout() {
-    fp!.signOut();
+    firebaseProvider!.signOut();
   }
 
   void startTodayWorkingTime() async{
-    todayWork = Work().createWork(fp!.getUser()!.uid);
-    workInOut = workInOut==false?true:false;
+    todayWork = Work().createWork(firebaseProvider!.getUser()!.uid);
       //당일 중복등록 못하게 validation
       bool checkDuplication = await UserDatabase().checkDuplication(todayWork!.userUid!);
       //첫출근인경우
@@ -112,10 +114,13 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   Widget MemberMainWidget(){
     print("main state build");
-    fp = Provider.of<FirebaseProvider>(context);
-    workStream = UserDatabase().getWeeklyWorkStream(fp!.getUser()!.uid);
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
+    workProvider = Provider.of<WorkProvider>(context);
+    workInOut = workProvider!.getWorkInOut();
 
-    Member? user = fp!.getUserInfo();
+    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUser()!.uid);
+
+    Member? user = firebaseProvider!.getUserInfo();
     return SafeArea(
         child:ListView(
           shrinkWrap: true,
