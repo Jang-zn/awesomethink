@@ -69,7 +69,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
               });
             }
         );
-
       //당일에 퇴근후 출근 또누른경우
       }else{
         workProvider!.setWorkEnd(false); //

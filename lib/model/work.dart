@@ -25,7 +25,7 @@ class Work{
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['userUid']=userUid;
-    data['workUid']=null;
+    data['workUid']=workUid;
     data['startTime']=startTime;
     data['endTime']=endTime;
     data['workingTimeState']=workingTimeState;
@@ -53,9 +53,9 @@ class Work{
 
   String workingTimeToHHMM(){
     String startHour = startTime!.hour.toString();
-    String startMinute = startTime!.minute.toString();
+    String startMinute = startTime!.minute<10?"0"+startTime!.minute.toString():startTime!.minute.toString();
     String endHour = endTime==null?"":endTime!.hour.toString();
-    String endMinute = endTime==null?"":endTime!.minute.toString();
+    String endMinute = endTime!.minute<10?"0"+endTime!.minute.toString():endTime!.minute.toString();
     String result = startHour+":"+startMinute+" ~ "+endHour+":"+endMinute;
     return result;
   }

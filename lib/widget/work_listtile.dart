@@ -20,6 +20,7 @@ class _WorkListTileState extends State<WorkListTile> {
   late final DocumentSnapshot documentData;
   BuildContext context;
   late bool workEnd;
+  bool isVisible = true;
 
   _WorkListTileState(this.documentData, this.context) {
     workProvider= Provider.of<WorkProvider>(context);
@@ -29,28 +30,17 @@ class _WorkListTileState extends State<WorkListTile> {
   void workingCheck() {
     //TODO 2. 확인창 띄우고 확인하면 체크됨.
     //우선 바로 눌리게 해놈
-    if (workProvider!.getWorkEnd()!) {
-      setState(() {});
-      FirebaseFirestore.instance
+    FirebaseFirestore.instance
           .collection("work")
           .doc(documentData.id)
           .get()
           .then((val) {
         val.reference
             .update({"workingTimeState": WorkingTimeState.check.index});
-      });
-    } else {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        duration: Duration(seconds: 1),
-        content: Text(
-          "퇴근후 가능합니다.",
-          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
-        backgroundColor: Colors.black,
-      ));
-    }
+    });
+    setState(() {
+      isVisible=false;
+    });
   }
 
   @override
@@ -80,6 +70,8 @@ class _WorkListTileState extends State<WorkListTile> {
                 ],
               ),
             ),
+           isVisible
+               ?
             workEnd
                 ? Container(
                     margin: EdgeInsets.only(top: 20, left: 250),
@@ -115,6 +107,7 @@ class _WorkListTileState extends State<WorkListTile> {
                             padding: EdgeInsets.zero,
                             backgroundColor: Colors.grey),
                         onPressed: (){}))
+               : Container()
           ]),
         ));
   }
