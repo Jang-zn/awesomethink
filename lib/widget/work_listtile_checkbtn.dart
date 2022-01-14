@@ -1,35 +1,44 @@
+import 'package:awesomethink/firebase/work_provider.dart';
+import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class WorkListTileCheckBtn extends StatefulWidget {
-  const WorkListTileCheckBtn({Key? key, required this.documentData}) : super(key: key);
-  final DocumentSnapshot documentData;
+  const WorkListTileCheckBtn({Key? key, required this.work, required this.workProvider}) : super(key: key);
+  final Work work;
+  final WorkProvider? workProvider;
   @override
-  _WorkListTileCheckBtnState createState() => _WorkListTileCheckBtnState(documentData: documentData);
+  _WorkListTileCheckBtnState createState() => _WorkListTileCheckBtnState(work: work, workProvider: workProvider);
 }
 
 class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
-  final DocumentSnapshot documentData;
+  final Work? work;
+  final WorkProvider? workProvider;
 
-  _WorkListTileCheckBtnState({required this.documentData});
+  _WorkListTileCheckBtnState({required this.work, required this.workProvider});
+
+
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
     //우선 바로 눌리게 해놈
     FirebaseFirestore.instance
         .collection("work")
-        .doc(documentData.id)
+        .doc(work?.workUid)
         .get()
         .then((val) {
       val.reference
           .update({"workingTimeState": WorkingTimeState.check.index});
+    }).whenComplete(() {
+      work!.workingTimeState!=WorkingTimeState.check;
+      workProvider!.setTodayWork(work);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (documentData["workingTimeState"] == WorkingTimeState.wait.index) {
+    if (work?.workingTimeState== WorkingTimeState.wait.index&&work?.endTime!=null) {
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
@@ -50,7 +59,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
               }));
     } else {
       return Container();
-
     }
   }
 }

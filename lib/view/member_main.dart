@@ -177,7 +177,8 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                     shrinkWrap: true,
                   //ListView안에 ListView 넣을수 있게 설정함. children 크기만큼 높이/길이를 갖게 만든다.
                     children:
-                      documentsList.map((eachDocument) => WorkListTile(eachDocument, context)).toList(),
+                      documentsList.map(
+                              (eachDocument) => WorkListTile(eachDocument, context)).toList(),
                     )
                 );
               },

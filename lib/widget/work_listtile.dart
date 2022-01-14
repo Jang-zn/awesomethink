@@ -24,6 +24,7 @@ class _WorkListTileState extends State<WorkListTile> {
 
   _WorkListTileState(this.documentData, this.context) {
     workProvider= Provider.of<WorkProvider>(context);
+    workProvider!.setTodayWork(Work.fromJson((documentData.data()) as Map<String, dynamic>));
   }
 
   @override
@@ -54,7 +55,7 @@ class _WorkListTileState extends State<WorkListTile> {
                 ],
               ),
             ),
-            WorkListTileCheckBtn(documentData: documentData)
+            WorkListTileCheckBtn(work:work, workProvider: workProvider,)
           ])
             :
               Container()

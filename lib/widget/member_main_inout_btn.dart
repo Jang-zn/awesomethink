@@ -32,8 +32,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   void startTodayWorkingTime() async {
     todayWork = Work().createWork(firebaseProvider.getUser()!.uid);
-    workProvider.setTodayWork(todayWork);
-
     //당일 중복등록 못하게 validation
     bool checkDuplication = await UserDatabase().checkDuplication(
         todayWork!.userUid!);
@@ -56,7 +54,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
             });
           }
       );
-
+      workProvider.setTodayWork(todayWork);
       //당일에 퇴근후 출근 또누른경우
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
