@@ -1,10 +1,8 @@
 import 'package:awesomethink/firebase/firebase_provider.dart';
-import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:awesomethink/widget/member_main_inout_btn.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,8 +39,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   Work? todayWork;
 
 
-  void logout() {
-    firebaseProvider!.signOut();
+  @override
+  void didChangeDependencies() {
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
+    workProvider = Provider.of<WorkProvider>(context);
+    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUser()!.uid);
   }
 
   @override
@@ -53,14 +54,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     );
   }
 
-
+  void logout() {
+    firebaseProvider!.signOut();
+  }
 
   Widget MemberMainWidget(){
-    firebaseProvider = Provider.of<FirebaseProvider>(context);
-    workProvider = Provider.of<WorkProvider>(context);
-
-    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUser()!.uid);
-
     Member? user = firebaseProvider!.getUserInfo();
     return SafeArea(
         child:ListView(
@@ -149,9 +147,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 ],
               )
             ),
-
-
-
             //근태관리하는곳
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical:10),
@@ -178,7 +173,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   //ListView안에 ListView 넣을수 있게 설정함. children 크기만큼 높이/길이를 갖게 만든다.
                     children:
                       documentsList.map(
-                              (eachDocument) => WorkListTile(eachDocument, context)).toList(),
+                              (eachDocument) => WorkListTile(eachDocument,workProvider!)).toList(),
                     )
                 );
               },

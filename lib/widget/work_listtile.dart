@@ -8,28 +8,24 @@ import 'package:provider/provider.dart';
 
 class WorkListTile extends StatefulWidget {
   late final DocumentSnapshot documentData;
-  BuildContext context;
+  final WorkProvider workProvider;
 
-  WorkListTile(this.documentData, this.context);
+  WorkListTile(this.documentData, this.workProvider);
 
   @override
-  _WorkListTileState createState() => _WorkListTileState(documentData, context);
+  _WorkListTileState createState() => _WorkListTileState(documentData:documentData, workProvider: workProvider);
 }
 
 class _WorkListTileState extends State<WorkListTile> {
-  WorkProvider? workProvider;
-  late final DocumentSnapshot documentData;
-  BuildContext context;
+  final WorkProvider workProvider;
+  final DocumentSnapshot documentData;
   late int workingTimeState;
 
-  _WorkListTileState(this.documentData, this.context) {
-    workProvider= Provider.of<WorkProvider>(context);
-    workProvider!.setTodayWork(Work.fromJson((documentData.data()) as Map<String, dynamic>));
-  }
+  _WorkListTileState({required this.documentData, required this.workProvider});
 
   @override
   Widget build(BuildContext context) {
-    Work? work = workProvider!.getTodayWork();
+    Work? work = workProvider.getTodayWork();
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
