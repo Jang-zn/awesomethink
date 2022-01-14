@@ -165,13 +165,8 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 if(!snapshot.hasData){
                   return Container();
                 }
-
                 //리스트로 불러와서 처리할 snapshot 가져옴
                 List<DocumentSnapshot> documentsList = snapshot.data!.docs;
-
-                //workProvider에다가 '최근' work 저장 -> recentWork
-                workProvider!.setRecentWork(Work.fromJson(documentsList.first.data() as Map<String, dynamic>));
-
                 return Container(
                   margin:const EdgeInsets.symmetric(horizontal: 10),
                   child:ListView(

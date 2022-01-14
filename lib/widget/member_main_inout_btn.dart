@@ -55,6 +55,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
           }
       );
       workProvider.setTodayWork(todayWork);
+      print("Tlqkf : "+todayWork.toString());
       //당일에 퇴근후 출근 또누른경우
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -119,8 +120,10 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   @override
   Widget build(BuildContext context) {
-    if (recentWork==null||recentWork?.endTime!=null) {
-      print(recentWork.toString());
+
+    todayWork=workProvider.getTodayWork();
+
+    if ((recentWork!=null&&recentWork!.endTime!=null)||recentWork==null||todayWork?.workUid==null) {
       return ElevatedButton(
         child: const Text("출근"),
         onPressed: startTodayWorkingTime,

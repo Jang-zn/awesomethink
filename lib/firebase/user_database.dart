@@ -1,4 +1,5 @@
 import 'package:awesomethink/model/member.dart';
+import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -51,16 +52,14 @@ class UserDatabase{
 
 
   Stream<QuerySnapshot> getWeeklyWorkStream(String uid) {
-    //현재 기준으로 지난 일요일 날짜 구하기
+    //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
-    DateTime lastSunday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
-    print(lastSunday.toString());
-
+    DateTime lastSunday = DateTime(now.year, now.month, now.day - (now.weekday-1));
 
     return firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime",isGreaterThanOrEqualTo: lastSunday)
-        .orderBy("startTime",descending: true)//중에서 일요일 기준으로 현재까지
+        .orderBy("startTime",descending: true)//중에서 월요일 기준으로 현재까지
         .snapshots();
   }
 
@@ -94,7 +93,19 @@ class UserDatabase{
       total = snapShot.docs.length;
     });
     return total==0?true:false;
+  }
 
+  //recentWork 호출
+  Future<Work?> getRecentWork(String? userUid) async {
+    Work? work;
+    await firestore.collection('work')
+        .where("userUid",isEqualTo: userUid)
+        .orderBy("startTime",descending: true)
+        .get()
+        .then((snapShot) {
+       work = Work.fromJson(snapShot.docs.first.data());
+    });
+    return work;
   }
 
 }
