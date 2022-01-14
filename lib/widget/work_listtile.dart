@@ -1,6 +1,7 @@
 import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
+import 'package:awesomethink/widget/work_listtile_checkbtn.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,35 +20,15 @@ class _WorkListTileState extends State<WorkListTile> {
   WorkProvider? workProvider;
   late final DocumentSnapshot documentData;
   BuildContext context;
-  late bool workEnd;
-  bool isVisible = true;
+  late int workingTimeState;
 
   _WorkListTileState(this.documentData, this.context) {
     workProvider= Provider.of<WorkProvider>(context);
   }
 
-
-  void workingCheck() {
-    //TODO 2. 확인창 띄우고 확인하면 체크됨.
-    //우선 바로 눌리게 해놈
-    FirebaseFirestore.instance
-          .collection("work")
-          .doc(documentData.id)
-          .get()
-          .then((val) {
-        val.reference
-            .update({"workingTimeState": WorkingTimeState.check.index});
-    });
-    setState(() {
-      isVisible=false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    Work work = Work.fromJson((documentData.data()) as Map<String, dynamic>);
-    workEnd = workProvider!.getWorkEnd()!;
-
+    Work? work = workProvider!.getTodayWork();
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
@@ -55,7 +36,10 @@ class _WorkListTileState extends State<WorkListTile> {
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5.0),
           ),
-          child: Stack(children: [
+          child:
+          work!=null
+              ?
+          Stack(children: [
             ListTile(
               title: Container(
                   margin: EdgeInsets.only(bottom: 8),
@@ -70,45 +54,10 @@ class _WorkListTileState extends State<WorkListTile> {
                 ],
               ),
             ),
-           isVisible
-               ?
-            workEnd
-                ? Container(
-                    margin: EdgeInsets.only(top: 20, left: 250),
-                    width: 60,
-                    height: 30,
-                    child: TextButton(
-                        child: const Text("확정",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            )),
-                        style: TextButton.styleFrom(
-                            primary: Colors.black,
-                            padding: EdgeInsets.zero,
-                            backgroundColor: Colors.lightGreen),
-                        onPressed: () {
-                          workingCheck();
-                        }))
-                : Container(
-                    margin: EdgeInsets.only(top: 20, left: 250),
-                    width: 60,
-                    height: 30,
-                    child: TextButton(
-                        child: const Text("확정",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            )),
-                        style: TextButton.styleFrom(
-                            primary: Colors.black,
-                            padding: EdgeInsets.zero,
-                            backgroundColor: Colors.grey),
-                        onPressed: (){}))
-               : Container()
-          ]),
+            WorkListTileCheckBtn(documentData: documentData)
+          ])
+            :
+              Container()
         ));
   }
 }

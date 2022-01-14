@@ -1,4 +1,5 @@
 import 'package:awesomethink/model/member.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -78,18 +79,17 @@ class UserDatabase{
 
 
   //퇴근 안눌렀는지 체크
-  Future<bool> isWorkEnd(String? userUid) async {
+  Future<bool> isWorkEnd(String? workUid) async {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     int total=0;
     await firestore.collection('work')
-        .where("userUid",isEqualTo: userUid)
-        .where("endTime",isNull: true)
+        .where("workUid",isEqualTo: workUid)
+        .where("workingTimeState",isEqualTo: WorkingTimeState.wait.index)
         .get()
         .then((snapShot) {
       total = snapShot.docs.length;
     });
-    print("total:"+total.toString());
     return total==0?true:false;
 
   }

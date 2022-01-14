@@ -55,7 +55,7 @@ class Work{
     String startHour = startTime!.hour.toString();
     String startMinute = startTime!.minute<10?"0"+startTime!.minute.toString():startTime!.minute.toString();
     String endHour = endTime==null?"":endTime!.hour.toString();
-    String endMinute = endTime!.minute<10?"0"+endTime!.minute.toString():endTime!.minute.toString();
+    String endMinute = endTime==null?"":endTime!.minute<10?"0"+endTime!.minute.toString():endTime!.minute.toString();
     String result = startHour+":"+startMinute+" ~ "+endHour+":"+endMinute;
     return result;
   }
