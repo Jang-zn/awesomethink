@@ -6,22 +6,21 @@ import 'package:logger/logger.dart';
 
 class WorkProvider with ChangeNotifier {
   Member? currentUser = FirebaseProvider().getUserInfo();
-  bool? _workInOut;
+  late bool _workEnd;
   Logger logger = Logger();
 
-
   WorkProvider() {
-    logger.d("init WorkProvider");
     _isWorkEnd();
   }
 
-
-  _isWorkEnd() async {
-    _workInOut=await UserDatabase().isWorkEnd(currentUser?.uid);
+  Future<void> _isWorkEnd() async {
+    _workEnd=await UserDatabase().isWorkEnd(currentUser?.uid);
+    logger.d("init WorkProvider");
+    notifyListeners();
   }
 
   bool? getWorkInOut(){
-    return _workInOut;
+    return _workEnd;
   }
 
 

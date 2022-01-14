@@ -1,7 +1,7 @@
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
-import 'package:awesomethink/firebase/work_controller.dart';
+import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
@@ -37,7 +37,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   WorkProvider? workProvider;
   Work? todayWork;
-  bool? workInOut;
+  late bool workEnd;
 
 
   void logout() {
@@ -66,7 +66,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
         );
       //당일에 퇴근후 출근 또누른경우
       }else{
-        workInOut=false; //
+        workEnd=false; //
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context)
             .showSnackBar(
@@ -84,8 +84,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   }
 
   void endTodayWorkingTime() async{
-    //TODO work 관련한건 provider로 교체
-    workInOut = workInOut==false?true:false;
     todayWork!.endTime = DateTime.now();
     FirebaseFirestore.instance.collection("work")
         .where("userUid",isEqualTo: todayWork!.userUid)
@@ -116,7 +114,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     print("main state build");
     firebaseProvider = Provider.of<FirebaseProvider>(context);
     workProvider = Provider.of<WorkProvider>(context);
-    workInOut = workProvider!.getWorkInOut();
+    workEnd = workProvider!.getWorkInOut()!;
 
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUser()!.uid);
 
@@ -135,7 +133,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   SizedBox(
                       width:MediaQuery.of(context).size.width*0.25,
                       child :
-                        workInOut==false
+                        workEnd==true
                             ? ElevatedButton(
                                 child: const Text("출근"),
                                 onPressed: startTodayWorkingTime,

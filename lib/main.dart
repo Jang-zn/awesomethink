@@ -1,5 +1,5 @@
 
-import 'package:awesomethink/firebase/work_controller.dart';
+import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/view/admin_main.dart';
 import 'package:awesomethink/view/auth_wait_page.dart';
 import 'package:awesomethink/view/login.dart';

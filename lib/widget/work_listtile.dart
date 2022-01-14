@@ -1,8 +1,10 @@
+import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/service/work_validation.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WorkListTile extends StatefulWidget {
   late final DocumentSnapshot documentData;
@@ -15,21 +17,17 @@ class WorkListTile extends StatefulWidget {
 }
 
 class _WorkListTileState extends State<WorkListTile> {
+  WorkProvider? workProvider;
   late final DocumentSnapshot documentData;
   BuildContext context;
+  late bool workEnd;
 
-  _WorkListTileState(this.documentData, this.context);
+  _WorkListTileState(this.documentData, this.context) {
+    workProvider= Provider.of<WorkProvider>(context);
+  }
 
-  bool btnState = true;
 
-  //firestore data update 과정
-  //Stream이라서 업데이트 되면 알아서 화면에서 지워짐
   void workingCheck() {
-    //1. Validation - 출/퇴근시간 찍혔는지 확인
-    btnState = btnState == true ? false : true;
-    setState(() {
-
-    });
     //2. 확인창 띄우고 확인하면 체크됨.
 
     //우선 바로 눌리게 해놈
@@ -59,6 +57,7 @@ class _WorkListTileState extends State<WorkListTile> {
   @override
   Widget build(BuildContext context) {
     Work work = Work.fromJson((documentData.data()) as Map<String, dynamic>);
+    workEnd = workProvider!.getWorkInOut()!;
 
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
@@ -82,7 +81,7 @@ class _WorkListTileState extends State<WorkListTile> {
                 ],
               ),
             ),
-            btnState
+            workEnd
                 ? Container(
                     margin: EdgeInsets.only(top: 20, left: 250),
                     width: 60,
@@ -115,8 +114,8 @@ class _WorkListTileState extends State<WorkListTile> {
                         style: TextButton.styleFrom(
                             primary: Colors.black,
                             padding: EdgeInsets.zero,
-                            backgroundColor: Colors.red),
-                        onPressed: workingCheck))
+                            backgroundColor: Colors.grey),
+                        onPressed: (){}))
           ]),
         ));
   }

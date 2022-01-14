@@ -70,7 +70,7 @@ class FirebaseProvider with ChangeNotifier{
       var result = await fAuth.signInWithEmailAndPassword(
           email: email, password: password);
         setUser(result.user);
-      Member info =await UserDatabase().getUserByUid(result.user!.uid);
+        Member info =await UserDatabase().getUserByUid(result.user!.uid);
         setUserInfo(info);
         logger.d(getUser());
         return true;

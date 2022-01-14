@@ -89,7 +89,9 @@ class UserDatabase{
         .then((snapShot) {
       total = snapShot.docs.length;
     });
+    print("total:"+total.toString());
     return total==0?true:false;
+
   }
 
 }
