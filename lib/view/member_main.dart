@@ -40,14 +40,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
 
   @override
-  void didChangeDependencies() {
+  Widget build(BuildContext context) {
     firebaseProvider = Provider.of<FirebaseProvider>(context);
     workProvider = Provider.of<WorkProvider>(context);
-    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUser()!.uid);
-  }
+    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUserInfo()!.uid!);
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body:MemberMainWidget(),
       key:_scaffoldKey

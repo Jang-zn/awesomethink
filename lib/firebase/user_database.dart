@@ -54,13 +54,14 @@ class UserDatabase{
   Stream<QuerySnapshot> getWeeklyWorkStream(String uid) {
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
-    DateTime lastSunday = DateTime(now.year, now.month, now.day - (now.weekday-1));
+    DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
 
-    return firestore.collection("work")
-        .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
-        .where("startTime",isGreaterThanOrEqualTo: lastSunday)
-        .orderBy("startTime",descending: true)//중에서 월요일 기준으로 현재까지
-        .snapshots();
+     var query = firestore.collection("work")
+         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
+         .orderBy("startTime",descending: true);
+     query = query.where("startTime",isGreaterThanOrEqualTo: lastMonday);//중에서 월요일 기준 전부 다불러옴
+
+    return query.snapshots();
   }
 
 

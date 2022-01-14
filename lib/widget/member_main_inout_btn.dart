@@ -88,7 +88,8 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
       ).whenComplete(
               () {
             workProvider.setRecentWork(recentWork);
-            todayWork=null;
+            workProvider.setRecentWork(null);
+            recentWork=null;
           }
       );
       return;
@@ -107,6 +108,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     ).whenComplete(
             () {
               workProvider.setTodayWork(todayWork);
+              workProvider.setTodayWork(null);
               todayWork=null;
             }
     );
@@ -120,10 +122,9 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   @override
   Widget build(BuildContext context) {
-
-    todayWork=workProvider.getTodayWork();
-
-    if ((recentWork!=null&&recentWork!.endTime!=null)||recentWork==null||todayWork?.workUid==null) {
+    //case 1. 월요일 첫출근 / 걍 첫출근 --> recentWork==null
+    if(recentWork==null) {
+      print("case1");
       return ElevatedButton(
         child: const Text("출근"),
         onPressed: startTodayWorkingTime,
@@ -131,7 +132,11 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
           primary: Colors.blueAccent,
         ),
       );
-    } else {
+    }
+
+    //case 2. 출근기록 있음 / 근데 퇴근 안누름
+    if(recentWork!.endTime==null){
+      print("case2");
       return ElevatedButton(
           child: const Text("퇴근"),
           onPressed: endTodayWorkingTime,
@@ -140,5 +145,30 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
           )
       );
     }
+
+    //case 3. 출근기록 있음 / 퇴근 누름 / 아직 출근버튼 안누름
+    if(todayWork==null) {
+      print("case3");
+      return ElevatedButton(
+        child: const Text("출근"),
+        onPressed: startTodayWorkingTime,
+        style: ElevatedButton.styleFrom(
+          primary: Colors.blueAccent,
+        ),
+      );
+    }
+
+    //case 4. 출근기록 있고 / 퇴근 눌렀고 / 출근함
+    print("case4");
+      return ElevatedButton(
+          child: const Text("퇴근"),
+          onPressed: endTodayWorkingTime,
+          style: ElevatedButton.styleFrom(
+            primary: Colors.green,
+          )
+      );
+
+    //case 5. 출근기록 있고 / 퇴근 눌렀고 / 출근했고 / 퇴근함--> case 3
   }
 }
+

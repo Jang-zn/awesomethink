@@ -45,7 +45,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
     if(!isVisible){
       return Container();
     }
-    if (work?.workingTimeState== WorkingTimeState.wait.index&&work?.endTime!=null) {
+    if (work!.workingTimeState== WorkingTimeState.wait.index&&work!.endTime!=null) {
       isVisible=true;
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
