@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase/firebase_provider.dart';
+import 'firebase/work_provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,10 @@ void main() async{
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FirebaseProvider()),
+        ChangeNotifierProxyProvider<FirebaseProvider, WorkProvider>(
+          create:(_)=>  WorkProvider(null),
+          update:(context, cur ,prev)=>  WorkProvider(cur.getUserInfo()),
+        )
       ],
       child: const AwesomeThink()));
 }

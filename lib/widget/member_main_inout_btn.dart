@@ -8,10 +8,9 @@ import 'package:provider/provider.dart';
 
 class WorkInOutBtn extends StatefulWidget {
   WorkInOutBtn(
-      {Key? key, required this.firebaseProvider, required this.workProvider})
+      {Key? key, required this.firebaseProvider})
       : super(key: key);
   final FirebaseProvider firebaseProvider;
-  final WorkProvider workProvider;
 
 
 
@@ -19,20 +18,25 @@ class WorkInOutBtn extends StatefulWidget {
   _WorkInOutBtnState createState() =>
       _WorkInOutBtnState(
           firebaseProvider: firebaseProvider,
-          workProvider: workProvider
       );
 }
 
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
   final FirebaseProvider firebaseProvider;
-  final WorkProvider workProvider;
+  WorkProvider? workProvider;
 
   Work? todayWork;
   Work? recentWork;
 
   _WorkInOutBtnState(
-      {required this.firebaseProvider, required this.workProvider});
+      {required this.firebaseProvider});
 
+
+  @override
+  void didChangeDependencies() {
+    workProvider=Provider.of<WorkProvider>(context);
+    recentWork= workProvider!.getRecentWork();
+  }
 
   void startTodayWorkingTime() async {
     todayWork = Work().createWork(firebaseProvider.getUser()!.uid);
@@ -58,7 +62,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
             });
           }
       );
-      workProvider.setTodayWork(todayWork);
+      workProvider!.setTodayWork(todayWork);
 
       //당일에 퇴근후 출근 또누른경우
     } else {
@@ -91,8 +95,8 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
           }
       ).whenComplete(
               () {
-            workProvider.setRecentWork(firebaseProvider.getUserInfo());
-            workProvider.setRecentWork(null);
+            workProvider!.setRecentWork(firebaseProvider.getUserInfo());
+            workProvider!.setRecentWork(null);
             recentWork=null;
           }
       );
@@ -111,16 +115,17 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
         }
     ).whenComplete(
             () {
-              workProvider.setTodayWork(todayWork);
-              workProvider.setTodayWork(null);
+              workProvider!.setTodayWork(todayWork);
+              workProvider!.setTodayWork(null);
               todayWork=null;
             }
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    recentWork= workProvider.getRecentWork();
+
     //case 1. 월요일 첫출근 / 걍 첫출근 --> recentWork==null
     if(recentWork==null) {
       print("case1");

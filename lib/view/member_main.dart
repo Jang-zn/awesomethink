@@ -16,19 +16,16 @@ class AwesomeMainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProxyProvider<WorkProvider, WorkProvider>(
-        create:(_)=>  WorkProvider(firebaseProvider.getUserInfo()!),
-        update:(context, cur ,prev)=>  WorkProvider(firebaseProvider.getUserInfo()!),
-        child: AwesomeMainWidget()
-    );
+    return AwesomeMainWidget(firebaseProvider:firebaseProvider);
   }
 }
 
 class AwesomeMainWidget extends StatefulWidget {
-  const AwesomeMainWidget({Key? key}) : super(key: key);
+  const AwesomeMainWidget({Key? key, required this.firebaseProvider}) : super(key: key);
+  final FirebaseProvider firebaseProvider;
 
   @override
-  _AwesomeMainWidgetState createState() => _AwesomeMainWidgetState();
+  _AwesomeMainWidgetState createState() => _AwesomeMainWidgetState(firebaseProvider);
 }
 
 void tempFunction(){
@@ -38,19 +35,23 @@ void tempFunction(){
 
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
-  FirebaseProvider? firebaseProvider;
+  final FirebaseProvider firebaseProvider;
   WorkProvider? workProvider;
   Stream<QuerySnapshot>? workStream;
 
+
+  _AwesomeMainWidgetState(this.firebaseProvider);
+
   @override
   void didChangeDependencies() {
-    firebaseProvider = Provider.of<FirebaseProvider>(context);
-    workProvider = Provider.of<WorkProvider>(context);
+    print("here");
+
+    print("now");
   }
 
   @override
   Widget build(BuildContext context) {
-    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider!.getUserInfo()!.uid!);
+    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
     return Scaffold(
           body:MemberMainWidget(firebaseProvider, context, workStream),
     );
@@ -75,7 +76,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                     //TODO 출퇴근기능
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : WorkInOutBtn(firebaseProvider: firebaseProvider, workProvider: workProvider!,)
+                        child : WorkInOutBtn(firebaseProvider: firebaseProvider)
                     ),
 
                     //TODO 휴무신청
