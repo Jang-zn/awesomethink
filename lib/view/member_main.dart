@@ -43,9 +43,9 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   _AwesomeMainWidgetState(this.firebaseProvider);
 
 
+  //스트림 init에 쳐넣어놔서 반영 안됐는데 이제 되네,..
   @override
   void didChangeDependencies() {
-    print("stream");
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
   }
 
