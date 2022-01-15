@@ -12,34 +12,24 @@ class WorkListTile extends StatefulWidget {
   WorkListTile(this.documentData, this.buildContext);
 
   @override
-  _WorkListTileState createState() => _WorkListTileState(documentData:documentData, buildContext: buildContext);
+  _WorkListTileState createState() => _WorkListTileState(documentData:documentData);
 }
 
 class _WorkListTileState extends State<WorkListTile> {
-  WorkProvider? workProvider;
   final DocumentSnapshot documentData;
-  final BuildContext buildContext;
-  late int workingTimeState;
-  Work? todayWork;
+  bool isToday = false;
   Work? work;
 
-  _WorkListTileState({required this.documentData, required this.buildContext});
+  _WorkListTileState({required this.documentData});
 
 
   @override
-  void didChangeDependencies() {
-    workProvider = Provider.of<WorkProvider>(buildContext);
+  void initState() {
+    work=Work.fromJson(documentData.data() as Map<String, dynamic>);
   }
 
   @override
   Widget build(BuildContext context) {
-    todayWork = workProvider?.getTodayWork();
-    if(todayWork?.workUid==null) {
-      work=Work.fromJson(documentData.data() as Map<String, dynamic>);
-    }else{
-      work=todayWork;
-    }
-
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
@@ -65,7 +55,7 @@ class _WorkListTileState extends State<WorkListTile> {
                 ],
               ),
             ),
-            WorkListTileCheckBtn(work:work!, workProvider: workProvider,)
+            WorkListTileCheckBtn(work:work!)
           ])
             :
               Container()

@@ -1,24 +1,21 @@
-import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class WorkListTileCheckBtn extends StatefulWidget {
-  const WorkListTileCheckBtn({Key? key, required this.work, required this.workProvider}) : super(key: key);
+  const WorkListTileCheckBtn({Key? key, required this.work}) : super(key: key);
   final Work work;
-  final WorkProvider? workProvider;
   @override
-  _WorkListTileCheckBtnState createState() => _WorkListTileCheckBtnState(work: work, workProvider: workProvider);
+  _WorkListTileCheckBtnState createState() => _WorkListTileCheckBtnState(work: work);
 }
 
 class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   final Work? work;
-  final WorkProvider? workProvider;
   bool isVisible = true;
 
-  _WorkListTileCheckBtnState({required this.work, required this.workProvider});
+  _WorkListTileCheckBtnState({required this.work});
 
 
   void workingCheck () {
@@ -32,9 +29,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
       val.reference
           .update({"workingTimeState": WorkingTimeState.check.index});
     }).whenComplete(() {
-      work!.workingTimeState!=WorkingTimeState.check;
       setState(() {
-        workProvider!.setTodayWork(work);
         isVisible=false;
       });
     });

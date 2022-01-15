@@ -15,10 +15,10 @@ class Work{
   Work.fromJson(Map<String, dynamic> json){
     userUid=json['userUid'];
     workUid=json['workUid'];
-    startTime=json['startTime'].toDate();
+    startTime=json['startTime']?.toDate();
     endTime=json['endTime']?.toDate();
     workingTimeState=json['workingTimeState'];
-    updateDate=json['updateDate'].toDate();
+    updateDate=json['updateDate']?.toDate();
   }
 
   Map<String, dynamic> toJson(){
@@ -37,7 +37,7 @@ class Work{
     String day = startTime!.day.toString();
     String week="";
     switch(startTime!.weekday){
-      case 0:week="일";break;
+      case 7:week="일";break;
       case 1:week="월";break;
       case 2:week="화";break;
       case 3:week="수";break;

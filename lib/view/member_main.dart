@@ -42,16 +42,16 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   _AwesomeMainWidgetState(this.firebaseProvider);
 
-  @override
-  void didChangeDependencies() {
-    print("here");
 
-    print("now");
+  @override
+  void initState() {
+    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
+    print("stream call");
   }
 
   @override
   Widget build(BuildContext context) {
-    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
+
     return Scaffold(
           body:MemberMainWidget(firebaseProvider, context, workStream),
     );
@@ -76,7 +76,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                     //TODO 출퇴근기능
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : WorkInOutBtn(firebaseProvider: firebaseProvider)
+                        child : WorkInOutBtn(firebaseProvider: firebaseProvider, buildContext: context,)
                     ),
 
                     //TODO 휴무신청
@@ -171,6 +171,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 //리스트로 불러와서 처리할 snapshot 가져옴
                 List<DocumentSnapshot> documentsList = snapshot.data!.docs;
                 List<WorkListTile> tileList = documentsList.map((eachDocument) =>WorkListTile(eachDocument, context)).toList();
+
 
                 return Expanded(child:
                 ListView.builder(

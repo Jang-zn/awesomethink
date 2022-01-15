@@ -88,7 +88,7 @@ class UserDatabase{
         .orderBy("startTime",descending: true)
         .get()
         .then((snapShot) {
-       work = Work.fromJson(snapShot.docs.first.data());
+            work = Work.fromJson(snapShot.docs.isNotEmpty?snapShot.docs.first.data():{});
     });
     return work;
   }
