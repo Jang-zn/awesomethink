@@ -1,5 +1,3 @@
-
-import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/view/admin_main.dart';
 import 'package:awesomethink/view/auth_wait_page.dart';
 import 'package:awesomethink/view/login.dart';
@@ -15,7 +13,6 @@ void main() async{
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FirebaseProvider()),
-        ChangeNotifierProvider(create: (_) => WorkProvider(null)),
       ],
       child: const AwesomeThink()));
 }
@@ -49,13 +46,11 @@ class AuthPage extends StatefulWidget {
 
 class AuthPageState extends State<AuthPage> {
   FirebaseProvider? fp;
-  WorkProvider? wp;
   get logger => null;
 
   @override
   Widget build (BuildContext context) {
     fp=Provider.of<FirebaseProvider>(context);
-    wp=Provider.of<WorkProvider>(context);
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp!.getUserInfo()?.uid != null ) {
         if (fp!.getUserInfo()?.state == false) {
@@ -64,7 +59,7 @@ class AuthPageState extends State<AuthPage> {
         if (fp!.getUserInfo()?.type == 1) {
           return const AdminMainPage();
         }
-        return const AwesomeMainPage();
+        return AwesomeMainPage(firebaseProvider: fp!);
     } else {
       return  const AwesomeThinkLoginPage(title: 'AwesomeThink');
     }

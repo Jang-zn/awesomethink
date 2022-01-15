@@ -3,35 +3,37 @@ import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/widget/work_listtile_checkbtn.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WorkListTile extends StatefulWidget {
   late final DocumentSnapshot documentData;
-  final WorkProvider workProvider;
+  final BuildContext buildContext;
 
-  WorkListTile(this.documentData, this.workProvider);
+  WorkListTile(this.documentData, this.buildContext);
 
   @override
-  _WorkListTileState createState() => _WorkListTileState(documentData:documentData, workProvider: workProvider);
+  _WorkListTileState createState() => _WorkListTileState(documentData:documentData, buildContext: buildContext);
 }
 
 class _WorkListTileState extends State<WorkListTile> {
-  final WorkProvider workProvider;
+  WorkProvider? workProvider;
   final DocumentSnapshot documentData;
+  final BuildContext buildContext;
   late int workingTimeState;
   Work? todayWork;
   Work? work;
 
-  _WorkListTileState({required this.documentData, required this.workProvider});
+  _WorkListTileState({required this.documentData, required this.buildContext});
 
 
   @override
   void didChangeDependencies() {
-    todayWork = workProvider.getTodayWork();
+    workProvider = Provider.of<WorkProvider>(buildContext);
   }
 
   @override
   Widget build(BuildContext context) {
-
+    todayWork = workProvider?.getTodayWork();
     if(todayWork?.workUid==null) {
       work=Work.fromJson(documentData.data() as Map<String, dynamic>);
     }else{

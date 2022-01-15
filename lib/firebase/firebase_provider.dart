@@ -9,15 +9,16 @@ class FirebaseProvider with ChangeNotifier{
 
   Logger logger = Logger();
   final FirebaseAuth fAuth = FirebaseAuth.instance; //firebase 인증 인스턴스
-
   User? _user; //FirebaseUser -> User 로 바뀜
   Member? _userInfo; //firestore에 저장된 user 정보
 
   String _lastFirebaseResponse = ""; //에러처리용 String
 
+
+
   FirebaseProvider() {
-    logger.d("init FirebaseProvider");
     _prepareUser();
+    logger.d("init FirebaseProvider");
   }
 
   _prepareUser(){

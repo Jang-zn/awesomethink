@@ -12,8 +12,10 @@ class WorkProvider with ChangeNotifier {
 
   WorkProvider(Member? user) {
     currentUser = user;
-    user ?? _prepareRecentWork();
-    logger.d("init WorkProvider");
+    _prepareRecentWork().then((_){
+      logger.d("currentUser : "+currentUser.toString());
+      logger.d("init WorkProvider : "+recentWork.toString());
+    });
   }
 
   Work? getTodayWork(){
@@ -29,12 +31,11 @@ class WorkProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setRecentWork(Work? work){
-    recentWork=work;
-    notifyListeners();
+  Future<void> setRecentWork(Member? user) async {
+    user ?? _prepareRecentWork();
   }
 
-  void _prepareRecentWork() async {
+  Future<void> _prepareRecentWork() async {
     recentWork=await UserDatabase().getRecentWork(currentUser?.uid);
   }
 

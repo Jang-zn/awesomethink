@@ -89,7 +89,6 @@ class UserDatabase{
         .get()
         .then((snapShot) {
        work = Work.fromJson(snapShot.docs.first.data());
-       print("recentWork : "+work.toString());
     });
     return work;
   }

@@ -4,13 +4,16 @@ import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WorkInOutBtn extends StatefulWidget {
-  const WorkInOutBtn(
+  WorkInOutBtn(
       {Key? key, required this.firebaseProvider, required this.workProvider})
       : super(key: key);
   final FirebaseProvider firebaseProvider;
   final WorkProvider workProvider;
+
+
 
   @override
   _WorkInOutBtnState createState() =>
@@ -23,6 +26,7 @@ class WorkInOutBtn extends StatefulWidget {
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
   final FirebaseProvider firebaseProvider;
   final WorkProvider workProvider;
+
   Work? todayWork;
   Work? recentWork;
 
@@ -55,7 +59,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
           }
       );
       workProvider.setTodayWork(todayWork);
-      print("Tlqkf : "+todayWork.toString());
+
       //당일에 퇴근후 출근 또누른경우
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -87,7 +91,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
           }
       ).whenComplete(
               () {
-            workProvider.setRecentWork(recentWork);
+            workProvider.setRecentWork(firebaseProvider.getUserInfo());
             workProvider.setRecentWork(null);
             recentWork=null;
           }
@@ -114,14 +118,9 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     );
   }
 
-
-  @override
-  void didChangeDependencies() {
-    recentWork= workProvider.getRecentWork();
-  }
-
   @override
   Widget build(BuildContext context) {
+    recentWork= workProvider.getRecentWork();
     //case 1. 월요일 첫출근 / 걍 첫출근 --> recentWork==null
     if(recentWork==null) {
       print("case1");
