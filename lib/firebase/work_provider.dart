@@ -6,37 +6,29 @@ import 'package:logger/logger.dart';
 
 class WorkProvider with ChangeNotifier {
   Member? currentUser;
-  Work? todayWork;
-  Work? recentWork;
+  Work? currentWork;
   Logger logger = Logger();
 
   WorkProvider(Member? user) {
     currentUser = user;
-    _prepareRecentWork().then((_){
-      logger.d("init WorkProvider : "+recentWork.toString());
+    _prepareCurrentWork().then((_){
+      logger.d("init WorkProvider : "+currentWork.toString());
     });
   }
 
-  Work? getTodayWork(){
-    return todayWork;
+  Work? getCurrentWork(){
+    return currentWork;
   }
 
-  Work? getRecentWork(){
-    return recentWork;
-  }
-
-  void setTodayWork(Work? work){
-    todayWork=work;
+  void setCurrentWork(Work? work){
+    currentWork=work;
     notifyListeners();
   }
 
-  Future<void> setRecentWork(Member? user) async {
-    user ?? _prepareRecentWork();
-    notifyListeners();
-  }
 
-  Future<void> _prepareRecentWork() async {
-    recentWork=await UserDatabase().getRecentWork(currentUser?.uid);
+
+  Future<void> _prepareCurrentWork() async {
+    currentWork=await UserDatabase().getRecentWork(currentUser?.uid);
     notifyListeners();
   }
 

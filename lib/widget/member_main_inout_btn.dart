@@ -27,8 +27,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   final FirebaseProvider firebaseProvider;
   final BuildContext buildContext;
   WorkProvider? workProvider;
-  Work? todayWork;
-  Work? recentWork;
+  Work? currentWork;
 
   _WorkInOutBtnState(
       {required this.firebaseProvider, required this.buildContext});
@@ -41,30 +40,30 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
 
   void startTodayWorkingTime() async {
-    todayWork = Work().createWork(firebaseProvider.getUser()!.uid);
+    currentWork = Work().createWork(firebaseProvider.getUser()!.uid);
     //당일 중복등록 못하게 validation
     bool checkDuplication = await UserDatabase().checkDuplication(
-        todayWork!.userUid!);
+        currentWork!.userUid!);
 
     //당일 첫 출근인경우
     if (checkDuplication) {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       //work doc 생성
-      firestore.collection("work").doc().set(todayWork!.toJson());
+      firestore.collection("work").doc().set(currentWork!.toJson());
       //workUid 넣어줌
       //await 안쓰면 uid 날라간다.
       await firestore.collection("work")
-          .where("userUid", isEqualTo: todayWork!.userUid)
+          .where("userUid", isEqualTo: currentWork!.userUid)
           .where("workUid", isNull: true)
           .get().then(
               (value) {
             value.docs.forEach((doc) {
-              todayWork!.workUid = doc.id;
+              currentWork!.workUid = doc.id;
               doc.reference.update({"workUid": doc.id});
             });
           }
       );
-      workProvider!.setTodayWork(todayWork);
+      workProvider!.setCurrentWork(currentWork);
 
       //당일에 퇴근후 출근 또누른경우
     } else {
@@ -84,42 +83,21 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   }
 
   void endTodayWorkingTime() async {
-    //recentWork 퇴근 안한경우 -> 퇴근 안누름
-    if(recentWork!=null&&recentWork?.endTime==null){
-      print("recentWork end");
-      recentWork?.endTime = DateTime(recentWork!.startTime!.year,recentWork!.startTime!.month,recentWork!.startTime!.day,18,0);
-      FirebaseFirestore.instance.collection("work")
-          .where("workUid", isEqualTo: recentWork!.workUid)
-          .get().then(
-              (value) {
-            value.docs.forEach((doc) {
-              doc.reference.update(recentWork!.toJson());
-            });
-          }
-      ).whenComplete(
-              () {
-            workProvider!.setRecentWork(firebaseProvider.getUserInfo());
-            recentWork=null;
-          }
-      );
-      return; //여기서 끊으려고 일부러 리턴함
-    }
-
-    //recentWork 퇴근 잘 한경우 -> todayWork로 처리
-    print("todayWork end");
-    todayWork?.endTime = DateTime.now();
+    currentWork?.endTime = DateTime.now();
     FirebaseFirestore.instance.collection("work")
-        .where("userUid", isEqualTo: todayWork!.userUid)
-        .where("endTime", isNull: true).get().then(
+        .where("workUid", isEqualTo: currentWork!.workUid)
+        .get()
+        .then(
             (value) {
-          value.docs.forEach((doc) {
-            doc.reference.update(todayWork!.toJson());
+              value.docs.forEach(
+                      (doc) {
+                          doc.reference.update(currentWork!.toJson());
           });
         }
     ).whenComplete(
             () {
-              workProvider!.setTodayWork(todayWork);
-              todayWork=null;
+              workProvider!.setCurrentWork(currentWork);
+
             }
     );
   }
@@ -127,10 +105,9 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   @override
   Widget build(BuildContext context) {
-    recentWork= workProvider!.getRecentWork();
-    //case 1. 걍 첫출근 --> recentWork==null
-    print("recentWork 왜 null이여"+recentWork.toString());
-    if(recentWork?.workUid==null) {
+    currentWork= workProvider!.getCurrentWork();
+    //case 1. 출근기록 X --> currentWork==null
+    if(currentWork?.workUid==null) {
       print("case1");
       return ElevatedButton(
         child: const Text("출근"),
@@ -142,7 +119,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     }
 
     //case 2. 출근기록 있음 / 근데 퇴근 안누름
-    if(recentWork?.endTime==null){
+    if(currentWork?.endTime==null){
       print("case2");
       return ElevatedButton(
           child: const Text("퇴근"),
@@ -151,10 +128,8 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
             primary: Colors.green,
           )
       );
-    }
-
-    //case 3. 출근기록 있음 / 퇴근 누름 / 아직 출근버튼 안누름
-    if(todayWork?.workUid==null) {
+    }else {
+      //case 3. 출퇴근기록 있음 / 아직 출근버튼 안누름
       print("case3");
       return ElevatedButton(
         child: const Text("출근"),
@@ -165,17 +140,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
       );
     }
 
-    //case 4. 출근기록 있고 / 퇴근 눌렀고 / 출근함
-    print("case4");
-      return ElevatedButton(
-          child: const Text("퇴근"),
-          onPressed: endTodayWorkingTime,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.green,
-          )
-      );
-
-    //case 5. 출근기록 있고 / 퇴근 눌렀고 / 출근했고 / 퇴근함--> case 3
   }
 }
 

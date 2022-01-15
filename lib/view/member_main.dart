@@ -44,9 +44,9 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    print("stream");
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
-    print("stream call");
   }
 
   @override
@@ -165,23 +165,28 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
             StreamBuilder(
               stream:workStream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(!snapshot.hasData){
-                  return Container();
-                }
-                //리스트로 불러와서 처리할 snapshot 가져옴
-                List<DocumentSnapshot> documentsList = snapshot.data!.docs;
-                List<WorkListTile> tileList = documentsList.map((eachDocument) =>WorkListTile(eachDocument, context)).toList();
-
-
-                return Expanded(child:
-                ListView.builder(
-                    itemCount:tileList.length,
-                    scrollDirection:Axis.vertical,
-                    itemBuilder:(context, index) {
-                      return tileList[index];
+                switch(snapshot.connectionState) {
+                  case ConnectionState.waiting :
+                    return Container();
+                  default :
+                    if (!snapshot.hasData) {
+                      return Container();
                     }
-                ));
-              },
+                    //리스트로 불러와서 처리할 snapshot 가져옴
+                    List<DocumentSnapshot> documentsList = snapshot.data!.docs;
+                    List<WorkListTile> tileList = documentsList.map((
+                        eachDocument) => WorkListTile(eachDocument, context))
+                        .toList();
+                    return Expanded(child:
+                    ListView.builder(
+                        itemCount: tileList.length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) {
+                          return tileList[index];
+                        }
+                    ));
+                }
+                }
             )
           ],
         )
