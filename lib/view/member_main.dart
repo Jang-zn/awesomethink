@@ -4,6 +4,7 @@ import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/widget/member_main_inout_btn.dart';
+import 'package:awesomethink/widget/member_vacation_btn.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -49,9 +50,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
 
 
-
-
-
   //스트림 init에 쳐넣어놔서 반영 안됐는데 이제 되네,..
   @override
   void didChangeDependencies() {
@@ -86,10 +84,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                     //TODO 휴무신청
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : const ElevatedButton(
-                          onPressed: tempFunction,
-                          child: Text("휴무신청"),
-                        )
+                        child : VacationBtn(firebaseProvider: firebaseProvider, buildContext: context,)
                     ),
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
@@ -201,6 +196,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   void logout() {
     firebaseProvider.signOut();
   }
+
 
   //주단위 시간계산
   void getWeeklyWorkingTime() async{
