@@ -75,7 +75,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 child:Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    //TODO 출퇴근기능
+                    //TODO 출퇴근기능 - 휴무추가해야됨
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
                         child : WorkInOutBtn(firebaseProvider: firebaseProvider, buildContext: context,)
@@ -97,7 +97,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 )
             ),
 
-            //TODO XXX 사원님 이번주 근무시간은 xx시간 xx분, 잔여 의무 근로시간은 xx시간 xx분 남았습니다 멘트치는곳
+            //XXX 사원님 이번주 근무시간은 xx시간 xx분, 잔여 의무 근로시간은 xx시간 xx분 남았습니다 멘트치는곳
             Container(
                 margin:const EdgeInsets.symmetric(horizontal: 20),
                 padding:const EdgeInsets.all(10),
@@ -125,7 +125,8 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                                 margin:const EdgeInsets.symmetric(vertical: 4),
                                 child:const Text("이번주 근무시간 ")
                             ),
-                            //TODO 주간 근무시간 계산로직..
+
+                            //주간 근무시간 계산후 출력
                             Container(
                                 margin:const EdgeInsets.symmetric(vertical: 4),
                                 child:Text("${weeklyWorkingTime}",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))

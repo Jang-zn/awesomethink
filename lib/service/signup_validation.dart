@@ -50,7 +50,7 @@ class SignUpValidation {
     }
   }
 
-//TODO 핸드폰번호 양식 확인
+//핸드폰번호 양식 확인
   String? validatePhoneNumber(String? value) {
     if (value!.isEmpty||value.length<11) {
       return '전화번호를 입력하세요. \'-\' 포함';
