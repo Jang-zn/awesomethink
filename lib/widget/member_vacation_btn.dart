@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-// 휴무신청 하면 날짜 물어보고 날짜 받으면 된다?
-// Vacation을 Work에 넣고 Work 불러올때 읽는다?
-// Vacation : Work에 넣음 / 시작일 / 종료일 /
+// TODO 휴무신청 하면 날짜 물어보고 날짜 받으면 된다?
 
 
 
@@ -140,7 +138,7 @@ class _VacationBtnState extends State<VacationBtn> {
       //case 3. 출퇴근기록 있음 / 아직 출근버튼 안누름
       print("case3");
       return ElevatedButton(
-        child: const Text("출근"),
+        child: const Text("휴무신청"),
         onPressed: requestVacation,
         style: ElevatedButton.styleFrom(
           primary: Colors.blueAccent,
