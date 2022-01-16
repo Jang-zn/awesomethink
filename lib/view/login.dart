@@ -28,9 +28,9 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
-        duration: Duration(seconds: 5),
+        duration: const Duration(seconds: 5),
         content: Row(
-          children: <Widget>[
+          children: const <Widget>[
             CircularProgressIndicator(),
             Text("   Login...")
           ],
@@ -42,9 +42,9 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(SnackBar(
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             content: Row(
-              children: [
+              children: const [
                 Text("이메일 또는 비밀번호를 확인해주세요")
               ],
             ),

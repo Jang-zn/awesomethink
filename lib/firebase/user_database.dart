@@ -15,8 +15,7 @@ class UserDatabase{
     var data = user.toJson();
 
     await documentReference.set(data).whenComplete(() {
-      print("User data added");
-    }).catchError((e)=>print(e));
+    }).catchError((e)=>(e));
   }
 
   Stream<QuerySnapshot> retrieveUsers(){
@@ -91,6 +90,24 @@ class UserDatabase{
             work = Work.fromJson(snapShot.docs.isNotEmpty?snapShot.docs.first.data():{});
     });
     return work;
+  }
+
+  Stream<List<Work>> getWeeklyWorkList(String? uid) {
+    //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
+    DateTime now = DateTime.now();
+    DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
+
+    var query = firestore.collection("work")
+        .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
+        .where("startTime",isGreaterThanOrEqualTo: lastMonday)//중에서 월요일 기준 전부 다불러옴
+        .orderBy("startTime",descending: true);
+
+    return query.snapshots().map(
+            (snapshot) => snapshot.docs.map(
+                    (doc) => Work
+                        .fromJson(doc.data())
+            ).toList()
+    );
   }
 
 }

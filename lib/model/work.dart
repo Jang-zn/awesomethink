@@ -89,4 +89,15 @@ class Work{
   String toString() {
     return 'Work{userUid: $userUid, workUid: $workUid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate}';
   }
+
+  Map<String, int> getWorkingTimeToMap(){
+    Map<String, int> timeMap=Map();
+    Duration duration=endTime!.difference(startTime!);
+    int total = duration.inMinutes;
+    int h = (total-total%60)~/60;
+    int m = total%60;
+    timeMap.putIfAbsent("hour", () => h);
+    timeMap.putIfAbsent("minute", () => m);
+    return timeMap;
+  }
 }

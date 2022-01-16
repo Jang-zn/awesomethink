@@ -2,11 +2,11 @@ import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/member.dart';
+import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/widget/member_main_inout_btn.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AwesomeMainPage extends StatelessWidget {
   AwesomeMainPage({Key? key, required this.firebaseProvider}) : super(key: key);
@@ -35,12 +35,21 @@ void tempFunction(){
 
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
+  //필드
   final FirebaseProvider firebaseProvider;
   WorkProvider? workProvider;
   Stream<QuerySnapshot>? workStream;
+  List<Work>? workList;
+  String weeklyWorkingTime ="00시간 00분";
+  String requiredWorkingTime ="00시간 00분";
 
-
+  //생성자
   _AwesomeMainWidgetState(this.firebaseProvider);
+
+
+
+
+
 
 
   //스트림 init에 쳐넣어놔서 반영 안됐는데 이제 되네,..
@@ -51,7 +60,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   @override
   Widget build(BuildContext context) {
-
+    getWeeklyWorkingTime();
     return Scaffold(
           body:MemberMainWidget(firebaseProvider, context, workStream),
     );
@@ -59,11 +68,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   Widget MemberMainWidget(FirebaseProvider? firebaseProvider, BuildContext context, Stream<QuerySnapshot>? workStream){
     Member? user = firebaseProvider!.getUserInfo();
-
-    void logout() {
-      firebaseProvider.signOut();
-    }
-
     return SafeArea(
         child:Column(
           children: [
@@ -129,7 +133,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                             //TODO 주간 근무시간 계산로직..
                             Container(
                                 margin:const EdgeInsets.symmetric(vertical: 4),
-                                child:const Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                                child:Text("${weeklyWorkingTime}",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                             ),
                           ],
                         ),
@@ -141,7 +145,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                             ),
                             Container(
                                 margin:const EdgeInsets.symmetric(vertical: 4),
-                                child:const Text("00시간 00분",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                                child:Text(requiredWorkingTime,style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                             )
                           ],
                         )
@@ -193,5 +197,50 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     );
   }
 
+
+  void logout() {
+    firebaseProvider.signOut();
+  }
+
+  //주단위 시간계산
+  void getWeeklyWorkingTime() async{
+
+    print("실행");
+    //변수
+    int? totalHour=39;
+    int? totalMinute = 60;
+    int weeklyHour=0;
+    int weeklyMinute=0;
+    int requiredHour=0;
+    int requiredMinute=0;
+
+    //Stream to List<Object>
+    Stream<List<Work>> getWorkList = await UserDatabase().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
+    await for (List<Work> works in getWorkList) {
+      workList=works; // yay, the NEXT list is here
+      for(Work w in workList!) {
+        Map<String, int> timeMap = w.getWorkingTimeToMap();
+        weeklyHour += timeMap["hour"]!;
+        weeklyMinute += timeMap["minute"]!;
+      }
+
+      // 분 합계가 60분 이상이면 단위 올려줌
+      if(weeklyMinute>59){
+        weeklyHour += (weeklyMinute-weeklyMinute%60)~/60;
+        weeklyMinute = weeklyMinute%60;
+      }
+         //잔여시간 처리
+      requiredHour = totalHour-weeklyHour;
+      requiredMinute = totalMinute-weeklyMinute;
+      if(requiredHour<0){
+        requiredHour=0;
+        requiredMinute=0;
+      }
+         //출력메세지 세팅
+        weeklyWorkingTime = weeklyHour.toString()+"시간 "+weeklyMinute.toString()+"분";
+        requiredWorkingTime = requiredHour.toString()+"시간 "+requiredMinute.toString()+"분";
+
+    }
+  }
 }
 
