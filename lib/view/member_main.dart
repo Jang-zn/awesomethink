@@ -40,8 +40,8 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   WorkProvider? workProvider;
   Stream<QuerySnapshot>? workStream;
   List<Work>? workList;
-  String weeklyWorkingTime ="00시간 00분";
-  String requiredWorkingTime ="00시간 00분";
+  String weeklyWorkingTime ="0시간 00분";
+  String requiredWorkingTime ="40시간 00분";
 
   //생성자
   _AwesomeMainWidgetState(this.firebaseProvider);
@@ -56,11 +56,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   @override
   void didChangeDependencies() {
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
+    getWeeklyWorkingTime();
   }
 
   @override
   Widget build(BuildContext context) {
-    getWeeklyWorkingTime();
     return Scaffold(
           body:MemberMainWidget(firebaseProvider, context, workStream),
     );
@@ -207,15 +207,15 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
     print("실행");
     //변수
-    int? totalHour=39;
-    int? totalMinute = 60;
     int weeklyHour=0;
     int weeklyMinute=0;
-    int requiredHour=0;
-    int requiredMinute=0;
+    int requiredHour=39;
+    int requiredMinute=60;
 
+
+    //weeklyHour / Minute 처리
     //Stream to List<Object>
-    Stream<List<Work>> getWorkList = await UserDatabase().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
+    Stream<List<Work>> getWorkList = UserDatabase().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
     await for (List<Work> works in getWorkList) {
       workList=works; // yay, the NEXT list is here
       for(Work w in workList!) {
@@ -229,16 +229,28 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
         weeklyHour += (weeklyMinute-weeklyMinute%60)~/60;
         weeklyMinute = weeklyMinute%60;
       }
-         //잔여시간 처리
-      requiredHour = totalHour-weeklyHour;
-      requiredMinute = totalMinute-weeklyMinute;
+
+      //requiredHour / Minute 처리
+      requiredHour = requiredHour-weeklyHour;
+      requiredMinute = requiredMinute-weeklyMinute;
       if(requiredHour<0){
         requiredHour=0;
         requiredMinute=0;
       }
+
+      if(requiredMinute==60){
+        requiredMinute=0;
+        requiredHour+=1;
+      }
+
+
          //출력메세지 세팅
-        weeklyWorkingTime = weeklyHour.toString()+"시간 "+weeklyMinute.toString()+"분";
-        requiredWorkingTime = requiredHour.toString()+"시간 "+requiredMinute.toString()+"분";
+      weeklyMinute>0?
+        weeklyWorkingTime = weeklyHour.toString()+"시간 "+ weeklyMinute.toString()+"분"
+      : weeklyWorkingTime = weeklyHour.toString()+"시간 "+ "0"+weeklyMinute.toString()+"분";
+      requiredMinute>0?
+        requiredWorkingTime = requiredHour.toString()+"시간 "+requiredMinute.toString()+"분"
+      : requiredWorkingTime = requiredHour.toString()+"시간 "+"0"+requiredMinute.toString()+"분";
 
     }
   }
