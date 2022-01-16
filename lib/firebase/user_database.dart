@@ -1,5 +1,6 @@
 import 'package:awesomethink/model/member.dart';
 import 'package:awesomethink/model/work.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -79,7 +80,7 @@ class UserDatabase{
   }
 
 
-  //recentWork 호출
+  //recentWork 호출 -> 휴무는 제외
   Future<Work?> getRecentWork(String? userUid) async {
     Work? work;
     await firestore.collection('work')

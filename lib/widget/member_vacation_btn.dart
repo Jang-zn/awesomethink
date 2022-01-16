@@ -6,6 +6,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
+// 휴무신청 하면 날짜 물어보고 날짜 받으면 된다?
+// Vacation을 Work에 넣고 Work 불러올때 읽는다?
+// Vacation : Work에 넣음 / 시작일 / 종료일 /
+
+
+
 class VacationBtn extends StatefulWidget {
   VacationBtn(
       {Key? key, required this.firebaseProvider, required this.buildContext})

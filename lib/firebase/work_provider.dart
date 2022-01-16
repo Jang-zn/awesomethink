@@ -25,12 +25,12 @@ class WorkProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future<void> _prepareCurrentWork() async {
     currentWork=await UserDatabase().getRecentWork(currentUser?.uid);
     notifyListeners();
   }
+
+  //TODO 휴무관련해서 currentWork setting하는 조건 설정 필요할듯
 
 
 }

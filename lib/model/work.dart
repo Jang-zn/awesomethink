@@ -1,3 +1,4 @@
+import 'package:awesomethink/model/vacation.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -8,9 +9,10 @@ class Work{
   DateTime? endTime;
   int? workingTimeState;
   DateTime? updateDate;
+  Vacation? vacation;
 
 
-  Work({this.workUid,this.userUid, this.startTime, this.endTime, this.workingTimeState, this.updateDate});
+  Work({this.workUid,this.userUid, this.startTime, this.endTime, this.workingTimeState, this.updateDate, this.vacation});
 
   Work.fromJson(Map<String, dynamic> json){
     userUid=json['userUid'];
@@ -19,6 +21,7 @@ class Work{
     endTime=json['endTime']?.toDate();
     workingTimeState=json['workingTimeState'];
     updateDate=json['updateDate']?.toDate();
+    vacation = json['vacation'];
   }
 
   Map<String, dynamic> toJson(){
@@ -29,6 +32,7 @@ class Work{
     data['endTime']=endTime;
     data['workingTimeState']=workingTimeState;
     data['updateDate']=updateDate;
+    data['vacation']=vacation?.toJson();
     return data;
   }
 
@@ -65,7 +69,17 @@ class Work{
     if(endTime!=null){
      duration=endTime!.difference(startTime!);
      int total = duration.inMinutes;
-     int h = (total-total%60)~/60;
+
+     //휴게시간 4시간마다 30분
+     int checkTime = ((total-total%60)~/240);
+     if(checkTime>2){
+       total-=60;
+     }else if(checkTime>1){
+       total-=30;
+     }
+
+     //시간계산
+     int h = ((total-total%60)~/60);
      int m = total%60;
      String hour = h.toString();
      String minute = m>9?m.toString():"0"+m.toString();
@@ -81,13 +95,26 @@ class Work{
     work.endTime = null;
     work.workingTimeState = WorkingTimeState.wait.index;
     work.updateDate = DateTime.now();
+    work.vacation = null;
+    return work;
+  }
+
+  Work createVacation(String uid, DateTime start, DateTime end){
+    Work work=Work();
+    work.userUid = uid;
+    work.startTime = null;
+    work.endTime = null;
+    work.workingTimeState = WorkingTimeState.closedWait.index;
+    work.updateDate = DateTime.now();
+    work.vacation = Vacation(startVacation: start, endVacation: end);
     return work;
   }
 
 
+
   @override
   String toString() {
-    return 'Work{userUid: $userUid, workUid: $workUid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate}';
+    return 'Work{userUid: $userUid, workUid: $workUid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate, vacation: ${vacation.toString()}}';
   }
 
   Map<String, int> getWorkingTimeToMap(){
