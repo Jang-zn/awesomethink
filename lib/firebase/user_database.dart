@@ -54,9 +54,10 @@ class UserDatabase{
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
-
+    DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
      var query = firestore.collection("work")
          .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
+         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월~일만 불러옴
          .orderBy("startTime",descending: true);
      query = query.where("startTime",isGreaterThanOrEqualTo: lastMonday);//중에서 월요일 기준 전부 다불러옴
 
@@ -113,12 +114,12 @@ class UserDatabase{
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
+    DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
 
     var query = firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
-        .where("startTime",isGreaterThanOrEqualTo: lastMonday)//중에서 월요일 기준 전부 다불러옴
+        .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월요일부터 일요일까지
         .orderBy("startTime",descending: true);
-
     return query.snapshots().map(
             (snapshot) => snapshot.docs.map(
                     (doc) => Work

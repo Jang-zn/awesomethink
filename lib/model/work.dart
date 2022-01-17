@@ -1,6 +1,5 @@
 import 'package:awesomethink/model/vacation.dart';
 import 'package:awesomethink/utils/constants.dart';
-import 'package:flutter/material.dart';
 
 class Work{
   String? userUid; //User uid
@@ -21,7 +20,7 @@ class Work{
     endTime=json['endTime']?.toDate();
     workingTimeState=json['workingTimeState'];
     updateDate=json['updateDate']?.toDate();
-    vacation = json['vacation'];
+    vacation = json['vacation']!=null?Vacation.fromJson(json['vacation']):null; //null체크 + fromJson으로 넣어주기
   }
 
   Map<String, dynamic> toJson(){
@@ -32,7 +31,7 @@ class Work{
     data['endTime']=endTime;
     data['workingTimeState']=workingTimeState;
     data['updateDate']=updateDate;
-    data['vacation']=vacation; //toJson 한번 더 해야되나??
+    data['vacation']=vacation?.toJson(); //toJson 한번 더 해야됨
     return data;
   }
 
@@ -71,7 +70,8 @@ class Work{
      int total = duration.inMinutes;
 
      //휴게시간 4시간마다 30분
-     int checkTime = ((total-total%60)~/240);
+     double checkTime = ((total-total%60)/240);
+     //↑ 이거 int로 하면 1or2라서 분처리가 안됨
      if(checkTime>2){
        total-=60;
      }else if(checkTime>1){
@@ -113,6 +113,7 @@ class Work{
       vacation.workingTimeState = WorkingTimeState.vacationWait.index;
       vacation.updateDate = DateTime.now();
       vacation.vacation = Vacation(startVacation: start, endVacation: end);
+      vacationList.add(vacation);
     }
     return vacationList;
   }
@@ -128,10 +129,22 @@ class Work{
     Map<String, int> timeMap=Map();
     Duration duration=endTime!.difference(startTime!);
     int total = duration.inMinutes;
+
+    //휴게시간 4시간마다 30분
+    double checkTime = ((total-total%60)/240);
+    //↑ 이거 int로 하면 1or2라서 분처리가 안됨
+    if(checkTime>2){
+      total-=60;
+    }else if(checkTime>1){
+      total-=30;
+    }
+
     int h = (total-total%60)~/60;
     int m = total%60;
     timeMap.putIfAbsent("hour", () => h);
     timeMap.putIfAbsent("minute", () => m);
     return timeMap;
   }
+
+
 }

@@ -40,7 +40,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   final FirebaseProvider firebaseProvider;
   WorkProvider? workProvider;
   Stream<QuerySnapshot>? workStream;
-  List<Work>? workList;
   String weeklyWorkingTime ="0시간 00분";
   String requiredWorkingTime ="40시간 00분";
 
@@ -201,7 +200,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   //주단위 시간계산
   void getWeeklyWorkingTime() async{
-
+    List<Work>? workList=[];
     print("실행");
     //변수
     int weeklyHour=0;
@@ -215,7 +214,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     Stream<List<Work>> getWorkList = UserDatabase().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
     await for (List<Work> works in getWorkList) {
       workList=works; // yay, the NEXT list is here
-      for(Work w in workList!) {
+      for(Work w in workList) {
         Map<String, int> timeMap = w.getWorkingTimeToMap();
         weeklyHour += timeMap["hour"]!;
         weeklyMinute += timeMap["minute"]!;

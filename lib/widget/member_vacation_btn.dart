@@ -39,8 +39,9 @@ class _VacationBtnState extends State<VacationBtn> {
   @override
   void initState() {
     workProvider = Provider.of<WorkProvider>(buildContext);
-    vacationWait=false;
   }
+
+
 
   void showCalendar(String soe) {
    Future<DateTime?> selectedDate = showDatePicker(
@@ -77,7 +78,6 @@ class _VacationBtnState extends State<VacationBtn> {
                 showCalendar("end");
               }
               if(vacationEnd!=null&&vacationEnd!=null) {
-                print("vacation " + vacationStart.toString() + " ~ " + vacationEnd.toString());
                 requestVacation();
               }
             }
@@ -91,13 +91,18 @@ class _VacationBtnState extends State<VacationBtn> {
       vacationList = Work().createVacation(
           firebaseProvider.getUser()!.uid, vacationStart!, vacationEnd!);
     }
-    print("here : "+ vacationList.toString());
+    vacationList.sort((a,b)=>b.startTime!.compareTo(a.startTime!));
+
+
     vacationStart=null;
     vacationEnd=null;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     //work doc 생성 -> WorkingTimeState.vacationWait
     for(Work w in vacationList) {
-      firestore.collection("work").doc().set(w.toJson());
+      //주말(6:토 / 7:일) 제외하고 휴가등록
+      if(w.startTime!.weekday<6) {
+        firestore.collection("work").doc().set(w.toJson());
+      }
     }
     //workUid 넣어줌
     //await 안쓰면 uid 날라간다.
