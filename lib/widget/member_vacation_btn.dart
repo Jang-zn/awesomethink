@@ -1,14 +1,10 @@
 import 'package:awesomethink/firebase/firebase_provider.dart';
-import 'package:awesomethink/firebase/user_database.dart';
 import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
-// TODO 휴무신청 하면 날짜 물어보고 날짜 받으면 된다?
-
 
 
 class VacationBtn extends StatefulWidget {
@@ -32,8 +28,9 @@ class _VacationBtnState extends State<VacationBtn> {
   final FirebaseProvider firebaseProvider;
   final BuildContext buildContext;
   WorkProvider? workProvider;
-  Work? currentWork;
-  bool isAble = true;
+  bool? vacationWait;
+  DateTime? vacationStart;
+  DateTime? vacationEnd;
 
   _VacationBtnState(
       {required this.firebaseProvider, required this.buildContext});
@@ -42,68 +39,89 @@ class _VacationBtnState extends State<VacationBtn> {
   @override
   void initState() {
     workProvider = Provider.of<WorkProvider>(buildContext);
+    vacationWait=false;
   }
+
+  void showCalendar(String soe) {
+   Future<DateTime?> selectedDate = showDatePicker(
+       context: context,
+       helpText: soe=="start"?"휴무 시작일 선택":"휴무 종료일 선택",
+       initialDate: DateTime.now(),
+       firstDate: DateTime(DateTime.now().year),
+       lastDate: DateTime(DateTime.now().year+1),
+       builder : (context, child){
+         return DefaultTextStyle.merge(
+             style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+             child : Theme(
+               data : ThemeData.dark(),
+               child : Column(
+               children:<Widget>[
+                 SizedBox(
+                   width: 400,
+                   height: 500,
+                   child: child,
+                 )
+               ]),
+             )
+          );
+       },
+   );
+    selectedDate.then(
+            (dateTime)  {
+              if(soe=="start"){
+                vacationStart=dateTime;
+              }else{
+                vacationEnd=dateTime;
+              }
+              if(dateTime!=null&&vacationEnd==null) {
+                showCalendar("end");
+              }
+              if(vacationEnd!=null&&vacationEnd!=null) {
+                print("vacation " + vacationStart.toString() + " ~ " + vacationEnd.toString());
+                requestVacation();
+              }
+            }
+          );
+    }
 
 
   void requestVacation() async {
-    currentWork = Work().createWork(firebaseProvider.getUser()!.uid);
-    //당일 중복등록 못하게 validation
-    bool checkDuplication = await UserDatabase().checkDuplication(
-        currentWork!.userUid!);
-
-    //당일 첫 출근인경우
-    if (checkDuplication) {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      //work doc 생성
-      firestore.collection("work").doc().set(currentWork!.toJson());
-      //workUid 넣어줌
-      //await 안쓰면 uid 날라간다.
-      await firestore.collection("work")
-          .where("userUid", isEqualTo: currentWork!.userUid)
-          .where("workUid", isNull: true)
-          .get().then(
-              (value) {
-            value.docs.forEach((doc) {
-              currentWork!.workUid = doc.id;
-              doc.reference.update({"workUid": doc.id});
-            });
-          }
-      );
-      workProvider!.setCurrentWork(currentWork);
-
-      //당일에 퇴근후 출근 또누른경우
-    } else {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-          const SnackBar(
-            duration: Duration(seconds: 1),
-            content: Text("당일 중복등록 불가",
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            backgroundColor: Colors.black,
-          )
-      );
+    List<Work> vacationList=[];
+    if(vacationStart!=null && vacationEnd!=null) {
+      vacationList = Work().createVacation(
+          firebaseProvider.getUser()!.uid, vacationStart!, vacationEnd!);
     }
+    print("here : "+ vacationList.toString());
+    vacationStart=null;
+    vacationEnd=null;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    //work doc 생성 -> WorkingTimeState.vacationWait
+    for(Work w in vacationList) {
+      firestore.collection("work").doc().set(w.toJson());
+    }
+    //workUid 넣어줌
+    //await 안쓰면 uid 날라간다.
+    await firestore.collection("work")
+           .where("userUid", isEqualTo: firebaseProvider.getUserInfo()!.uid)
+           .where("workUid", isNull: true)
+           .where("workingTimeState", isEqualTo: WorkingTimeState.vacationWait.index)
+           .get().then(
+               (value) {
+             value.docs.forEach((doc) {
+               doc.reference.update({"workUid": doc.id});
+             });
+             setState(() {
+               vacationWait=true;
+             });
+           }
+       );
+
   }
 
-  void endTodayWorkingTime() async {
-    currentWork?.endTime = DateTime.now();
-    FirebaseFirestore.instance.collection("work")
-        .where("workUid", isEqualTo: currentWork!.workUid)
-        .get()
-        .then(
+  void checkVacationState() async {
+    await workProvider!.getCurrentVacation().then(
             (value) {
-              value.docs.forEach(
-                      (doc) {
-                          doc.reference.update(currentWork!.toJson());
-          });
-        }
-    ).whenComplete(
-            () {
-              workProvider!.setCurrentWork(currentWork);
-
+              vacationWait=value;
             }
     );
   }
@@ -111,41 +129,28 @@ class _VacationBtnState extends State<VacationBtn> {
 
   @override
   Widget build(BuildContext context) {
-    currentWork= workProvider!.getCurrentWork();
-    //case 1. 출근기록 X --> currentWork==null
-    if(currentWork?.workUid==null) {
-      print("case1");
+    checkVacationState();
+    if(!vacationWait!) {
+      print("no vacation");
       return ElevatedButton(
         child: const Text("휴무신청"),
-        onPressed: requestVacation,
+        onPressed: () {showCalendar("start");},
         style: ElevatedButton.styleFrom(
           primary: Colors.blueAccent,
         ),
       );
-    }
-
-    //case 2. 출근기록 있음 / 근데 퇴근 안누름
-    if(currentWork?.endTime==null){
-      print("case2");
+    }else{
+      print("vacation wait");
       return ElevatedButton(
-          child: const Text("대기중"),
-          onPressed: endTodayWorkingTime,
+          child: const Text("승인대기"),
+          onPressed: (){},
           style: ElevatedButton.styleFrom(
-            primary: Colors.green,
+            primary: Colors.orange,
           )
-      );
-    }else {
-      //case 3. 출퇴근기록 있음 / 아직 출근버튼 안누름
-      print("case3");
-      return ElevatedButton(
-        child: const Text("휴무신청"),
-        onPressed: requestVacation,
-        style: ElevatedButton.styleFrom(
-          primary: Colors.blueAccent,
-        ),
       );
     }
 
   }
 }
+
 

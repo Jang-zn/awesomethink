@@ -80,17 +80,33 @@ class UserDatabase{
   }
 
 
-  //recentWork 호출 -> 휴무는 제외
+  //recentWork 호출 -> 휴무대기는 제외
   Future<Work?> getRecentWork(String? userUid) async {
     Work? work;
     await firestore.collection('work')
         .where("userUid",isEqualTo: userUid)
-        .orderBy("startTime",descending: true)
+        .where("workingTimeState",isNotEqualTo: WorkingTimeState.vacationWait.index)
         .get()
         .then((snapShot) {
             work = Work.fromJson(snapShot.docs.isNotEmpty?snapShot.docs.first.data():{});
     });
     return work;
+  }
+
+  Future<bool?> isVacationWait(String? userUid) async {
+    bool? isWait;
+    await firestore.collection('work')
+        .where("userUid",isEqualTo: userUid)
+        .where("workingTimeState",isEqualTo: WorkingTimeState.vacationWait.index)
+        .get()
+        .then((snapShot) {
+          if(snapShot.docs.isNotEmpty){
+            isWait=true;
+          }else{
+            isWait=false;
+          }
+    });
+    return isWait;
   }
 
   Stream<List<Work>> getWeeklyWorkList(String? uid) {

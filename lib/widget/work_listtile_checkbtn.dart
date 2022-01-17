@@ -37,6 +37,27 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   @override
   Widget build(BuildContext context) {
+    //휴무일 경우
+    if(work!.workingTimeState==WorkingTimeState.vacation){
+      isVisible=true;
+      return Container(
+          margin: EdgeInsets.only(top: 20, left: 250),
+          width: 60,
+          height: 30,
+          child: TextButton(
+              child: const Text("휴무",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  )),
+              style: TextButton.styleFrom(
+                  primary: Colors.red,
+                  padding: EdgeInsets.zero,
+                  backgroundColor: Colors.redAccent),
+              onPressed: () {
+              }));
+    }
     if(!isVisible){
       return Container();
     }

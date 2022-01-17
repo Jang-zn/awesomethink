@@ -32,7 +32,7 @@ class Work{
     data['endTime']=endTime;
     data['workingTimeState']=workingTimeState;
     data['updateDate']=updateDate;
-    data['vacation']=vacation?.toJson();
+    data['vacation']=vacation; //toJson 한번 더 해야되나??
     return data;
   }
 
@@ -99,15 +99,22 @@ class Work{
     return work;
   }
 
-  Work createVacation(String uid, DateTime start, DateTime end){
-    Work work=Work();
-    work.userUid = uid;
-    work.startTime = null;
-    work.endTime = null;
-    work.workingTimeState = WorkingTimeState.closedWait.index;
-    work.updateDate = DateTime.now();
-    work.vacation = Vacation(startVacation: start, endVacation: end);
-    return work;
+  //휴무는 하루가 아닐수 있으니 List로 처리
+  List<Work> createVacation(String uid, DateTime start, DateTime end){
+    List<Work> vacationList=[];
+    int count = end.day-start.day+1;
+    //count일간의 work 생성 (state=vacationWait)
+    for(int i=0; i<count;i++) {
+      Work vacation = Work();
+      vacation.userUid = uid;
+      //정상근무처리
+      vacation.startTime = DateTime(start.year,start.month,start.day+i,9,0);
+      vacation.endTime = DateTime(start.year,start.month,start.day+i,18,0);
+      vacation.workingTimeState = WorkingTimeState.vacationWait.index;
+      vacation.updateDate = DateTime.now();
+      vacation.vacation = Vacation(startVacation: start, endVacation: end);
+    }
+    return vacationList;
   }
 
 

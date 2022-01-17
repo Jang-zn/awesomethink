@@ -3,6 +3,6 @@ enum UserType{
 }
 
 enum WorkingTimeState{
-  wait, check, closedWait, closed, no_reward
+  wait, check, vacationWait, vacation, no_reward
 }
 
