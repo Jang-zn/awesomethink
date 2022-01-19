@@ -127,23 +127,28 @@ class Work{
 
   Map<String, int> getWorkingTimeToMap(){
     Map<String, int> timeMap=Map();
-    Duration duration=endTime!.difference(startTime!);
-    int total = duration.inMinutes;
+    try {
+      Duration duration = endTime!.difference(startTime!);
+      int total = duration.inMinutes;
 
-    //휴게시간 4시간마다 30분
-    double checkTime = ((total-total%60)/240);
-    //↑ 이거 int로 하면 1or2라서 분처리가 안됨
-    if(checkTime>2){
-      total-=60;
-    }else if(checkTime>1){
-      total-=30;
+      //휴게시간 4시간마다 30분
+      double checkTime = ((total - total % 60) / 240);
+      //↑ 이거 int로 하면 1or2라서 분처리가 안됨
+      if (checkTime > 2) {
+        total -= 60;
+      } else if (checkTime > 1) {
+        total -= 30;
+      }
+
+      int h = (total - total % 60) ~/ 60;
+      int m = total % 60;
+      timeMap.putIfAbsent("hour", () => h);
+      timeMap.putIfAbsent("minute", () => m);
+      return timeMap;
+    }catch(e){
+      return timeMap;
     }
 
-    int h = (total-total%60)~/60;
-    int m = total%60;
-    timeMap.putIfAbsent("hour", () => h);
-    timeMap.putIfAbsent("minute", () => m);
-    return timeMap;
   }
 
 

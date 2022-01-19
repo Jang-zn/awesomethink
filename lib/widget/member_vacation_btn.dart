@@ -135,26 +135,39 @@ class _VacationBtnState extends State<VacationBtn> {
   @override
   Widget build(BuildContext context) {
     checkVacationState();
-    if(!vacationWait!) {
-      print("no vacation");
+    try {
+      if (!vacationWait!) {
+        print("no vacation");
+        return ElevatedButton(
+          child: const Text("휴무신청"),
+          onPressed: () {
+            showCalendar("start");
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blueAccent,
+          ),
+        );
+      } else {
+        print("vacation wait");
+        return ElevatedButton(
+            child: const Text("승인대기"),
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              primary: Colors.orange,
+            )
+        );
+      }
+    }catch(e){
       return ElevatedButton(
         child: const Text("휴무신청"),
-        onPressed: () {showCalendar("start");},
+        onPressed: () {
+          showCalendar("start");
+        },
         style: ElevatedButton.styleFrom(
           primary: Colors.blueAccent,
         ),
       );
-    }else{
-      print("vacation wait");
-      return ElevatedButton(
-          child: const Text("승인대기"),
-          onPressed: (){},
-          style: ElevatedButton.styleFrom(
-            primary: Colors.orange,
-          )
-      );
     }
-
   }
 }
 

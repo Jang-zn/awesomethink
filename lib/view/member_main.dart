@@ -213,41 +213,60 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     //Stream to List<Object>
     Stream<List<Work>> getWorkList = UserDatabase().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
     await for (List<Work> works in getWorkList) {
-      workList=works; // yay, the NEXT list is here
-      for(Work w in workList) {
-        Map<String, int> timeMap = w.getWorkingTimeToMap();
-        weeklyHour += timeMap["hour"]!;
-        weeklyMinute += timeMap["minute"]!;
+      workList = works; // yay, the NEXT list is here
+      print(workList.toString());
+      try {
+        for (Work w in workList) {
+          Map<String, int> timeMap = w.getWorkingTimeToMap();
+          weeklyHour += timeMap["hour"]!;
+          weeklyMinute += timeMap["minute"]!;
+        }
+
+        // 분 합계가 60분 이상이면 단위 올려줌
+        if (weeklyMinute > 59) {
+          weeklyHour += (weeklyMinute - weeklyMinute % 60) ~/ 60;
+          weeklyMinute = weeklyMinute % 60;
+        }
+
+        //requiredHour / Minute 처리
+        requiredHour = requiredHour - weeklyHour;
+        requiredMinute = requiredMinute - weeklyMinute;
+        if (requiredHour < 0) {
+          requiredHour = 0;
+          requiredMinute = 0;
+        }
+
+        if (requiredMinute == 60) {
+          requiredMinute = 0;
+          requiredHour += 1;
+        }
+
+
+        //출력메세지 세팅
+        weeklyMinute > 0 ?
+        weeklyWorkingTime =
+            weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"
+            : weeklyWorkingTime =
+            weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
+        requiredMinute > 0 ?
+        requiredWorkingTime =
+            requiredHour.toString() + "시간 " + requiredMinute.toString() + "분"
+            : requiredWorkingTime =
+            requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
+                "분";
+      }catch(e){
+        weeklyMinute > 0 ?
+        weeklyWorkingTime =
+            weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"
+            : weeklyWorkingTime =
+            weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
+        requiredMinute > 0 ?
+        requiredWorkingTime =
+            requiredHour.toString() + "시간 " + requiredMinute.toString() + "분"
+            : requiredWorkingTime =
+            requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
+                "분";
       }
-
-      // 분 합계가 60분 이상이면 단위 올려줌
-      if(weeklyMinute>59){
-        weeklyHour += (weeklyMinute-weeklyMinute%60)~/60;
-        weeklyMinute = weeklyMinute%60;
-      }
-
-      //requiredHour / Minute 처리
-      requiredHour = requiredHour-weeklyHour;
-      requiredMinute = requiredMinute-weeklyMinute;
-      if(requiredHour<0){
-        requiredHour=0;
-        requiredMinute=0;
-      }
-
-      if(requiredMinute==60){
-        requiredMinute=0;
-        requiredHour+=1;
-      }
-
-
-         //출력메세지 세팅
-      weeklyMinute>0?
-        weeklyWorkingTime = weeklyHour.toString()+"시간 "+ weeklyMinute.toString()+"분"
-      : weeklyWorkingTime = weeklyHour.toString()+"시간 "+ "0"+weeklyMinute.toString()+"분";
-      requiredMinute>0?
-        requiredWorkingTime = requiredHour.toString()+"시간 "+requiredMinute.toString()+"분"
-      : requiredWorkingTime = requiredHour.toString()+"시간 "+"0"+requiredMinute.toString()+"분";
-
     }
   }
 }
