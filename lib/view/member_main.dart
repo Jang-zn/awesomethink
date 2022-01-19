@@ -8,7 +8,6 @@ import 'package:awesomethink/widget/member_vacation_btn.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AwesomeMainPage extends StatelessWidget {
   AwesomeMainPage({Key? key, required this.firebaseProvider}) : super(key: key);
@@ -43,34 +42,30 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   Stream<QuerySnapshot>? workStream;
   String weeklyWorkingTime ="0시간 00분";
   String requiredWorkingTime ="40시간 00분";
-  Work? currWork;
+
   //생성자
   _AwesomeMainWidgetState(this.firebaseProvider);
 
 
-  @override
-  void initState() {
-    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
-  }
 
 
+  //스트림 init에 쳐넣어놔서 반영 안됐는데 이제 되네,..
   @override
   void didChangeDependencies() {
-    workProvider = Provider.of<WorkProvider>(context);
-    currWork = workProvider?.getCurrentWork();
-
-  }
-
-  void refreshMain(){
-
+    workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
+    getWeeklyWorkingTime();
   }
 
   @override
   Widget build(BuildContext context) {
-    getWeeklyWorkingTime();
-    Member? user = firebaseProvider.getUserInfo();
     return Scaffold(
-          body: SafeArea(
+          body:MemberMainWidget(firebaseProvider, context, workStream),
+    );
+  }
+
+  Widget MemberMainWidget(FirebaseProvider? firebaseProvider, BuildContext context, Stream<QuerySnapshot>? workStream){
+    Member? user = firebaseProvider!.getUserInfo();
+    return SafeArea(
         child:Column(
           children: [
             //출퇴근버튼, 휴무신청버튼
@@ -79,12 +74,13 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 child:Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    //TODO 출퇴근기능 - 휴무추가해야됨
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
                         child : WorkInOutBtn(firebaseProvider: firebaseProvider, buildContext: context,)
                     ),
 
-                    //TODO 휴무신청 - 리스트 호출하는데서 문제.. 개같은 비동기
+                    //TODO 휴무신청
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
                         child : VacationBtn(firebaseProvider: firebaseProvider, buildContext: context,)
@@ -158,58 +154,42 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 margin: const EdgeInsets.symmetric(horizontal: 20, vertical:10),
                 child:Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:[
+                    children:const [
                       Text("이번주 근무 현황"),
-                      ElevatedButton(onPressed: refreshMain, child: Text("새로고침")),
+                      ElevatedButton(onPressed: tempFunction, child: Text("근태관리")),
                     ]
                 )
             ),
 
             StreamBuilder(
               stream:workStream,
-              initialData: workStream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                try {
-                  if(snapshot.data.docs.length==0){return Container();}
-                  return Expanded(child: ListView.builder(
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        return WorkListTile(
-                            snapshot.data.docs[index], workProvider!
-                        );
-                      }
-                  ));
-                }catch(e){
-                  return Container();
+                switch(snapshot.connectionState) {
+                  case ConnectionState.waiting :
+                    return Container();
+                  default :
+                    if (!snapshot.hasData) {
+                      return Container();
+                    }
+                    //리스트로 불러와서 처리할 snapshot 가져옴
+                    List<DocumentSnapshot> documentsList = snapshot.data!.docs;
+                    List<WorkListTile> tileList = documentsList.map((
+                        eachDocument) => WorkListTile(eachDocument, context))
+                        .toList();
+                    return Expanded(child:
+                    ListView.builder(
+                        itemCount: tileList.length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) {
+                          return tileList[index];
+                        }
+                    ));
                 }
-
-                // if(snapshot.connectionState==ConnectionState.active) {
-                //       if (!snapshot.hasData) {
-                //         return Container();
-                //       }
-                //       //리스트로 불러와서 처리할 snapshot 가져옴
-                //       List<DocumentSnapshot> documentsList = snapshot.data!
-                //           .docs;
-                //       List<WorkListTile> tileList = documentsList.map(
-                //          (eachDocument) => WorkListTile(eachDocument, workProvider!)
-                //       ).toList();
-                //
-                //       return Expanded(child:
-                //       ListView.builder(
-                //           itemCount: tileList.length,
-                //           scrollDirection: Axis.vertical,
-                //           itemBuilder: (context, index) {
-                //             return tileList[index];
-                //           }
-                //       ));
-                // }else{
-                //   return CircularProgressIndicator();
-                // }
-                },
+                }
             )
           ],
         )
-    ));
+    );
   }
 
 
@@ -233,63 +213,41 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     //Stream to List<Object>
     Stream<List<Work>> getWorkList = UserDatabase().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
     await for (List<Work> works in getWorkList) {
-      workList = works; // yay, the NEXT list is here
-      try {
-        for (Work w in workList) {
-          Map<String, int> timeMap = w.getWorkingTimeToMap();
-          weeklyHour += timeMap["hour"]!;
-          weeklyMinute += timeMap["minute"]!;
-        }
-
-        // 분 합계가 60분 이상이면 단위 올려줌
-        if (weeklyMinute > 59) {
-          weeklyHour += (weeklyMinute - weeklyMinute % 60) ~/ 60;
-          weeklyMinute = weeklyMinute % 60;
-        }
-
-        //requiredHour / Minute 처리
-        requiredHour = requiredHour - weeklyHour;
-        requiredMinute = requiredMinute - weeklyMinute;
-        if (requiredHour < 0) {
-          requiredHour = 0;
-          requiredMinute = 0;
-        }
-
-        if (requiredMinute == 60) {
-          requiredMinute = 0;
-          requiredHour += 1;
-        }
-
-
-        //출력메세지 세팅
-        weeklyMinute > 0 ?
-        weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"
-            : weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
-        requiredMinute > 0 ?
-        requiredWorkingTime =
-            requiredHour.toString() + "시간 " + requiredMinute.toString() + "분"
-            : requiredWorkingTime =
-            requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
-                "분";
-      }catch(e){
-        if (requiredMinute == 60) {
-          requiredMinute = 0;
-          requiredHour += 1;
-        }
-        weeklyMinute > 0 ?
-        weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"
-            : weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
-        requiredMinute > 0 ?
-        requiredWorkingTime =
-            requiredHour.toString() + "시간 " + requiredMinute.toString() + "분"
-            : requiredWorkingTime =
-            requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
-                "분";
+      workList=works; // yay, the NEXT list is here
+      for(Work w in workList) {
+        Map<String, int> timeMap = w.getWorkingTimeToMap();
+        weeklyHour += timeMap["hour"]!;
+        weeklyMinute += timeMap["minute"]!;
       }
+
+      // 분 합계가 60분 이상이면 단위 올려줌
+      if(weeklyMinute>59){
+        weeklyHour += (weeklyMinute-weeklyMinute%60)~/60;
+        weeklyMinute = weeklyMinute%60;
+      }
+
+      //requiredHour / Minute 처리
+      requiredHour = requiredHour-weeklyHour;
+      requiredMinute = requiredMinute-weeklyMinute;
+      if(requiredHour<0){
+        requiredHour=0;
+        requiredMinute=0;
+      }
+
+      if(requiredMinute==60){
+        requiredMinute=0;
+        requiredHour+=1;
+      }
+
+
+         //출력메세지 세팅
+      weeklyMinute>0?
+        weeklyWorkingTime = weeklyHour.toString()+"시간 "+ weeklyMinute.toString()+"분"
+      : weeklyWorkingTime = weeklyHour.toString()+"시간 "+ "0"+weeklyMinute.toString()+"분";
+      requiredMinute>0?
+        requiredWorkingTime = requiredHour.toString()+"시간 "+requiredMinute.toString()+"분"
+      : requiredWorkingTime = requiredHour.toString()+"시간 "+"0"+requiredMinute.toString()+"분";
+
     }
   }
 }
