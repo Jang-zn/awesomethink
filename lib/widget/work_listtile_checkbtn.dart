@@ -18,6 +18,11 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
   _WorkListTileCheckBtnState({required this.work});
 
 
+  @override
+  void initState() {
+    isVisible = work?.endTime==null?false:true;
+  }
+
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
     //우선 바로 눌리게 해놈
@@ -37,6 +42,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   @override
   Widget build(BuildContext context) {
+    print("workBtn : "+work.toString());
     //휴무일 경우
     if(work!.workingTimeState==WorkingTimeState.vacation.index){
       isVisible=true;

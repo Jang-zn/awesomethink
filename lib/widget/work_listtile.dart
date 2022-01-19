@@ -30,8 +30,6 @@ class _WorkListTileState extends State<WorkListTile> {
   Widget build(BuildContext context) {
     currentWork = workProvider.getCurrentWork();
     thisTileWork=Work.fromJson(documentData.data() as Map<String, dynamic>);
-    print("currentWork : "+currentWork.toString());
-    print("thisWork : "+thisTileWork.toString());
     try {
       if (currentWork?.workUid != null
           && currentWork?.startTime?.year == thisTileWork?.startTime?.year
@@ -40,7 +38,6 @@ class _WorkListTileState extends State<WorkListTile> {
           && currentWork?.startTime?.hour == thisTileWork?.startTime?.hour
           && currentWork?.startTime?.minute == thisTileWork?.startTime?.minute
       ) {
-        print("왜이래 씨발");
         thisTileWork = currentWork;
       }
     }catch(e){
