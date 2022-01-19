@@ -3,7 +3,6 @@ import 'package:awesomethink/utils/constants.dart';
 
 class Work{
   String? userUid; //User uid
-  String? workUid;
   DateTime? startTime;
   DateTime? endTime;
   int? workingTimeState;
@@ -11,11 +10,10 @@ class Work{
   Vacation? vacation;
 
 
-  Work({this.workUid,this.userUid, this.startTime, this.endTime, this.workingTimeState, this.updateDate, this.vacation});
+  Work({this.userUid, this.startTime, this.endTime, this.workingTimeState, this.updateDate, this.vacation});
 
   Work.fromJson(Map<String, dynamic> json){
     userUid=json['userUid'];
-    workUid=json['workUid'];
     startTime=json['startTime']?.toDate();
     endTime=json['endTime']?.toDate();
     workingTimeState=json['workingTimeState'];
@@ -26,7 +24,6 @@ class Work{
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['userUid']=userUid;
-    data['workUid']=workUid;
     data['startTime']=startTime;
     data['endTime']=endTime;
     data['workingTimeState']=workingTimeState;
@@ -122,7 +119,7 @@ class Work{
 
   @override
   String toString() {
-    return 'Work{userUid: $userUid, workUid: $workUid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate, vacation: ${vacation.toString()}}';
+    return 'Work{userUid: $userUid, startTime: $startTime, endTime: $endTime, workingTimeState: $workingTimeState, updateDate: $updateDate, vacation: ${vacation.toString()}}';
   }
 
   Map<String, int> getWorkingTimeToMap(){

@@ -31,7 +31,7 @@ class _WorkListTileState extends State<WorkListTile> {
     currentWork = workProvider.getCurrentWork();
     thisTileWork=Work.fromJson(documentData.data() as Map<String, dynamic>);
     try {
-      if (currentWork?.workUid != null
+      if (currentWork?.startTime != null
           && currentWork?.startTime?.year == thisTileWork?.startTime?.year
           && currentWork?.startTime?.month == thisTileWork?.startTime?.month
           && currentWork?.startTime?.day == thisTileWork?.startTime?.day

@@ -1,7 +1,9 @@
+import 'package:awesomethink/firebase/work_provider.dart';
 import 'package:awesomethink/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WorkListTileCheckBtn extends StatefulWidget {
   const WorkListTileCheckBtn({Key? key, required this.work}) : super(key: key);
@@ -20,7 +22,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   @override
   void initState() {
-    isVisible = work?.endTime==null?false:true;
+    isVisible = work?.workingTimeState==0?true:false;
   }
 
   void workingCheck () {
@@ -28,11 +30,10 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
     //우선 바로 눌리게 해놈
     FirebaseFirestore.instance
         .collection("work")
-        .doc(work?.workUid)
+        .where("startTime",isEqualTo: work!.startTime)
         .get()
         .then((val) {
-      val.reference
-          .update({"workingTimeState": WorkingTimeState.check.index});
+          val.docs.first.reference.update({"workingTimeState": WorkingTimeState.check.index});
     }).whenComplete(() {
       setState(() {
         isVisible=false;
@@ -42,7 +43,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   @override
   Widget build(BuildContext context) {
-    print("workBtn : "+work.toString());
     //휴무일 경우
     if(work!.workingTimeState==WorkingTimeState.vacation.index){
       isVisible=true;

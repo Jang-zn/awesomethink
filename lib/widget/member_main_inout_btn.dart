@@ -50,19 +50,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       //work doc 생성
       firestore.collection("work").doc().set(currentWork!.toJson());
-      //workUid 넣어줌
-      //await 안쓰면 uid 날라간다.
-      await firestore.collection("work")
-          .where("userUid", isEqualTo: currentWork!.userUid)
-          .where("workUid", isNull: true)
-          .get().then(
-              (value) {
-            value.docs.forEach((doc) {
-              currentWork!.workUid = doc.id;
-              doc.reference.update({"workUid": doc.id});
-            });
-          }
-      );
       workProvider!.setCurrentWork(currentWork);
 
       //당일에 퇴근후 출근 또누른경우
@@ -85,7 +72,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   void endTodayWorkingTime() async {
     currentWork?.endTime = DateTime.now();
     UserDatabase().firestore.collection("work")
-        .where("workUid", isEqualTo: currentWork!.workUid)
+        .where("startTime", isEqualTo: currentWork!.startTime)
         .get()
         .then(
             (value) {
@@ -103,7 +90,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   Widget build(BuildContext context) {
     currentWork= workProvider!.getCurrentWork();
     //case 1. 출근기록 X --> currentWork==null
-    if(currentWork?.workUid==null) {
+    if(currentWork?.startTime==null) {
       print("case1");
       return ElevatedButton(
         child: const Text("출근"),
