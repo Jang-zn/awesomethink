@@ -11,5 +11,9 @@ class WorkRepository{
       logger.d("init WorkProvider : current" + currentWork.toString());
     }
   }
+
+  Work? getCurrentWork(){
+    return currentWork;
+  }
 }
 

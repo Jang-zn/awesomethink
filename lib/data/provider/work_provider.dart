@@ -1,4 +1,5 @@
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 
@@ -8,28 +9,28 @@ class WorkProvider {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 
-
-  Work? getCurrentWork(){
-    return currentWork;
+  Future<bool?> isVacationWait(String? userUid) async {
+    bool? isWait;
+    await firestore.collection('work')
+        .where("userUid",isEqualTo: userUid)
+        .where("workingTimeState",isEqualTo: WorkingTimeState.vacationWait.index)
+        .get()
+        .then((snapShot) {
+      if(snapShot.docs.isNotEmpty){
+        isWait=true;
+      }else{
+        isWait=false;
+      }
+    });
+    return isWait;
   }
 
-  Future<bool?> getCurrentVacation() async {
-    return await isVacationWait(currentUser?.uid);
+
+  //타일 워크 호출
+  Future<QuerySnapshot> getCurrentTileWork(DateTime? startTime) async {
+    return await firestore.collection('work').where("startTime",isEqualTo: startTime).get();
   }
 
-  Future<Work?> getCurrentTileWork(DateTime? startTime) async {
-    return await getCurrentTileWork(startTime);
-  }
-
-  void setCurrentWork(Work? work){
-    currentWork=work;
-    notifyListeners();
-  }
-
-  Future<void> _prepareCurrentWork() async {
-    currentWork=await getRecentWork(currentUser?.uid);
-    notifyListeners();
-  }
 
   Stream<QuerySnapshot> getWeeklyWorkStream(String uid) {
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
@@ -74,22 +75,6 @@ class WorkProvider {
     return work;
   }
 
-  Future<bool?> isVacationWait(String? userUid) async {
-    bool? isWait;
-    await firestore.collection('work')
-        .where("userUid",isEqualTo: userUid)
-        .where("workingTimeState",isEqualTo: WorkingTimeState.vacationWait.index)
-        .get()
-        .then((snapShot) {
-      if(snapShot.docs.isNotEmpty){
-        isWait=true;
-      }else{
-        isWait=false;
-      }
-    });
-    return isWait;
-  }
-
   Stream<List<Work>> getWeeklyWorkList(String? uid) {
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
@@ -106,18 +91,6 @@ class WorkProvider {
                 .fromJson(doc.data())
         ).toList()
     );
-  }
-
-  //타일 워크 호출
-  Future<Work?> getCurrentTileWork(DateTime? startTime) async {
-    Work? work;
-    await firestore.collection('work')
-        .where("startTime",isEqualTo: startTime)
-        .get()
-        .then((snapShot) {
-      work = Work.fromJson(snapShot.docs.isNotEmpty?snapShot.docs.first.data():{});
-    });
-    return work;
   }
 
 }
