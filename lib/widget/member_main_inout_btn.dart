@@ -84,7 +84,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   void endTodayWorkingTime() async {
     currentWork?.endTime = DateTime.now();
-    FirebaseFirestore.instance.collection("work")
+    UserDatabase().firestore.collection("work")
         .where("workUid", isEqualTo: currentWork!.workUid)
         .get()
         .then(
@@ -97,7 +97,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     ).whenComplete(
             () {
               workProvider!.setCurrentWork(currentWork);
-
             }
     );
   }

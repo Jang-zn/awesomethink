@@ -57,7 +57,7 @@ class UserDatabase{
     DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
      var query = firestore.collection("work")
          .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
-         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월~일만 불러옴
+         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday)//중에서 월~일만 불러옴
          .orderBy("startTime",descending: true);
 
     return query.snapshots();

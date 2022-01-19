@@ -48,7 +48,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
 
   @override
-  void didChangeDependencies() {
+  void initState() {
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
   }
 
@@ -156,19 +156,21 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
             StreamBuilder(
               stream:workStream,
+              initialData: workStream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if(snapshot.connectionState==ConnectionState.active) {
-                  print("active");
                       if (!snapshot.hasData) {
-                        print("not yet");
-                        return CircularProgressIndicator();
+                        return Container();
                       }
                       //리스트로 불러와서 처리할 snapshot 가져옴
                       List<DocumentSnapshot> documentsList = snapshot.data!
                           .docs;
                       List<WorkListTile> tileList = documentsList.map(
-                              (eachDocument) =>
+                         (eachDocument) =>
                               WorkListTile(eachDocument, context)).toList();
+                              print("list length :"+ tileList.length.toString()
+                      );
+
 
                       return Expanded(child:
                       ListView.builder(
@@ -179,7 +181,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                           }
                       ));
                 }else{
-                  return Container(child:Text("${snapshot.connectionState.toString()}"));
+                  return CircularProgressIndicator();
                 }
                 },
             )

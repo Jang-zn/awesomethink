@@ -29,6 +29,7 @@ class _WorkListTileState extends State<WorkListTile> {
   @override
   Widget build(BuildContext context) {
     work=Work.fromJson(documentData.data() as Map<String, dynamic>);
+    print(work!.workUid);
     //print("빌드됨? : "+work.toString());
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
