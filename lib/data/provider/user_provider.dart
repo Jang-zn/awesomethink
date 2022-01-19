@@ -1,10 +1,10 @@
-import 'package:awesomethink/model/member.dart';
-import 'package:awesomethink/model/work.dart';
+import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class UserDatabase{
+class UserProvider{
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   late CollectionReference userCollection = firestore.collection("user");

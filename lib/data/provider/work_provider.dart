@@ -1,6 +1,6 @@
-import 'package:awesomethink/firebase/user_database.dart';
-import 'package:awesomethink/model/member.dart';
-import 'package:awesomethink/model/work.dart';
+import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -21,11 +21,11 @@ class WorkProvider with ChangeNotifier {
   }
 
   Future<bool?> getCurrentVacation() async {
-    return await UserDatabase().isVacationWait(currentUser?.uid);
+    return await UserProvider().isVacationWait(currentUser?.uid);
   }
 
   Future<Work?> getCurrentTileWork(DateTime? startTime) async {
-    return await UserDatabase().getCurrentTileWork(startTime);
+    return await UserProvider().getCurrentTileWork(startTime);
   }
 
   void setCurrentWork(Work? work){
@@ -34,7 +34,7 @@ class WorkProvider with ChangeNotifier {
   }
 
   Future<void> _prepareCurrentWork() async {
-    currentWork=await UserDatabase().getRecentWork(currentUser?.uid);
+    currentWork=await UserProvider().getRecentWork(currentUser?.uid);
     notifyListeners();
   }
 

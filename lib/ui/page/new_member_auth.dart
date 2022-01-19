@@ -1,5 +1,5 @@
-import 'package:awesomethink/firebase/user_database.dart';
-import 'package:awesomethink/widget/newbie_listtile.dart';
+import 'package:awesomethink/data/provider/user_provider.dart';
+import 'package:awesomethink/ui/component/newbie_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ class NewMemberAuthPage extends StatefulWidget {
 }
 
 class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
-  late Stream<QuerySnapshot> newbieList = UserDatabase().getNewbieStream();
+  late Stream<QuerySnapshot> newbieList = UserProvider().getNewbieStream();
 
   void backPage() {
     Navigator.of(context).pop();

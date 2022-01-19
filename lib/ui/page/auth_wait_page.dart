@@ -1,4 +1,4 @@
-import 'package:awesomethink/firebase/firebase_provider.dart';
+import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

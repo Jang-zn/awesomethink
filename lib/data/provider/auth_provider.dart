@@ -1,25 +1,19 @@
-import 'package:awesomethink/firebase/user_database.dart';
-import 'package:awesomethink/model/member.dart';
+import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-class FirebaseProvider with ChangeNotifier{
-
-
+class FirebaseProvider {
   Logger logger = Logger();
-  final FirebaseAuth fAuth = FirebaseAuth.instance; //firebase 인증 인스턴스
+  final FirebaseAuth fAuth = FirebaseAuth.instance; //provider 인증 인스턴스
   User? _user; //FirebaseUser -> User 로 바뀜
   Member? _userInfo; //firestore에 저장된 user 정보
-
-  String _lastFirebaseResponse = ""; //에러처리용 String
-
-
 
   FirebaseProvider() {
     _prepareUser();
     logger.d("init FirebaseProvider");
   }
+
 
   _prepareUser(){
     _user = fAuth.currentUser;
@@ -34,7 +28,6 @@ class FirebaseProvider with ChangeNotifier{
 
   void setUserInfo(Member? value){
     _userInfo = value;
-   notifyListeners();
   }
 
   User? getUser() {
@@ -71,7 +64,7 @@ class FirebaseProvider with ChangeNotifier{
       var result = await fAuth.signInWithEmailAndPassword(
           email: email, password: password);
         setUser(result.user);
-        Member info =await UserDatabase().getUserByUid(result.user!.uid);
+        Member info =await UserProvider().getUserByUid(result.user!.uid);
         setUserInfo(info);
         logger.d(getUser());
         return true;
@@ -79,17 +72,6 @@ class FirebaseProvider with ChangeNotifier{
       logger.e(e.toString());
       return false;
     }
-  }
-  // Firebase로부터 수신한 메시지 설정
-  setLastFBMessage(String msg) {
-    _lastFirebaseResponse = msg;
-  }
-
-  // Firebase로부터 수신한 메시지를 반환하고 삭제
-  getLastFBMessage() {
-    String returnValue = _lastFirebaseResponse;
-    _lastFirebaseResponse = "";
-    return returnValue;
   }
 
   // Firebase로부터 로그아웃

@@ -1,11 +1,8 @@
-import 'dart:async';
-
-import 'package:awesomethink/firebase/work_provider.dart';
-import 'package:awesomethink/model/work.dart';
-import 'package:awesomethink/widget/work_listtile_checkbtn.dart';
+import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/data/provider/work_provider.dart';
+import 'package:awesomethink/ui/component/work_listtile_checkbtn.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class WorkListTile extends StatefulWidget {
   late final DocumentSnapshot documentData;

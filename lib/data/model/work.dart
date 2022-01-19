@@ -1,4 +1,4 @@
-import 'package:awesomethink/model/vacation.dart';
+import 'package:awesomethink/data/model/vacation.dart';
 import 'package:awesomethink/utils/constants.dart';
 
 class Work{

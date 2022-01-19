@@ -1,9 +1,9 @@
-import 'package:awesomethink/firebase/firebase_provider.dart';
-import 'package:awesomethink/view/admin_main.dart';
-import 'package:awesomethink/view/signUp.dart';
-import 'package:awesomethink/view/test.dart';
+import 'package:awesomethink/data/provider/auth_provider.dart';
+import 'package:awesomethink/ui/page/signUp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'admin_main.dart';
 
 
 class AwesomeThinkLoginPage extends StatefulWidget {

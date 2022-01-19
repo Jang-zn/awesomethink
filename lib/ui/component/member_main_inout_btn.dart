@@ -1,7 +1,7 @@
-import 'package:awesomethink/firebase/firebase_provider.dart';
-import 'package:awesomethink/firebase/user_database.dart';
-import 'package:awesomethink/firebase/work_provider.dart';
-import 'package:awesomethink/model/work.dart';
+import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/data/provider/auth_provider.dart';
+import 'package:awesomethink/data/provider/user_provider.dart';
+import 'package:awesomethink/data/provider/work_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +42,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   void startTodayWorkingTime() async {
     currentWork = Work().createWork(firebaseProvider.getUser()!.uid);
     //당일 중복등록 못하게 validation
-    bool checkDuplication = await UserDatabase().checkDuplication(
+    bool checkDuplication = await UserProvider().checkDuplication(
         currentWork!.userUid!);
 
     //당일 첫 출근인경우
@@ -71,7 +71,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   void endTodayWorkingTime() async {
     currentWork?.endTime = DateTime.now();
-    UserDatabase().firestore.collection("work")
+    UserProvider().firestore.collection("work")
         .where("startTime", isEqualTo: currentWork!.startTime)
         .get()
         .then(

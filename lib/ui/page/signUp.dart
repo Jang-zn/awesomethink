@@ -1,8 +1,7 @@
 import 'dart:collection';
-
-import 'package:awesomethink/firebase/firebase_provider.dart';
-import 'package:awesomethink/firebase/user_database.dart';
-import 'package:awesomethink/model/member.dart';
+import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/provider/auth_provider.dart';
+import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/service/signup_validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -205,7 +204,7 @@ class SignUpPageState extends State<SignUpPage> {
          user = user.userSignUpData(userMap);
 
          //user 콜렉션에 현재 가입한 uid를 가지는 document 생성
-         UserDatabase().storeUserData(user);
+         UserProvider().storeUserData(user);
          //페이지 닫음
          Navigator.pop(context);
        } else {
