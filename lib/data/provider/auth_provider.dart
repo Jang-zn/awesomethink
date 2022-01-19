@@ -1,41 +1,20 @@
-import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/provider/user_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 
-class FirebaseProvider {
+class UserAuthProvider {
   Logger logger = Logger();
   final FirebaseAuth fAuth = FirebaseAuth.instance; //provider 인증 인스턴스
-  User? _user; //FirebaseUser -> User 로 바뀜
-  Member? _userInfo; //firestore에 저장된 user 정보
+  final FirebaseFirestore firestore = FirebaseFirestore.instance; //firestore 인스턴스
 
-  FirebaseProvider() {
-    _prepareUser();
-    logger.d("init FirebaseProvider");
+
+  User? getCurrentUser(){
+    return fAuth.currentUser;
   }
 
 
-  _prepareUser(){
-    _user = fAuth.currentUser;
-    if(_user!=null) {
-      setUser(_user);
-    }
-  }
-
-  void setUser(User? value) {
-    _user = value;
-  }
-
-  void setUserInfo(Member? value){
-    _userInfo = value;
-  }
-
-  User? getUser() {
-    return _user;
-  }
-
-  Member? getUserInfo() {
-    return _userInfo;
+  Future<DocumentSnapshot> getCurrentUserInfo() {
+    return firestore.collection("user").doc(fAuth.currentUser?.uid).get();
   }
 
 
@@ -44,13 +23,7 @@ class FirebaseProvider {
     try {
       UserCredential result = await fAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-      if (result.user != null) {
-        // 새로운 계정 생성이 성공하였으므로 기존 계정이 있을 경우 로그아웃 시킴
-        signOut();
-        return true;
-      }else{
-        throw Exception("Sign Failed");
-      }
+      return true;
     } on Exception catch (e) {
       logger.e(e.toString());
       return false;
@@ -59,14 +32,9 @@ class FirebaseProvider {
 
 
   // 이메일/비밀번호로 Firebase에 로그인
-  Future<bool> signInWithEmail(String email, String password) async {
+  bool signInWithEmail(String email, String password) {
     try {
-      var result = await fAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-        setUser(result.user);
-        Member info =await UserProvider().getUserByUid(result.user!.uid);
-        setUserInfo(info);
-        logger.d(getUser());
+      fAuth.signInWithEmailAndPassword(email: email, password: password);
         return true;
     } on Exception catch (e) {
       logger.e(e.toString());
@@ -75,12 +43,17 @@ class FirebaseProvider {
   }
 
   // Firebase로부터 로그아웃
-  signOut() async {
+  void signOut() async {
     await fAuth.signOut();
-    setUser(null);
-    setUserInfo(null);
   }
 
+
+ //memberInfo 세팅용
+  Future<DocumentSnapshot> getUserByUid (String? uid) {
+    return firestore.collection("user").doc(uid).get();
+  }
+
+  //TODO
   // // 사용자에게 비밀번호 재설정 메일을 한글로 전송 시도
   // sendPasswordResetEmailByKorean() async {
   //   await fAuth.setLanguageCode("ko");

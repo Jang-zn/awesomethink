@@ -12,7 +12,7 @@ class AdminMainPage extends StatefulWidget {
 
 class _AdminMainPageState extends State<AdminMainPage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
-  late FirebaseProvider fp=Provider.of<FirebaseProvider>(context,listen:false);
+  late UserAuthProvider fp=Provider.of<UserAuthProvider>(context,listen:false);
 
   void tempFunc(){  }
 

@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class AwesomeMainPage extends StatelessWidget {
   AwesomeMainPage({Key? key, required this.firebaseProvider}) : super(key: key);
 
-  final FirebaseProvider firebaseProvider;
+  final UserAuthProvider firebaseProvider;
 
 
   @override
@@ -24,7 +24,7 @@ class AwesomeMainPage extends StatelessWidget {
 
 class AwesomeMainWidget extends StatefulWidget {
   const AwesomeMainWidget({Key? key, required this.firebaseProvider}) : super(key: key);
-  final FirebaseProvider firebaseProvider;
+  final UserAuthProvider firebaseProvider;
 
   @override
   _AwesomeMainWidgetState createState() => _AwesomeMainWidgetState(firebaseProvider);
@@ -38,7 +38,7 @@ void tempFunction(){
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   //필드
-  final FirebaseProvider firebaseProvider;
+  final UserAuthProvider firebaseProvider;
   WorkProvider? workProvider;
   Stream<QuerySnapshot>? workStream;
   String weeklyWorkingTime ="0시간 00분";

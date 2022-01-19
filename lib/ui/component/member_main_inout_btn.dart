@@ -10,7 +10,7 @@ class WorkInOutBtn extends StatefulWidget {
   WorkInOutBtn(
       {Key? key, required this.firebaseProvider, required this.buildContext})
       : super(key: key);
-  final FirebaseProvider firebaseProvider;
+  final UserAuthProvider firebaseProvider;
   final BuildContext buildContext;
 
 
@@ -24,7 +24,7 @@ class WorkInOutBtn extends StatefulWidget {
 }
 
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
-  final FirebaseProvider firebaseProvider;
+  final UserAuthProvider firebaseProvider;
   final BuildContext buildContext;
   WorkProvider? workProvider;
   Work? currentWork;

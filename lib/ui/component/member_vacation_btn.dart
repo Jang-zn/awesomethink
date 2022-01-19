@@ -10,7 +10,7 @@ class VacationBtn extends StatefulWidget {
   VacationBtn(
       {Key? key, required this.firebaseProvider, required this.buildContext})
       : super(key: key);
-  final FirebaseProvider firebaseProvider;
+  final UserAuthProvider firebaseProvider;
   final BuildContext buildContext;
 
 
@@ -24,7 +24,7 @@ class VacationBtn extends StatefulWidget {
 }
 
 class _VacationBtnState extends State<VacationBtn> {
-  final FirebaseProvider firebaseProvider;
+  final UserAuthProvider firebaseProvider;
   final BuildContext buildContext;
   WorkProvider? workProvider;
   bool? vacationWait;

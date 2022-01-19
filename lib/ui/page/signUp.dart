@@ -33,12 +33,12 @@ class SignUpPageState extends State<SignUpPage> {
   final FocusNode _passwordCheckFocus = FocusNode();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late FirebaseProvider fp;
+  late UserAuthProvider fp;
   FirebaseAuth fa = FirebaseAuth.instance;
 
   @override
   void didChangeDependencies() {
-    fp = Provider.of<FirebaseProvider>(context);
+    fp = Provider.of<UserAuthProvider>(context);
     userMap["position"]=selectedValue as String;
   }
 

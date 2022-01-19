@@ -11,7 +11,7 @@ class AuthWaitPage extends StatefulWidget {
 }
 
 class _AuthWaitPageState extends State<AuthWaitPage> {
-  FirebaseProvider? fp;
+  UserAuthProvider? fp;
 
   void logout() {
     fp!.signOut();
@@ -20,7 +20,7 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
 
   @override
   Widget build(BuildContext context) {
-    fp = Provider.of<FirebaseProvider>(context);
+    fp = Provider.of<UserAuthProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset : true,

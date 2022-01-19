@@ -18,13 +18,13 @@ class AuthPage extends StatefulWidget {
 }
 
 class AuthPageState extends State<AuthPage> {
-  FirebaseProvider? fp;
+  UserAuthProvider? fp;
 
   get logger => null;
 
   @override
   Widget build(BuildContext context) {
-    fp = Provider.of<FirebaseProvider>(context);
+    fp = Provider.of<UserAuthProvider>(context);
     //최근 로그인 기록 보고서 로그인페이지 또는 메인페이지로 이동
     if (fp!.getUserInfo()?.uid != null) {
       if (fp!.getUserInfo()?.state == false) {

@@ -19,7 +19,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pwController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late FirebaseProvider fp;
+  late UserAuthProvider fp;
 
 
   void login() async {
@@ -62,7 +62,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    fp = Provider.of<FirebaseProvider>(context);
+    fp = Provider.of<UserAuthProvider>(context);
 
 
     return Scaffold(
