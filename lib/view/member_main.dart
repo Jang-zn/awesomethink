@@ -47,25 +47,18 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   _AwesomeMainWidgetState(this.firebaseProvider);
 
 
-
-
-  //스트림 init에 쳐넣어놔서 반영 안됐는데 이제 되네,..
   @override
   void didChangeDependencies() {
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
-    getWeeklyWorkingTime();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("build");
+    getWeeklyWorkingTime();
+    Member? user = firebaseProvider.getUserInfo();
     return Scaffold(
-          body:MemberMainWidget(firebaseProvider, context, workStream),
-    );
-  }
-
-  Widget MemberMainWidget(FirebaseProvider? firebaseProvider, BuildContext context, Stream<QuerySnapshot>? workStream){
-    Member? user = firebaseProvider!.getUserInfo();
-    return SafeArea(
+          body: SafeArea(
         child:Column(
           children: [
             //출퇴근버튼, 휴무신청버튼
@@ -164,32 +157,35 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
             StreamBuilder(
               stream:workStream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                switch(snapshot.connectionState) {
-                  case ConnectionState.waiting :
-                    return Container();
-                  default :
-                    if (!snapshot.hasData) {
-                      return Container();
-                    }
-                    //리스트로 불러와서 처리할 snapshot 가져옴
-                    List<DocumentSnapshot> documentsList = snapshot.data!.docs;
-                    List<WorkListTile> tileList = documentsList.map((
-                        eachDocument) => WorkListTile(eachDocument, context))
-                        .toList();
-                    return Expanded(child:
-                    ListView.builder(
-                        itemCount: tileList.length,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          return tileList[index];
-                        }
-                    ));
+                if(snapshot.connectionState==ConnectionState.active) {
+                  print("active");
+                      if (!snapshot.hasData) {
+                        print("not yet");
+                        return CircularProgressIndicator();
+                      }
+                      //리스트로 불러와서 처리할 snapshot 가져옴
+                      List<DocumentSnapshot> documentsList = snapshot.data!
+                          .docs;
+                      List<WorkListTile> tileList = documentsList.map(
+                              (eachDocument) =>
+                              WorkListTile(eachDocument, context)).toList();
+
+                      return Expanded(child:
+                      ListView.builder(
+                          itemCount: tileList.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, index) {
+                            return tileList[index];
+                          }
+                      ));
+                }else{
+                  return Container(child:Text("${snapshot.connectionState.toString()}"));
                 }
-                }
+                },
             )
           ],
         )
-    );
+    ));
   }
 
 
@@ -214,7 +210,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     Stream<List<Work>> getWorkList = UserDatabase().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
     await for (List<Work> works in getWorkList) {
       workList = works; // yay, the NEXT list is here
-      print(workList.toString());
       try {
         for (Work w in workList) {
           Map<String, int> timeMap = w.getWorkingTimeToMap();
@@ -255,6 +250,10 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
             requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
                 "분";
       }catch(e){
+        if (requiredMinute == 60) {
+          requiredMinute = 0;
+          requiredHour += 1;
+        }
         weeklyMinute > 0 ?
         weeklyWorkingTime =
             weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"

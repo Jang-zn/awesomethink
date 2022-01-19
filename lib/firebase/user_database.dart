@@ -59,7 +59,6 @@ class UserDatabase{
          .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
          .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월~일만 불러옴
          .orderBy("startTime",descending: true);
-     query = query.where("startTime",isGreaterThanOrEqualTo: lastMonday);//중에서 월요일 기준 전부 다불러옴
 
     return query.snapshots();
   }
