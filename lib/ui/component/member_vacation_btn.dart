@@ -84,13 +84,15 @@ class _VacationBtnState extends State<VacationBtn> {
     }
 
 
-  void requestVacation() {
+  void requestVacation() async {
     List<Work> vacationList=[];
     if(vacationStart!=null && vacationEnd!=null) {
       vacationList = Work().createVacation(
           firebaseProvider.getUser()!.uid, vacationStart!, vacationEnd!);
     }
     vacationList.sort((a,b)=>b.startTime!.compareTo(a.startTime!));
+
+
     vacationStart=null;
     vacationEnd=null;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -101,9 +103,26 @@ class _VacationBtnState extends State<VacationBtn> {
         firestore.collection("work").doc().set(w.toJson());
       }
     }
+    //workUid 넣어줌
+    //await 안쓰면 uid 날라간다.
+    await firestore.collection("work")
+           .where("userUid", isEqualTo: firebaseProvider.getUserInfo()!.uid)
+           .where("workUid", isNull: true)
+           .where("workingTimeState", isEqualTo: WorkingTimeState.vacationWait.index)
+           .get().then(
+               (value) {
+             value.docs.forEach((doc) {
+               doc.reference.update({"workUid": doc.id});
+             });
+             setState(() {
+               vacationWait=true;
+             });
+           }
+       );
+
   }
 
-  void checkVacationState() async{
+  void checkVacationState() async {
     await workProvider!.getCurrentVacation().then(
             (value) {
               vacationWait=value;
@@ -115,39 +134,26 @@ class _VacationBtnState extends State<VacationBtn> {
   @override
   Widget build(BuildContext context) {
     checkVacationState();
-    try {
-      if (!vacationWait!) {
-        print("no vacation");
-        return ElevatedButton(
-          child: const Text("휴무신청"),
-          onPressed: () {
-            showCalendar("start");
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.blueAccent,
-          ),
-        );
-      } else {
-        print("vacation wait");
-        return ElevatedButton(
-            child: const Text("승인대기"),
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              primary: Colors.orange,
-            )
-        );
-      }
-    }catch(e){
+    if(!vacationWait!) {
+      print("no vacation");
       return ElevatedButton(
         child: const Text("휴무신청"),
-        onPressed: () {
-          showCalendar("start");
-        },
+        onPressed: () {showCalendar("start");},
         style: ElevatedButton.styleFrom(
           primary: Colors.blueAccent,
         ),
       );
+    }else{
+      print("vacation wait");
+      return ElevatedButton(
+          child: const Text("승인대기"),
+          onPressed: (){},
+          style: ElevatedButton.styleFrom(
+            primary: Colors.orange,
+          )
+      );
     }
+
   }
 }
 
