@@ -55,7 +55,7 @@ class UserDatabase{
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
     DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
-     var query = firestore.collection("work")
+    Query<Map<String, dynamic>> query = firestore.collection("work")
          .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
          .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday)//중에서 월~일만 불러옴
          .orderBy("startTime",descending: true);
@@ -125,6 +125,18 @@ class UserDatabase{
                         .fromJson(doc.data())
             ).toList()
     );
+  }
+
+  //타일 워크 호출
+  Future<Work?> getCurrentTileWork(DateTime? startTime) async {
+    Work? work;
+    await firestore.collection('work')
+        .where("startTime",isEqualTo: startTime)
+        .get()
+        .then((snapShot) {
+      work = Work.fromJson(snapShot.docs.isNotEmpty?snapShot.docs.first.data():{});
+    });
+    return work;
   }
 
 }

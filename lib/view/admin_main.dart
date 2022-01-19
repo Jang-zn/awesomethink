@@ -1,6 +1,5 @@
 import 'package:awesomethink/firebase/firebase_provider.dart';
 import 'package:awesomethink/view/new_member_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

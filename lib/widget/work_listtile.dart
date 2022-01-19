@@ -25,9 +25,17 @@ class _WorkListTileState extends State<WorkListTile> {
 
   _WorkListTileState(this.documentData, this.workProvider);
 
+  void checkThisTile() {
+    workProvider.getCurrentTileWork(thisTileWork?.startTime).then(
+        (value){
+          thisTileWork = value;
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    checkThisTile();
     currentWork = workProvider.getCurrentWork();
     thisTileWork=Work.fromJson(documentData.data() as Map<String, dynamic>);
     try {

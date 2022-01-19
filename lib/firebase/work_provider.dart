@@ -24,6 +24,10 @@ class WorkProvider with ChangeNotifier {
     return await UserDatabase().isVacationWait(currentUser?.uid);
   }
 
+  Future<Work?> getCurrentTileWork(DateTime? startTime) async {
+    return await UserDatabase().getCurrentTileWork(startTime);
+  }
+
   void setCurrentWork(Work? work){
     currentWork=work;
     notifyListeners();

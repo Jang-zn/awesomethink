@@ -85,15 +85,13 @@ class _VacationBtnState extends State<VacationBtn> {
     }
 
 
-  void requestVacation() async {
+  void requestVacation() {
     List<Work> vacationList=[];
     if(vacationStart!=null && vacationEnd!=null) {
       vacationList = Work().createVacation(
           firebaseProvider.getUser()!.uid, vacationStart!, vacationEnd!);
     }
     vacationList.sort((a,b)=>b.startTime!.compareTo(a.startTime!));
-
-
     vacationStart=null;
     vacationEnd=null;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -104,26 +102,9 @@ class _VacationBtnState extends State<VacationBtn> {
         firestore.collection("work").doc().set(w.toJson());
       }
     }
-    //workUid 넣어줌
-    //await 안쓰면 uid 날라간다.
-    await firestore.collection("work")
-           .where("userUid", isEqualTo: firebaseProvider.getUserInfo()!.uid)
-           .where("workUid", isNull: true)
-           .where("workingTimeState", isEqualTo: WorkingTimeState.vacationWait.index)
-           .get().then(
-               (value) {
-             value.docs.forEach((doc) {
-               doc.reference.update({"workUid": doc.id});
-             });
-             setState(() {
-               vacationWait=true;
-             });
-           }
-       );
-
   }
 
-  void checkVacationState() async {
+  void checkVacationState() async{
     await workProvider!.getCurrentVacation().then(
             (value) {
               vacationWait=value;

@@ -43,7 +43,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   Stream<QuerySnapshot>? workStream;
   String weeklyWorkingTime ="0시간 00분";
   String requiredWorkingTime ="40시간 00분";
-
+  Work? currWork;
   //생성자
   _AwesomeMainWidgetState(this.firebaseProvider);
 
@@ -57,11 +57,16 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   @override
   void didChangeDependencies() {
     workProvider = Provider.of<WorkProvider>(context);
+    currWork = workProvider?.getCurrentWork();
+
+  }
+
+  void refreshMain(){
+
   }
 
   @override
   Widget build(BuildContext context) {
-    print("build");
     getWeeklyWorkingTime();
     Member? user = firebaseProvider.getUserInfo();
     return Scaffold(
@@ -74,13 +79,12 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 child:Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    //TODO 출퇴근기능 - 휴무추가해야됨
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
                         child : WorkInOutBtn(firebaseProvider: firebaseProvider, buildContext: context,)
                     ),
 
-                    //TODO 휴무신청
+                    //TODO 휴무신청 - 리스트 호출하는데서 문제.. 개같은 비동기
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
                         child : VacationBtn(firebaseProvider: firebaseProvider, buildContext: context,)
@@ -154,9 +158,9 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 margin: const EdgeInsets.symmetric(horizontal: 20, vertical:10),
                 child:Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:const [
+                    children:[
                       Text("이번주 근무 현황"),
-                      ElevatedButton(onPressed: tempFunction, child: Text("근태관리")),
+                      ElevatedButton(onPressed: refreshMain, child: Text("새로고침")),
                     ]
                 )
             ),
@@ -165,31 +169,42 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
               stream:workStream,
               initialData: workStream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(snapshot.connectionState==ConnectionState.active) {
-                      if (!snapshot.hasData) {
-                        return Container();
+                try {
+                  if(snapshot.data.docs.length==0){return Container();}
+                  return Expanded(child: ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: (context, index) {
+                        return WorkListTile(
+                            snapshot.data.docs[index], workProvider!
+                        );
                       }
-                      //리스트로 불러와서 처리할 snapshot 가져옴
-                      List<DocumentSnapshot> documentsList = snapshot.data!
-                          .docs;
-                      List<WorkListTile> tileList = documentsList.map(
-                         (eachDocument) =>
-                              WorkListTile(eachDocument, workProvider!)).toList();
-                              print("list length :"+ tileList.length.toString()
-                      );
-
-
-                      return Expanded(child:
-                      ListView.builder(
-                          itemCount: tileList.length,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (context, index) {
-                            return tileList[index];
-                          }
-                      ));
-                }else{
-                  return CircularProgressIndicator();
+                  ));
+                }catch(e){
+                  return Container();
                 }
+
+                // if(snapshot.connectionState==ConnectionState.active) {
+                //       if (!snapshot.hasData) {
+                //         return Container();
+                //       }
+                //       //리스트로 불러와서 처리할 snapshot 가져옴
+                //       List<DocumentSnapshot> documentsList = snapshot.data!
+                //           .docs;
+                //       List<WorkListTile> tileList = documentsList.map(
+                //          (eachDocument) => WorkListTile(eachDocument, workProvider!)
+                //       ).toList();
+                //
+                //       return Expanded(child:
+                //       ListView.builder(
+                //           itemCount: tileList.length,
+                //           scrollDirection: Axis.vertical,
+                //           itemBuilder: (context, index) {
+                //             return tileList[index];
+                //           }
+                //       ));
+                // }else{
+                //   return CircularProgressIndicator();
+                // }
                 },
             )
           ],
