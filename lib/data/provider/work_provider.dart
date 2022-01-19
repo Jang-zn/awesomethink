@@ -1,4 +1,3 @@
-import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
@@ -8,11 +7,7 @@ class WorkProvider {
   Logger logger = Logger();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  WorkProvider(Member? user) {
-    _prepareCurrentWork().then((_){
-      logger.d("init WorkProvider : current"+currentWork.toString());
-    });
-  }
+
 
   Work? getCurrentWork(){
     return currentWork;
