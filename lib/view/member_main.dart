@@ -167,13 +167,16 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
             StreamBuilder(
               stream:workStream,
-              initialData: workStream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 try {
                   if(snapshot.data.docs.length==0){return Container();}
                   return Expanded(child: ListView.builder(
                       itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
+                        if(index==snapshot.data.docs.length-1){
+
+                        }
+                        print(snapshot.data.docs[index]["startTime"].toDate());
                         return WorkListTile(
                             snapshot.data.docs[index], workProvider!
                         );
