@@ -12,7 +12,7 @@ class WorkProvider with ChangeNotifier {
   WorkProvider(Member? user) {
     currentUser = user;
     _prepareCurrentWork().then((_){
-      logger.d("init WorkProvider : "+currentWork.toString());
+      logger.d("init WorkProvider : current"+currentWork.toString());
     });
   }
 

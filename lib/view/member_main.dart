@@ -8,6 +8,7 @@ import 'package:awesomethink/widget/member_vacation_btn.dart';
 import 'package:awesomethink/widget/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AwesomeMainPage extends StatelessWidget {
   AwesomeMainPage({Key? key, required this.firebaseProvider}) : super(key: key);
@@ -50,6 +51,12 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   @override
   void initState() {
     workStream = UserDatabase().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    workProvider = Provider.of<WorkProvider>(context);
   }
 
   @override
@@ -167,7 +174,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                           .docs;
                       List<WorkListTile> tileList = documentsList.map(
                          (eachDocument) =>
-                              WorkListTile(eachDocument, context)).toList();
+                              WorkListTile(eachDocument, workProvider!)).toList();
                               print("list length :"+ tileList.length.toString()
                       );
 

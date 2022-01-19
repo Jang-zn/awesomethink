@@ -9,28 +9,44 @@ import 'package:provider/provider.dart';
 
 class WorkListTile extends StatefulWidget {
   late final DocumentSnapshot documentData;
-  final BuildContext buildContext;
+  final WorkProvider workProvider;
 
-  WorkListTile(this.documentData, this.buildContext);
+  WorkListTile(this.documentData, this.workProvider);
 
   @override
-  _WorkListTileState createState() => _WorkListTileState(documentData:documentData);
+  _WorkListTileState createState() => _WorkListTileState(documentData, workProvider);
 }
 
 class _WorkListTileState extends State<WorkListTile> {
   final DocumentSnapshot documentData;
-  Work? work;
+  final WorkProvider workProvider;
+  Work? thisTileWork;
+  Work? currentWork;
 
-  _WorkListTileState({required this.documentData});
-
-
+  _WorkListTileState(this.documentData, this.workProvider);
 
 
   @override
   Widget build(BuildContext context) {
-    work=Work.fromJson(documentData.data() as Map<String, dynamic>);
-    print(work!.workUid);
-    //print("빌드됨? : "+work.toString());
+    currentWork = workProvider.getCurrentWork();
+    thisTileWork=Work.fromJson(documentData.data() as Map<String, dynamic>);
+    print("currentWork : "+currentWork.toString());
+    print("thisWork : "+thisTileWork.toString());
+    try {
+      if (currentWork?.workUid != null
+          && currentWork?.startTime?.year == thisTileWork?.startTime?.year
+          && currentWork?.startTime?.month == thisTileWork?.startTime?.month
+          && currentWork?.startTime?.day == thisTileWork?.startTime?.day
+          && currentWork?.startTime?.hour == thisTileWork?.startTime?.hour
+          && currentWork?.startTime?.minute == thisTileWork?.startTime?.minute
+      ) {
+        print("왜이래 씨발");
+        thisTileWork = currentWork;
+      }
+    }catch(e){
+      return Container();
+    }
+
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
@@ -39,24 +55,24 @@ class _WorkListTileState extends State<WorkListTile> {
             borderRadius: BorderRadius.circular(5.0),
           ),
           child:
-          work!=null
+          thisTileWork!=null
               ?
           Stack(children: [
             ListTile(
               title: Container(
                   margin: EdgeInsets.only(bottom: 8),
                   child: Row(children: [
-                    Text(work!.createTimeToMMDDW()),
+                    Text(thisTileWork!.createTimeToMMDDW()),
                     SizedBox(width: 10, height: 10),
-                    Text(work!.workingTimeCalc()),
+                    Text(thisTileWork!.workingTimeCalc()),
                   ])),
               subtitle: Row(
                 children: <Widget>[
-                  Text(work!.workingTimeToHHMM()),
+                  Text(thisTileWork!.workingTimeToHHMM()),
                 ],
               ),
             ),
-            WorkListTileCheckBtn(work:work!)
+            WorkListTileCheckBtn(work:thisTileWork!)
           ])
             :
               Container()

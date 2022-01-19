@@ -92,12 +92,9 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
               value.docs.forEach(
                       (doc) {
                           doc.reference.update(currentWork!.toJson());
+                          workProvider!.setCurrentWork(currentWork);
           });
         }
-    ).whenComplete(
-            () {
-              workProvider!.setCurrentWork(currentWork);
-            }
     );
   }
 
