@@ -8,16 +8,14 @@ class AuthRepository{
   final UserAuthProvider authProvider;
   Logger logger = Logger();
   User? _user; //FirebaseUser -> User 로 바뀜
-  Member? _userInfo; //firestore에 저장된 user 정보
 
   AuthRepository({required this.authProvider}){
     _prepareUser();
-    logger.d("init UserAuthProvider"+_userInfo.toString());
+    logger.d("init UserAuthProvider"+_user.toString());
   }
 
   _prepareUser() {
     _user = authProvider.getCurrentUser();
-    _userInfo = Member.fromJson(authProvider.getCurrentUserInfo() as Map<String, dynamic>);
   }
 
   //현재유저
@@ -25,22 +23,13 @@ class AuthRepository{
     return _user;
   }
 
-  //현재 유저정보
-  Member? getCurrentUserInfo() {
-    return _userInfo;
-  }
 
 
-  Member? getUserByUid(String? uid){
-    return Member.fromJson(authProvider.getUserByUid(uid) as Map<String, dynamic>);
-  }
 
   void signInWithEmail(String email, String password) {
     bool result = authProvider.signInWithEmail(email, password);
     if(result) {
       _user = authProvider.getCurrentUser();
-      _userInfo = Member.fromJson(
-          authProvider.getCurrentUserInfo() as Map<String, dynamic>);
     }else{
       throw Exception("Sign Failed");
     }
@@ -59,7 +48,6 @@ class AuthRepository{
 
   void signOut() {
     _user=null;
-    _userInfo=null;
     authProvider.signOut();
   }
 }

@@ -11,7 +11,7 @@ class NewMemberAuthPage extends StatefulWidget {
 }
 
 class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
-  late Stream<QuerySnapshot> newbieList = UserProvider().getNewbieStream();
+  late Stream<QuerySnapshot> newbieList = UserProvider().getNewbieList();
 
   void backPage() {
     Navigator.of(context).pop();

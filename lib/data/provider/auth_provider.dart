@@ -13,12 +13,6 @@ class UserAuthProvider {
   }
 
 
-  Future<DocumentSnapshot> getCurrentUserInfo() {
-    return firestore.collection("user").doc(fAuth.currentUser?.uid).get();
-  }
-
-
-
   Future<bool> signUpWithEmail(String email, String password) async {
     try {
       UserCredential result = await fAuth.createUserWithEmailAndPassword(
@@ -47,11 +41,6 @@ class UserAuthProvider {
     await fAuth.signOut();
   }
 
-
- //memberInfo 세팅용
-  Future<DocumentSnapshot> getUserByUid (String? uid) {
-    return firestore.collection("user").doc(uid).get();
-  }
 
   //TODO
   // // 사용자에게 비밀번호 재설정 메일을 한글로 전송 시도

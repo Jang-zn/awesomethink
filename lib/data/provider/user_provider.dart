@@ -1,6 +1,4 @@
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -28,8 +26,30 @@ class UserProvider{
   }
 
 
-  Stream<QuerySnapshot> getNewbieStream() {
-    return firestore.collection("user").where("state",isEqualTo: false).snapshots();
+  Future<List<Member?>> getNewbieList() async {
+    return await firestore
+        .collection("user")
+        .where("state",isEqualTo: false)
+        .snapshots().map(
+            (snapshot) => snapshot.docs.map(
+                (doc)=> Member.fromJson(doc.data())
+            ).toList()
+        ).single;
+  }
+
+  Future<List<Member?>> getMemberList() async {
+    return await firestore
+        .collection("user")
+        .where("state",isEqualTo: true)
+        .snapshots().map(
+            (snapshot) => snapshot.docs.map(
+                (doc)=> Member.fromJson(doc.data())
+        ).toList()
+    ).single;
+  }
+
+  Future<DocumentSnapshot> getUserInfoByUid(String? uid) {
+    return firestore.collection("user").doc(uid).get();
   }
 
 }

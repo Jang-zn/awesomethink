@@ -8,74 +8,7 @@ class WorkProvider {
   Logger logger = Logger();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-
-  Future<bool?> isVacationWait(String? userUid) async {
-    bool? isWait;
-    await firestore.collection('work')
-        .where("userUid",isEqualTo: userUid)
-        .where("workingTimeState",isEqualTo: WorkingTimeState.vacationWait.index)
-        .get()
-        .then((snapShot) {
-      if(snapShot.docs.isNotEmpty){
-        isWait=true;
-      }else{
-        isWait=false;
-      }
-    });
-    return isWait;
-  }
-
-
-  //타일 워크 호출
-  Future<QuerySnapshot> getCurrentTileWork(DateTime? startTime) async {
-    return await firestore.collection('work').where("startTime",isEqualTo: startTime).get();
-  }
-
-
-  Stream<QuerySnapshot> getWeeklyWorkStream(String uid) {
-    //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
-    DateTime now = DateTime.now();
-    DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
-    DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
-    Query<Map<String, dynamic>> query = firestore.collection("work")
-        .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
-        .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday)//중에서 월~일만 불러옴
-        .orderBy("startTime",descending: true);
-
-    return query.snapshots();
-  }
-
-
-  //중복체크... List 길이 이용하면 되네
-  Future<bool> checkDuplication(String userUid) async {
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    int total=0;
-    await firestore.collection('work')
-        .where("userUid",isEqualTo: userUid)
-        .where("startTime",isGreaterThanOrEqualTo: today)
-        .get()
-        .then((snapShot) {
-      total = snapShot.docs.length;
-    });
-    return total==0?true:false;
-  }
-
-
-  //recentWork 호출 -> 휴무대기는 제외
-  Future<Work?> getRecentWork(String? userUid) async {
-    Work? work;
-    await firestore.collection('work')
-        .where("userUid",isEqualTo: userUid)
-        .where("workingTimeState",isNotEqualTo: WorkingTimeState.vacationWait.index)
-        .get()
-        .then((snapShot) {
-      work = Work.fromJson(snapShot.docs.isNotEmpty?snapShot.docs.first.data():{});
-    });
-    return work;
-  }
-
-  Stream<List<Work>> getWeeklyWorkList(String? uid) {
+  Future<List<Work>> getWeeklyWorkList(String? uid) async{
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
@@ -85,12 +18,89 @@ class WorkProvider {
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월요일부터 일요일까지
         .orderBy("startTime",descending: true);
-    return query.snapshots().map(
+
+    return await query.snapshots().map(
             (snapshot) => snapshot.docs.map(
                 (doc) => Work
                 .fromJson(doc.data())
         ).toList()
-    );
+    ).single;
   }
+
+  Future<List<Work>> getMonthlyWorkList(String? uid, DateTime dateTime) async{
+    DateTime monthFirst = DateTime(dateTime.year, dateTime.month, 1);
+    DateTime nextMonthFirst = DateTime(dateTime.year,dateTime.month+1,1);
+    DateTime monthLast = DateTime(dateTime.year, dateTime.month, nextMonthFirst.day-1);
+
+    print(monthFirst.toString());
+    print(monthLast.toString());
+
+    var query = firestore.collection("work")
+        .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
+        .where("startTime", isGreaterThan: monthFirst, isLessThan: monthLast) //중에서 1일부터 말일까지
+        .orderBy("startTime",descending: true);
+
+    return await query.snapshots().map(
+            (snapshot) => snapshot.docs.map(
+                (doc) => Work
+                .fromJson(doc.data())
+        ).toList()
+    ).single;
+  }
+
+  // Future<bool?> isVacationWait(String? userUid) async {
+  //   bool? isWait;
+  //   await firestore.collection('work')
+  //       .where("userUid",isEqualTo: userUid)
+  //       .where("workingTimeState",isEqualTo: WorkingTimeState.vacationWait.index)
+  //       .get()
+  //       .then((snapShot) {
+  //     if(snapShot.docs.isNotEmpty){
+  //       isWait=true;
+  //     }else{
+  //       isWait=false;
+  //     }
+  //   });
+  //   return isWait;
+  // }
+
+
+  // //타일 워크 호출
+  // Future<QuerySnapshot> getCurrentTileWork(DateTime? startTime) async {
+  //   return await firestore.collection('work').where("startTime",isEqualTo: startTime).get();
+  // }
+
+
+
+  // //중복체크... List 길이 이용하면 되네
+  // Future<bool> checkDuplication(String userUid) async {
+  //   DateTime now = DateTime.now();
+  //   DateTime today = DateTime(now.year, now.month, now.day);
+  //   int total=0;
+  //   await firestore.collection('work')
+  //       .where("userUid",isEqualTo: userUid)
+  //       .where("startTime",isGreaterThanOrEqualTo: today)
+  //       .get()
+  //       .then((snapShot) {
+  //     total = snapShot.docs.length;
+  //   });
+  //   return total==0?true:false;
+  // }
+  //
+  //
+  // //recentWork 호출 -> 휴무대기는 제외
+  // Future<Work?> getRecentWork(String? userUid) async {
+  //   Work? work;
+  //   await firestore.collection('work')
+  //       .where("userUid",isEqualTo: userUid)
+  //       .where("workingTimeState",isNotEqualTo: WorkingTimeState.vacationWait.index)
+  //       .get()
+  //       .then((snapShot) {
+  //     work = Work.fromJson(snapShot.docs.isNotEmpty?snapShot.docs.first.data():{});
+  //   });
+  //   return work;
+  // }
+
+
 
 }
