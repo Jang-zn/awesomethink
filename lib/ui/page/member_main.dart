@@ -11,23 +11,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AwesomeMainPage extends StatelessWidget {
-  AwesomeMainPage({Key? key, required this.firebaseProvider}) : super(key: key);
-
-  final UserAuthProvider firebaseProvider;
-
+  AwesomeMainPage({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AwesomeMainWidget(firebaseProvider:firebaseProvider);
+    return AwesomeMainWidget();
   }
 }
 
 class AwesomeMainWidget extends StatefulWidget {
-  const AwesomeMainWidget({Key? key, required this.firebaseProvider}) : super(key: key);
-  final UserAuthProvider firebaseProvider;
+  const AwesomeMainWidget({Key? key}) : super(key: key);
+
 
   @override
-  _AwesomeMainWidgetState createState() => _AwesomeMainWidgetState(firebaseProvider);
+  _AwesomeMainWidgetState createState() => _AwesomeMainWidgetState();
 }
 
 void tempFunction(){

@@ -24,10 +24,11 @@ class AuthController{
 
 
 
-  void signInWithEmail(String email, String password) {
+  bool signInWithEmail(String email, String password) {
     bool result = authProvider.signInWithEmail(email, password);
     if(result) {
       _user = authProvider.getCurrentUser();
+      return result;
     }else{
       throw Exception("Sign Failed");
     }

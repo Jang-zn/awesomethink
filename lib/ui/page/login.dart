@@ -1,6 +1,13 @@
+import 'package:awesomethink/controller/auth_controller.dart';
+import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/data/provider/auth_provider.dart';
+import 'package:awesomethink/data/provider/user_provider.dart';
+import 'package:awesomethink/data/repository/user_repo.dart';
+import 'package:awesomethink/ui/page/member_main.dart';
 import 'package:awesomethink/ui/page/signUp.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'admin_main.dart';
@@ -19,52 +26,69 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pwController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late UserAuthProvider fp;
+
+  late final AuthController authController;
+  late final UserController userController;
 
 
-  void login() async {
+  @override
+  void initState() {
+    authController = Get.put(
+        AuthController(authProvider: UserAuthProvider())
+    );
+  }
+
+  void login() {
     FocusScopeNode currentFocus = FocusScope.of(context);
     currentFocus.unfocus();
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        duration: const Duration(seconds: 5),
-        content: Row(
-          children: const <Widget>[
-            CircularProgressIndicator(),
-            Text("   Login...")
-          ],
-        ),
-      ));
-      bool result = await fp.signInWithEmail(
-          emailController.text, pwController.text);
-      if (result != true) {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(
-            duration: const Duration(seconds: 1),
-            content: Row(
-              children: const [
-                Text("이메일 또는 비밀번호를 확인해주세요")
-              ],
-            ),
-          ));
+    Get.snackbar(
+      "Login....",
+      "",
+      snackPosition : SnackPosition.TOP,
+    );
+      try {
+        authController.signInWithEmail(
+            emailController.text, pwController.text);
+        userController = Get.put(
+            UserController(
+                userRepository: UserRepository(
+                    userProvider: UserProvider(),
+                    currentUser: authController.getCurrentUser()
+                ))
+        );
+        if(userController.userInfo.type == UserType.admin.index){
+          Get.to(AdminMainPage(), binding: BindingsBuilder((){
+            Get.lazyPut<AuthController>(() => authController);
+            Get.lazyPut<UserController>(() => userController);
+          }));
+        }else{
+          Get.to(AwesomeMainPage(), binding: BindingsBuilder((){
+            Get.lazyPut<AuthController>(() => authController);
+            Get.lazyPut<UserController>(() => userController);
+          }));
+        }
+      }catch(e){
+        Get.snackbar("Error", "이메일 또는 비밀번호를 확인해주세요", snackPosition: SnackPosition.TOP);
       }
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
+
   void signUp(){
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>SignUpPage()));
+    Get.to(SignUpPage(), binding: BindingsBuilder((){
+      Get.lazyPut<AuthController>(() => authController);
+      Get.lazyPut<UserController>(() => userController);
+    }));
   }
+
   void admin(){
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>AdminMainPage()));
+    Get.to(AdminMainPage(), binding: BindingsBuilder((){
+      Get.lazyPut<AuthController>(() => authController);
+      Get.lazyPut<UserController>(() => userController);
+    }));
   }
 
 
   @override
   Widget build(BuildContext context) {
-    fp = Provider.of<UserAuthProvider>(context);
-
-
     return Scaffold(
       //키보드가 화면 밀게 함. 대신 리스트뷰로 스크롤 가능하게 해야 사용 가능
       resizeToAvoidBottomInset : true,
