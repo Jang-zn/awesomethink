@@ -1,8 +1,11 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
+import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:awesomethink/data/provider/user_provider.dart';
+import 'package:awesomethink/data/provider/work_provider.dart';
 import 'package:awesomethink/data/repository/user_repo.dart';
+import 'package:awesomethink/data/repository/work_repo.dart';
 import 'package:awesomethink/ui/page/member_main.dart';
 import 'package:awesomethink/ui/page/signUp.dart';
 import 'package:awesomethink/utils/constants.dart';
@@ -29,6 +32,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   late final AuthController authController;
   late final UserController userController;
+  late final WorkController workController;
 
 
   @override
@@ -46,9 +50,12 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       "",
       snackPosition : SnackPosition.TOP,
     );
+    //로그인 후 에러 안나면
       try {
         authController.signInWithEmail(
             emailController.text, pwController.text);
+
+        //controller 생성
         userController = Get.put(
             UserController(
                 userRepository: UserRepository(
@@ -56,15 +63,27 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                     currentUser: authController.getCurrentUser()
                 ))
         );
+        workController = Get.put(
+          WorkController(
+            workRepository: WorkRepository(
+                workProvider: WorkProvider(),
+                userInfo: userController.userInfo
+            )
+          )
+        );
+
+
         if(userController.userInfo.type == UserType.admin.index){
           Get.to(AdminMainPage(), binding: BindingsBuilder((){
             Get.lazyPut<AuthController>(() => authController);
             Get.lazyPut<UserController>(() => userController);
+            Get.lazyPut<WorkController>(() => workController);
           }));
         }else{
           Get.to(AwesomeMainPage(), binding: BindingsBuilder((){
             Get.lazyPut<AuthController>(() => authController);
             Get.lazyPut<UserController>(() => userController);
+            Get.lazyPut<WorkController>(() => workController);
           }));
         }
       }catch(e){
@@ -78,14 +97,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       Get.lazyPut<UserController>(() => userController);
     }));
   }
-
-  void admin(){
-    Get.to(AdminMainPage(), binding: BindingsBuilder((){
-      Get.lazyPut<AuthController>(() => authController);
-      Get.lazyPut<UserController>(() => userController);
-    }));
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -138,11 +149,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                       child:ElevatedButton(onPressed: signUp,
                           child: const Text("SignUp")),
                   ),
-                  Container(
-                    width:MediaQuery.of(context).size.width*0.5,
-                    child:ElevatedButton(onPressed: admin,
-                        child: const Text("Admin")),
-                  )
                 ],
               )
             )

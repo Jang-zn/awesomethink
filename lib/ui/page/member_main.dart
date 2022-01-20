@@ -1,14 +1,10 @@
-import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/controller/auth_controller.dart';
+import 'package:awesomethink/controller/user_controller.dart';
+import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/data/provider/auth_provider.dart';
-import 'package:awesomethink/data/provider/user_provider.dart';
-import 'package:awesomethink/data/provider/work_provider.dart';
-import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
-import 'package:awesomethink/ui/component/member_vacation_btn.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class AwesomeMainPage extends StatelessWidget {
   AwesomeMainPage({Key? key,}) : super(key: key);
@@ -35,37 +31,24 @@ void tempFunction(){
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   //필드
-  final UserAuthProvider firebaseProvider;
-  WorkProvider? workProvider;
-  Stream<QuerySnapshot>? workStream;
   String weeklyWorkingTime ="0시간 00분";
   String requiredWorkingTime ="40시간 00분";
-  Work? currWork;
+  List<Work>? weeklyWorkList;
   //생성자
-  _AwesomeMainWidgetState(this.firebaseProvider);
-
+  _AwesomeMainWidgetState();
+  late final UserController userController;
+  late final WorkController workController;
 
   @override
   void initState() {
-    workStream = UserProvider().getWeeklyWorkStream(firebaseProvider.getUserInfo()!.uid!);
-  }
-
-
-  @override
-  void didChangeDependencies() {
-    workProvider = Provider.of<WorkProvider>(context);
-    currWork = workProvider?.getCurrentWork();
-
-  }
-
-  void refreshMain(){
-
+    userController = Get.find<UserController>();
+    workController = Get.find<WorkController>();
+    weeklyWorkList = workController.getWeeklyWorkList();
   }
 
   @override
   Widget build(BuildContext context) {
     getWeeklyWorkingTime();
-    Member? user = firebaseProvider.getUserInfo();
     return Scaffold(
           body: SafeArea(
         child:Column(
@@ -78,13 +61,13 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   children: [
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : WorkInOutBtn(firebaseProvider: firebaseProvider, buildContext: context,)
+                        child : TextButton(child:Text("임시"), onPressed: (){},)//WorkInOutBtn()
                     ),
 
                     //TODO 휴무신청 - 리스트 호출하는데서 문제.. 개같은 비동기
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : VacationBtn(firebaseProvider: firebaseProvider, buildContext: context,)
+                        child : TextButton(child:Text("임시"), onPressed: (){},)//VacationBtn()
                     ),
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
@@ -112,8 +95,8 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                         margin:const EdgeInsets.only(bottom: 7),
                         child:Row(
                           children: [
-                            Text("${user?.name} ",style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-                            Text("${user?.position} 님",style:const TextStyle(fontSize: 18))
+                            Text("${userController.userInfo.name} ",style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
+                            Text("${userController.userInfo.position} 님",style:const TextStyle(fontSize: 18))
                           ],
                         )),
                     Row(
@@ -157,85 +140,36 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children:[
                       Text("이번주 근무 현황"),
-                      ElevatedButton(onPressed: refreshMain, child: Text("새로고침")),
+                      ElevatedButton(onPressed: (){}, child: Text("근태 관리")),
                     ]
                 )
             ),
-
-            StreamBuilder(
-              stream:workStream,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                try {
-                  if(snapshot.data.docs.length==0){return Container();}
-                  return Expanded(child: ListView.builder(
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        if(index==snapshot.data.docs.length-1){
-
-                        }
-                        print(snapshot.data.docs[index]["startTime"].toDate());
-                        return WorkListTile(
-                            snapshot.data.docs[index], workProvider!
-                        );
-                      }
-                  ));
-                }catch(e){
-                  return Container();
-                }
-
-                // if(snapshot.connectionState==ConnectionState.active) {
-                //       if (!snapshot.hasData) {
-                //         return Container();
-                //       }
-                //       //리스트로 불러와서 처리할 snapshot 가져옴
-                //       List<DocumentSnapshot> documentsList = snapshot.data!
-                //           .docs;
-                //       List<WorkListTile> tileList = documentsList.map(
-                //          (eachDocument) => WorkListTile(eachDocument, workProvider!)
-                //       ).toList();
-                //
-                //       return Expanded(child:
-                //       ListView.builder(
-                //           itemCount: tileList.length,
-                //           scrollDirection: Axis.vertical,
-                //           itemBuilder: (context, index) {
-                //             return tileList[index];
-                //           }
-                //       ));
-                // }else{
-                //   return CircularProgressIndicator();
-                // }
-                },
-            )
-          ],
-        )
-    ));
+            ListView.builder(
+              itemCount: weeklyWorkList?.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return WorkListTile(weeklyWorkList[index]);
+              })]
+    )));
   }
 
 
+
   void logout() {
-    firebaseProvider.signOut();
+    Get.find<AuthController>().signOut();
   }
 
 
   //주단위 시간계산
   void getWeeklyWorkingTime() async{
-    List<Work>? workList=[];
-    print("실행");
+    print("주간 시간계산");
     //변수
     int weeklyHour=0;
     int weeklyMinute=0;
     int requiredHour=39;
     int requiredMinute=60;
-
-
-    //weeklyHour / Minute 처리
-    //Stream to List<Object>
-    Stream<List<Work>> getWorkList = UserProvider().getWeeklyWorkList(firebaseProvider.getUserInfo()!.uid);
-    await for (List<Work> works in getWorkList) {
-      workList = works; // yay, the NEXT list is here
       try {
-        for (Work w in workList) {
+        for (Work w in weeklyWorkList!) {
           Map<String, int> timeMap = w.getWorkingTimeToMap();
           weeklyHour += timeMap["hour"]!;
           weeklyMinute += timeMap["minute"]!;
@@ -291,6 +225,5 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 "분";
       }
     }
-  }
 }
 

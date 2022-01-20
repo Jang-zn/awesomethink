@@ -1,45 +1,33 @@
+import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:awesomethink/data/provider/work_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 
 class VacationBtn extends StatefulWidget {
   VacationBtn(
-      {Key? key, required this.firebaseProvider, required this.buildContext})
-      : super(key: key);
-  final UserAuthProvider firebaseProvider;
-  final BuildContext buildContext;
-
-
+      {Key? key}): super(key: key);
 
   @override
   _VacationBtnState createState() =>
-      _VacationBtnState(
-          firebaseProvider: firebaseProvider,
-          buildContext : buildContext,
-      );
+      _VacationBtnState();
 }
 
 class _VacationBtnState extends State<VacationBtn> {
-  final UserAuthProvider firebaseProvider;
-  final BuildContext buildContext;
-  WorkProvider? workProvider;
-  bool? vacationWait;
-  DateTime? vacationStart;
-  DateTime? vacationEnd;
-
-  _VacationBtnState(
-      {required this.firebaseProvider, required this.buildContext});
+  late final WorkController workController;
+  List<Work?>? weeklyWorkList;
+  _VacationBtnState();
 
 
   @override
   void initState() {
-    workProvider = Provider.of<WorkProvider>(buildContext);
+      workController = Get.find<WorkController>();
+      weeklyWorkList = workController.getWeeklyWorkList();
   }
-
 
 
   void showCalendar(String soe) {
@@ -103,31 +91,10 @@ class _VacationBtnState extends State<VacationBtn> {
         firestore.collection("work").doc().set(w.toJson());
       }
     }
-    //workUid 넣어줌
-    //await 안쓰면 uid 날라간다.
-    await firestore.collection("work")
-           .where("userUid", isEqualTo: firebaseProvider.getUserInfo()!.uid)
-           .where("workUid", isNull: true)
-           .where("workingTimeState", isEqualTo: WorkingTimeState.vacationWait.index)
-           .get().then(
-               (value) {
-             value.docs.forEach((doc) {
-               doc.reference.update({"workUid": doc.id});
-             });
-             setState(() {
-               vacationWait=true;
-             });
-           }
-       );
-
   }
 
   void checkVacationState() async {
-    await workProvider!.getCurrentVacation().then(
-            (value) {
-              vacationWait=value;
-            }
-    );
+
   }
 
 

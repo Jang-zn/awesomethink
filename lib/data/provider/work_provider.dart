@@ -48,6 +48,19 @@ class WorkProvider {
     ).single;
   }
 
+  bool updateWorkingTimeState(Work? work, int state){
+    firestore.collection("work")
+        .where("startTime",isEqualTo: work!.startTime)
+        .get()
+        .then((val) {
+      val.docs.first.reference.update({"workingTimeState": state});
+      return true;
+    });
+
+    print("false 걸림");
+    return false;
+  }
+
   // Future<bool?> isVacationWait(String? userUid) async {
   //   bool? isWait;
   //   await firestore.collection('work')

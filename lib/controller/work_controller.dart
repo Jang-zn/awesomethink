@@ -23,4 +23,8 @@ class WorkController extends GetxController{
   getMonthlylyWorkList(){
     monthlyWorkList = workRepository.getMonthlyWorkList();
   }
+
+  bool updateWorkingTimeState(Work? work, int state){
+    return workRepository.updateWorkingTimeState(work, state);
+  }
 }

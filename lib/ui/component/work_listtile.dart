@@ -1,54 +1,24 @@
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/data/provider/work_provider.dart';
 import 'package:awesomethink/ui/component/work_listtile_checkbtn.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class WorkListTile extends StatefulWidget {
-  late final DocumentSnapshot documentData;
-  final WorkProvider workProvider;
+  Work? work;
 
-  WorkListTile(this.documentData, this.workProvider);
+  WorkListTile(this.work);
 
   @override
-  _WorkListTileState createState() => _WorkListTileState(documentData, workProvider);
+  _WorkListTileState createState() => _WorkListTileState(this.work);
 }
 
 class _WorkListTileState extends State<WorkListTile> {
-  final DocumentSnapshot documentData;
-  final WorkProvider workProvider;
-  Work? thisTileWork;
-  Work? currentWork;
+   Work? work;
 
-  _WorkListTileState(this.documentData, this.workProvider);
+  _WorkListTileState(this.work);
 
-  void checkThisTile() {
-    workProvider.getCurrentTileWork(thisTileWork?.startTime).then(
-        (value){
-          thisTileWork = value;
-        }
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    checkThisTile();
-    currentWork = workProvider.getCurrentWork();
-    thisTileWork=Work.fromJson(documentData.data() as Map<String, dynamic>);
-    try {
-      if (currentWork?.startTime != null
-          && currentWork?.startTime?.year == thisTileWork?.startTime?.year
-          && currentWork?.startTime?.month == thisTileWork?.startTime?.month
-          && currentWork?.startTime?.day == thisTileWork?.startTime?.day
-          && currentWork?.startTime?.hour == thisTileWork?.startTime?.hour
-          && currentWork?.startTime?.minute == thisTileWork?.startTime?.minute
-      ) {
-        thisTileWork = currentWork;
-      }
-    }catch(e){
-      return Container();
-    }
-
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
@@ -57,24 +27,24 @@ class _WorkListTileState extends State<WorkListTile> {
             borderRadius: BorderRadius.circular(5.0),
           ),
           child:
-          thisTileWork!=null
+          work!=null
               ?
           Stack(children: [
             ListTile(
               title: Container(
                   margin: EdgeInsets.only(bottom: 8),
                   child: Row(children: [
-                    Text(thisTileWork!.createTimeToMMDDW()),
+                    Text(work!.createTimeToMMDDW()),
                     SizedBox(width: 10, height: 10),
-                    Text(thisTileWork!.workingTimeCalc()),
+                    Text(work!.workingTimeCalc()),
                   ])),
               subtitle: Row(
                 children: <Widget>[
-                  Text(thisTileWork!.workingTimeToHHMM()),
+                  Text(work!.workingTimeToHHMM()),
                 ],
               ),
             ),
-            WorkListTileCheckBtn(work:thisTileWork!)
+            WorkListTileCheckBtn(work:work!)
           ])
             :
               Container()

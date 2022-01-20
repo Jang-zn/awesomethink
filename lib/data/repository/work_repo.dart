@@ -33,6 +33,10 @@ class WorkRepository{
     return monthlyWorkList;
   }
 
+  bool updateWorkingTimeState(Work? work, int state){
+    return workProvider.updateWorkingTimeState(work, state);
+  }
+
 
 }
 

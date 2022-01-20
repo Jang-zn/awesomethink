@@ -1,7 +1,9 @@
+import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class WorkListTileCheckBtn extends StatefulWidget {
   const WorkListTileCheckBtn({Key? key, required this.work}) : super(key: key);
@@ -16,27 +18,17 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
   bool isVisible = true;
 
   _WorkListTileCheckBtnState({required this.work});
-
+  late final WorkController workController;
 
   @override
   void initState() {
     isVisible = work?.workingTimeState==0?true:false;
+    workController = Get.find<WorkController>();
   }
 
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
-    //우선 바로 눌리게 해놈
-    FirebaseFirestore.instance
-        .collection("work")
-        .where("startTime",isEqualTo: work!.startTime)
-        .get()
-        .then((val) {
-          val.docs.first.reference.update({"workingTimeState": WorkingTimeState.check.index});
-    }).whenComplete(() {
-      setState(() {
-        isVisible=false;
-      });
-    });
+    workController.updateWorkingTimeState(work, WorkingTimeState.check.index);
   }
 
   @override
