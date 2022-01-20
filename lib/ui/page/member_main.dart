@@ -2,6 +2,7 @@ import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/ui/component/member_vacation_btn.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -61,13 +62,12 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   children: [
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : TextButton(child:Text("임시"), onPressed: (){},)//WorkInOutBtn()
+                        child : WorkInOutBtn()
                     ),
 
-                    //TODO 휴무신청 - 리스트 호출하는데서 문제.. 개같은 비동기
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : TextButton(child:Text("임시"), onPressed: (){},)//VacationBtn()
+                        child : VacationBtn()
                     ),
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,

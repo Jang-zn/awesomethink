@@ -37,6 +37,9 @@ class WorkRepository{
     return workProvider.updateWorkingTimeState(work, state);
   }
 
+  Future<bool?> setVacation(Work? vacation) async{
+    return await workProvider.setVacation(vacation);
+  }
 
 }
 

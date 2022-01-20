@@ -61,6 +61,14 @@ class WorkProvider {
     return false;
   }
 
+  Future<bool?> setVacation(Work? vacation) async {
+    firestore.collection("work").doc().set(vacation!.toJson()).then((value) {
+      return true;
+    }).onError((error, stackTrace) {
+      return false;
+    });
+  }
+
   // Future<bool?> isVacationWait(String? userUid) async {
   //   bool? isWait;
   //   await firestore.collection('work')

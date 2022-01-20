@@ -1,11 +1,9 @@
+import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/data/provider/auth_provider.dart';
-import 'package:awesomethink/data/provider/work_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 
 class VacationBtn extends StatefulWidget {
@@ -19,13 +17,18 @@ class VacationBtn extends StatefulWidget {
 
 class _VacationBtnState extends State<VacationBtn> {
   late final WorkController workController;
+  late final UserController userController;
   List<Work?>? weeklyWorkList;
+  bool vacationWait = false;
+  DateTime? vacationStart;
+  DateTime? vacationEnd;
   _VacationBtnState();
 
 
   @override
   void initState() {
       workController = Get.find<WorkController>();
+      userController = Get.find<UserController>();
       weeklyWorkList = workController.getWeeklyWorkList();
   }
 
@@ -76,32 +79,39 @@ class _VacationBtnState extends State<VacationBtn> {
     List<Work> vacationList=[];
     if(vacationStart!=null && vacationEnd!=null) {
       vacationList = Work().createVacation(
-          firebaseProvider.getUser()!.uid, vacationStart!, vacationEnd!);
+          userController.userInfo.uid, vacationStart!, vacationEnd!);
     }
     vacationList.sort((a,b)=>b.startTime!.compareTo(a.startTime!));
 
 
     vacationStart=null;
     vacationEnd=null;
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
     //work doc 생성 -> WorkingTimeState.vacationWait
     for(Work w in vacationList) {
       //주말(6:토 / 7:일) 제외하고 휴가등록
       if(w.startTime!.weekday<6) {
-        firestore.collection("work").doc().set(w.toJson());
+        workController.setVacation(w);
       }
     }
   }
 
-  void checkVacationState() async {
-
+  void checkVacationState() {
+    try {
+      for (Work? w in weeklyWorkList!) {
+        if(w!.workingTimeState==WorkingTimeState.vacationWait.index){
+          vacationWait=true;
+        }
+      }
+    }catch(e){
+      vacationWait = false;
+    }
   }
 
 
   @override
   Widget build(BuildContext context) {
     checkVacationState();
-    if(!vacationWait!) {
+    if(!vacationWait) {
       print("no vacation");
       return ElevatedButton(
         child: const Text("휴무신청"),

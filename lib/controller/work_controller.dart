@@ -27,4 +27,11 @@ class WorkController extends GetxController{
   bool updateWorkingTimeState(Work? work, int state){
     return workRepository.updateWorkingTimeState(work, state);
   }
+
+  void setVacation(Work? vacation) async {
+    bool? result = await workRepository.setVacation(vacation);
+    if(result!){
+      getWeeklyWorkList();
+    }
+  }
 }
