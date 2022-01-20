@@ -2,7 +2,7 @@
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/utils/constants.dart';
-import 'package:firebase/firebase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 
 class UserRepository{

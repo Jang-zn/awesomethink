@@ -19,15 +19,15 @@ class UserController extends GetxController{
   get memberList => _memberList;
   set memberList(value) => _memberList;
 
-  void getUserInfo(){
+  void updateUserInfo(){
     userInfo = userRepository.getUserInfo();
   }
 
-  void getNewbieList(){
+  void updateNewbieList(){
     newbieList = userRepository.getNewbieList();
   }
 
-  void getMemberList(){
+  void updateMemberList(){
     memberList = userRepository.getMemberList();
   }
 
