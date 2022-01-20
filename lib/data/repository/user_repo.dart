@@ -39,9 +39,15 @@ class UserRepository{
     return newbieList;
   }
 
+  List<Member?>? getMemberList(){
+    return memberList;
+  }
+
   Member? getUserInfo(){
     return userInfo;
   }
+
+
 
 
 }

@@ -17,12 +17,12 @@ class WorkRepository{
     logger.d("init WorkRepository : "+userInfo.name!);
   }
 
-  void setWeeklyWorkList() async {
-    weeklyWorkList = await workProvider.getWeeklyWorkList(userInfo.uid);
+  void setWeeklyWorkList() {
+    workProvider.getWeeklyWorkList(userInfo.uid).then((value)=>weeklyWorkList = value);
   }
 
-  void setMonthlyWorkList(DateTime dateTime) async {
-    weeklyWorkList = await workProvider.getMonthlyWorkList(userInfo.uid, dateTime);
+  void setMonthlyWorkList(DateTime dateTime) {
+    workProvider.getMonthlyWorkList(userInfo.uid, dateTime).then((value) => monthlyWorkList = value);
   }
 
   List<Work?>? getWeeklyWorkList(){
