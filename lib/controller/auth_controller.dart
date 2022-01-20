@@ -1,8 +1,9 @@
 import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
-class AuthController{
+class AuthController extends GetxController{
   final UserAuthProvider authProvider;
   Logger logger = Logger();
   User? _user; //FirebaseUser -> User 로 바뀜
@@ -14,6 +15,7 @@ class AuthController{
 
   _prepareUser() {
     _user = authProvider.getCurrentUser();
+    update();
   }
 
   //현재유저
@@ -28,6 +30,7 @@ class AuthController{
     bool result = authProvider.signInWithEmail(email, password);
     if(result) {
       _user = authProvider.getCurrentUser();
+      update();
       return result;
     }else{
       throw Exception("Sign Failed");
@@ -48,5 +51,6 @@ class AuthController{
   void signOut() {
     _user=null;
     authProvider.signOut();
+    update();
   }
 }
