@@ -52,30 +52,30 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     );
     //로그인 후 에러 안나면
       try {
-        bool result = await authController.signInWithEmail(
-            emailController.text, pwController.text);
-
-        //controller init
-        initController().then(
-            (value){
-              if(userController?.userInfo.type == UserType.admin.index){
-                Get.to(AdminMainPage(), binding: BindingsBuilder((){
-                  Get.lazyPut<AuthController>(() => authController);
-                  Get.lazyPut<UserController?>(() => userController);
-                  Get.lazyPut<WorkController?>(() => workController);
-                }));
-              }else{
-                Get.to(AwesomeMainPage(), binding: BindingsBuilder((){
-                  Get.lazyPut<AuthController>(() => authController);
-                  Get.lazyPut<UserController>(() => userController!);
-                  Get.lazyPut<WorkController>(() => workController!);
-                }));
+        bool? result = await authController.signInWithEmail(
+          emailController.text, pwController.text).then((value){
+          //controller init
+          initController().then(
+                  (value){
+                if(userController?.userInfo.type == UserType.admin.index){
+                  Get.to(AdminMainPage(), binding: BindingsBuilder((){
+                    Get.lazyPut<AuthController>(() => authController);
+                    Get.lazyPut<UserController?>(() => userController);
+                    Get.lazyPut<WorkController?>(() => workController);
+                  }));
+                }else{
+                  Get.to(AwesomeMainPage(), binding: BindingsBuilder((){
+                    Get.lazyPut<AuthController>(() => authController);
+                    Get.lazyPut<UserController>(() => userController!);
+                    Get.lazyPut<WorkController>(() => workController!);
+                  }));
+                }
               }
-            }
-        );
-
+          );
+        });
       }catch(e){
         e.printError();
+        e.printInfo();
         Get.snackbar("Error", "이메일 또는 비밀번호를 확인해주세요", snackPosition: SnackPosition.TOP);
       }
   }

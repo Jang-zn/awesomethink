@@ -1,5 +1,7 @@
+import 'package:awesomethink/ui/page/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 class UserAuthProvider {
@@ -9,16 +11,16 @@ class UserAuthProvider {
 
 
   User? getCurrentUser(){
-    print("찾았다 이거지 씨발? : "+fAuth.currentUser.toString());
     return fAuth.currentUser;
   }
 
 
-  Future<bool> signUpWithEmail(String email, String password) async {
+  Future<bool?> signUpWithEmail(String email, String password) async {
     try {
       await fAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      return true;
+          email: email, password: password).then((value){
+        return true;
+      });
     } on Exception catch (e) {
       logger.e(e.toString());
       return false;
@@ -27,10 +29,11 @@ class UserAuthProvider {
 
 
   // 이메일/비밀번호로 Firebase에 로그인
-  bool signInWithEmail(String email, String password) {
+  Future<bool?> signInWithEmail(String email, String password) async {
     try {
-      fAuth.signInWithEmailAndPassword(email: email, password: password);
-        return true;
+      fAuth.signInWithEmailAndPassword(email: email, password: password).then(
+          (value){return true;}
+      );
     } on Exception catch (e) {
       logger.e(e.toString());
       return false;
@@ -40,6 +43,7 @@ class UserAuthProvider {
   // Firebase로부터 로그아웃
   void signOut() async {
     await fAuth.signOut();
+    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"));
   }
 
 

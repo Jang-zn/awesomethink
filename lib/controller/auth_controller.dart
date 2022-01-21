@@ -15,7 +15,6 @@ class AuthController extends GetxController{
 
   _prepareUser() {
     _user = authProvider.getCurrentUser();
-    update();
   }
 
   //현재유저
@@ -26,26 +25,28 @@ class AuthController extends GetxController{
 
 
 
-  Future<bool> signInWithEmail(String email, String password) async {
-    bool result = await authProvider.signInWithEmail(email, password);
-    if(result) {
-      _user = authProvider.getCurrentUser();
-      print("Tlqkf!!!!! : "+_user.toString());
-      update();
-    }else{
-      throw Exception("Sign Failed");
-    }
+  Future<bool?> signInWithEmail(String email, String password) async {
+    bool? result = await authProvider.signInWithEmail(email, password).then(
+            (value){
+              if(value!) {
+                _user = authProvider.getCurrentUser();
+                update();
+              }else{
+                throw Exception("Sign Failed");
+              }
+            });
     return result;
   }
 
   void signUpWithEmail(String email, String password) async {
-    bool result = await authProvider.signUpWithEmail(email, password);
-    if (result) {
-      // 새로운 계정 생성이 성공하였으므로 기존 계정이 있을 경우 로그아웃 시킴
-      signOut();
-    }else{
-      throw Exception("Sign Failed");
-    }
+    bool? result = await authProvider.signUpWithEmail(email, password).then((value){
+      if (value!) {
+        // 새로운 계정 생성이 성공하였으므로 기존 계정이 있을 경우 로그아웃 시킴
+        signOut();
+      }else{
+        throw Exception("Sign Failed");
+      }
+    });
   }
 
 
