@@ -1,5 +1,4 @@
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 
@@ -61,12 +60,27 @@ class WorkProvider {
     return false;
   }
 
-  Future<bool?> setVacation(Work? vacation) async {
-    firestore.collection("work").doc().set(vacation!.toJson()).then((value) {
+  Future<bool?> setWork(Work? work) async {
+    firestore.collection("work").doc().set(work!.toJson()).then((value) {
       return true;
     }).onError((error, stackTrace) {
       return false;
     });
+  }
+
+  Future<bool?> updateWork(Work? work) async {
+    firestore.collection("work").where("startTime",isEqualTo: work?.startTime)
+        .get().then(
+        (value){
+          value.docs.first.reference.update(work!.toJson())
+              .then((value) {
+                return true;
+              }).onError((error, stackTrace) {
+                return false;
+              });
+        }
+    );
+
   }
 
   // Future<bool?> isVacationWait(String? userUid) async {

@@ -11,7 +11,6 @@ import 'package:awesomethink/ui/page/signUp.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import 'admin_main.dart';
 

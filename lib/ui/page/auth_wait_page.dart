@@ -1,6 +1,5 @@
 import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 
 class AuthWaitPage extends StatefulWidget {
@@ -20,7 +19,6 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
 
   @override
   Widget build(BuildContext context) {
-    fp = Provider.of<UserAuthProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset : true,

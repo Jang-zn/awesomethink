@@ -1,7 +1,13 @@
+import 'package:awesomethink/controller/auth_controller.dart';
+import 'package:awesomethink/controller/user_controller.dart';
+import 'package:awesomethink/controller/work_controller.dart';
+import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:awesomethink/ui/page/new_member_auth.dart';
+import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class AdminMainPage extends StatefulWidget {
   const AdminMainPage({Key? key}) : super(key: key);
@@ -11,18 +17,36 @@ class AdminMainPage extends StatefulWidget {
 }
 
 class _AdminMainPageState extends State<AdminMainPage> {
-  var scaffoldKey = GlobalKey<ScaffoldState>();
-  late UserAuthProvider fp=Provider.of<UserAuthProvider>(context,listen:false);
+  late final UserController userController;
+  late final WorkController workController;
+  late final AuthController authController;
+  late List<Member?> memberList;
+  late List<Work?> workList;
 
   void tempFunc(){  }
 
+
+  @override
+  void initState() {
+    userController = Get.find<UserController>();
+    workController = Get.find<WorkController>();
+    authController = Get.find<AuthController>();
+    memberList = userController.memberList;
+    workList = workController.weeklyWorkList;
+  }
+
   void newMemberAuthCheck(){
-    Navigator.pop(context);
-    Navigator.push(context, MaterialPageRoute(builder: (ctx)=>NewMemberAuthPage()));
+    Get.to(NewMemberAuthPage(),
+      binding: BindingsBuilder((){
+        Get.put(userController);
+        Get.put(workController);
+      })
+    );
+
   }
 
   void logout(){
-    fp.signOut();
+    authController.signOut();
   }
 
   @override

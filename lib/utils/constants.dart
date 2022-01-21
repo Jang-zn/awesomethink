@@ -5,5 +5,5 @@ enum UserType{
 }
 
 enum WorkingTimeState{
-  wait, check, vacationWait, vacation, no_reward
+  wait, check, vacationWait, vacation, noReward
 }

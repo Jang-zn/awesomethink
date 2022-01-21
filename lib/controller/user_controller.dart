@@ -19,16 +19,23 @@ class UserController extends GetxController{
   get memberList => _memberList;
   set memberList(value) => _memberList;
 
-  void updateUserInfo(){
+  void getUserInfo(){
     userInfo = userRepository.getUserInfo();
   }
 
-  void updateNewbieList(){
+  void getNewbieList(){
     newbieList = userRepository.getNewbieList();
   }
 
-  void updateMemberList(){
+  void getMemberList(){
     memberList = userRepository.getMemberList();
+  }
+
+  void updateUserInfo(Member? user) async{
+    bool? result = await userRepository.updateUserInfo(user);
+    if(result!){
+     getNewbieList();
+    }
   }
 
 }

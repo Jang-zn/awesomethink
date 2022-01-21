@@ -1,96 +1,93 @@
+import 'package:awesomethink/controller/user_controller.dart';
+import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/data/provider/auth_provider.dart';
-import 'package:awesomethink/data/provider/user_provider.dart';
-import 'package:awesomethink/data/provider/work_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class WorkInOutBtn extends StatefulWidget {
   WorkInOutBtn(
-      {Key? key, required this.firebaseProvider, required this.buildContext})
-      : super(key: key);
-  final UserAuthProvider firebaseProvider;
-  final BuildContext buildContext;
+      {Key? key, }): super(key: key);
 
 
 
   @override
   _WorkInOutBtnState createState() =>
-      _WorkInOutBtnState(
-          firebaseProvider: firebaseProvider,
-          buildContext : buildContext,
-      );
+      _WorkInOutBtnState();
 }
 
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
-  final UserAuthProvider firebaseProvider;
-  final BuildContext buildContext;
-  WorkProvider? workProvider;
-  Work? currentWork;
+  late final WorkController workController;
+  late final UserController userController;
+  List<Work?>? weeklyWorkList;
+  Work? today;
 
-  _WorkInOutBtnState(
-      {required this.firebaseProvider, required this.buildContext});
+  _WorkInOutBtnState();
 
 
   @override
   void initState() {
-    workProvider = Provider.of<WorkProvider>(buildContext);
+    workController = Get.find<WorkController>();
+    userController = Get.find<UserController>();
+    weeklyWorkList = workController.getWeeklyWorkList();
   }
 
 
-  void startTodayWorkingTime() async {
-    currentWork = Work().createWork(firebaseProvider.getUser()!.uid);
+  bool checkDuplication(){
+    int? year = weeklyWorkList?.first?.startTime?.year;
+    int? month = weeklyWorkList?.first?.startTime?.month;
+    int? day = weeklyWorkList?.first?.startTime?.day;
+    bool result = true;
+    for(Work? w in weeklyWorkList!){
+      //중복이면 false 하고 반복 중단
+      if(w?.startTime!.year==year&&w?.startTime!.month==month&&w?.startTime!.day==day){
+        result = false;
+        break;
+      //아니면
+      }else{
+        result = true;
+      }
+    }
+    return result;
+  }
+
+  void startTodayWorkingTime() {
     //당일 중복등록 못하게 validation
-    bool checkDuplication = await UserProvider().checkDuplication(
-        currentWork!.userUid!);
+    bool check = checkDuplication();
 
     //당일 첫 출근인경우
-    if (checkDuplication) {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
+    if (check) {
+      today = Work().createWork(userController.userInfo.uid);
       //work doc 생성
-      firestore.collection("work").doc().set(currentWork!.toJson());
-      workProvider!.setCurrentWork(currentWork);
-
+      workController.setWork(today);
       //당일에 퇴근후 출근 또누른경우
     } else {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-          const SnackBar(
-            duration: Duration(seconds: 1),
-            content: Text("당일 중복등록 불가",
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            backgroundColor: Colors.black,
-          )
-      );
+      Get.snackbar("당일 중복등록 불가", "같은날 기록이 중복될 수 없습니다");
     }
   }
 
   void endTodayWorkingTime() async {
-    currentWork?.endTime = DateTime.now();
-    UserProvider().firestore.collection("work")
-        .where("startTime", isEqualTo: currentWork!.startTime)
-        .get()
-        .then(
-            (value) {
-              value.docs.forEach(
-                      (doc) {
-                          doc.reference.update(currentWork!.toJson());
-                          workProvider!.setCurrentWork(currentWork);
-          });
-        }
-    );
+    //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
+    today?.endTime = DateTime.now();
+    workController.updateWork(today);
   }
 
+  //퇴근체크
+  bool isOut(){
+    bool result = true;
+    for(Work? w in weeklyWorkList!){
+      if(w!.endTime==null){
+        result = false;
+        break;
+      }
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
-    currentWork= workProvider!.getCurrentWork();
-    //case 1. 출근기록 X --> currentWork==null
-    if(currentWork?.startTime==null) {
+
+    //case 1. 출근기록 X --> list empty
+    if(weeklyWorkList!.isEmpty) {
       print("case1");
       return ElevatedButton(
         child: const Text("출근"),
@@ -102,7 +99,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     }
 
     //case 2. 출근기록 있음 / 근데 퇴근 안누름
-    if(currentWork?.endTime==null){
+    if(!isOut()){
       print("case2");
       return ElevatedButton(
           child: const Text("퇴근"),

@@ -2,6 +2,7 @@ import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
 import 'package:awesomethink/ui/component/member_vacation_btn.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +149,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
               itemCount: weeklyWorkList?.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                return WorkListTile(weeklyWorkList[index]);
+                return WorkListTile(weeklyWorkList?[index]);
               })]
     )));
   }

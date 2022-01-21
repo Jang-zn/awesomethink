@@ -52,4 +52,19 @@ class UserProvider{
     return firestore.collection("user").doc(uid).get();
   }
 
+  Future<bool?> updateUserInfo(Member? user) async {
+    firestore.collection("user").where("uid",isEqualTo: user?.uid)
+        .get().then(
+            (value){
+          value.docs.first.reference.update(user!.toJson())
+              .then((value) {
+            return true;
+          }).onError((error, stackTrace) {
+            return false;
+          });
+        }
+    );
+
+  }
+
 }

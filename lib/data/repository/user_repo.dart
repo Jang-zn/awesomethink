@@ -47,6 +47,10 @@ class UserRepository{
     return userInfo;
   }
 
+  Future<bool?> updateUserInfo(Member? user) async{
+    return await userProvider.updateUserInfo(user);
+  }
+
 
 
 

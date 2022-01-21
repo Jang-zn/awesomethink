@@ -1,21 +1,16 @@
+import 'package:awesomethink/controller/user_controller.dart';
+import 'package:awesomethink/data/model/member.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 class NewbieListTile extends StatelessWidget {
-  late final DocumentSnapshot documentData;
-  NewbieListTile(this.documentData);
+  Member? newbie;
+  NewbieListTile(this.newbie);
+  final UserController userController = Get.find<UserController>();
 
-  //firestore data update 과정
-  //Stream이라서 업데이트 되면 알아서 화면에서 지워짐
   void newbieAuth(){
-    print(documentData["email"]);
-    FirebaseFirestore.instance.collection("user").where("email", isEqualTo:documentData["email"]).get()
-        .then((val){
-          val.docs.forEach(
-                  (element) {
-                     element.reference.update({"state":true});
-                  });
-        });
+    newbie?.state=true;
+    userController.updateUserInfo(newbie);
   }
 
   @override
@@ -32,9 +27,9 @@ class NewbieListTile extends StatelessWidget {
             margin:EdgeInsets.only(bottom:8),
             child:Row(
               children:[
-                Text(documentData["name"]),
+                Text(newbie!.name!),
                 SizedBox(width: 10, height: 10),
-                Text(documentData["position"]),
+                Text(newbie!.position!),
                 SizedBox(width: 120, height: 10),
                 Container(
                   width:60,
@@ -60,9 +55,9 @@ class NewbieListTile extends StatelessWidget {
           ),
           subtitle: Row(
             children: <Widget>[
-              Text(documentData["email"]),
+              Text(newbie!.email!),
               SizedBox(width: 10, height: 10),
-              Text(documentData["phone"]),
+              Text(newbie!.phone!),
             ],
           ),
         ),

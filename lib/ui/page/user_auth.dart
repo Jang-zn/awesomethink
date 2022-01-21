@@ -6,7 +6,6 @@ import 'package:awesomethink/data/repository/user_repo.dart';
 import 'package:awesomethink/ui/page/admin_main.dart';
 import 'package:awesomethink/ui/page/auth_wait_page.dart';
 import 'package:awesomethink/ui/page/login.dart';
-import 'package:awesomethink/ui/page/member_main.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -90,7 +90,7 @@ class _VacationBtnState extends State<VacationBtn> {
     for(Work w in vacationList) {
       //주말(6:토 / 7:일) 제외하고 휴가등록
       if(w.startTime!.weekday<6) {
-        workController.setVacation(w);
+        workController.setWork(w);
       }
     }
   }

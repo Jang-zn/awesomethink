@@ -1,11 +1,8 @@
 import 'dart:collection';
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/service/signup_validation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -33,12 +30,10 @@ class SignUpPageState extends State<SignUpPage> {
   final FocusNode _passwordCheckFocus = FocusNode();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late UserAuthProvider fp;
-  FirebaseAuth fa = FirebaseAuth.instance;
+
 
   @override
   void didChangeDependencies() {
-    fp = Provider.of<UserAuthProvider>(context);
     userMap["position"]=selectedValue as String;
   }
 
@@ -195,12 +190,12 @@ class SignUpPageState extends State<SignUpPage> {
 
       //1. Member 객체 빈거 만들고 (user) signup 성공하면
       Member user = Member();
-      bool result =
-           await fp.signUpWithEmail(emailController.text, pwController.text);
+      bool result = true;
+
       // 스낵바 접어주고, currentUser uid를 userMap에 넣어주고, userSignUpdata로 Member객체에 넣어줌.
        if (result) {
          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-         userMap["uid"]=fa.currentUser!.uid;
+         //userMap["uid"]=fa.currentUser!.uid;
          user = user.userSignUpData(userMap);
 
          //user 콜렉션에 현재 가입한 uid를 가지는 document 생성

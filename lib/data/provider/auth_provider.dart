@@ -15,7 +15,7 @@ class UserAuthProvider {
 
   Future<bool> signUpWithEmail(String email, String password) async {
     try {
-      UserCredential result = await fAuth.createUserWithEmailAndPassword(
+      await fAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       return true;
     } on Exception catch (e) {
