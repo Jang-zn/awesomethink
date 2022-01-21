@@ -14,7 +14,7 @@ class WorkRepository{
   WorkRepository({required this.workProvider, required this.userInfo}){
     setWeeklyWorkList();
     setMonthlyWorkList(DateTime.now());
-    logger.d("init WorkRepository : "+userInfo.name!);
+    logger.d("init WorkRepository : "+userInfo.toString());
   }
 
   void setWeeklyWorkList() {

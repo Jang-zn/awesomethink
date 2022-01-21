@@ -29,16 +29,12 @@ class WorkController extends GetxController{
   }
 
   void setWork(Work? work) async {
-    bool? result = await workRepository.setWork(work);
-    if(result!){
-      getWeeklyWorkList();
-    }
+    await workRepository.setWork(work);
+    getWeeklyWorkList();
   }
 
   void updateWork(Work? work) async{
-    bool? result = await workRepository.updateWork(work);
-    if(result!){
-      getWeeklyWorkList();
-    }
+    await workRepository.updateWork(work);
+    getWeeklyWorkList();
   }
 }

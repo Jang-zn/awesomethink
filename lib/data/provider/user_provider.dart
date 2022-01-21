@@ -49,7 +49,7 @@ class UserProvider{
   }
 
   Future<DocumentSnapshot> getUserInfoByUid(String? uid) {
-    return firestore.collection("user").doc(uid).get();
+    return firestore.collection("user").doc(uid).snapshots().single;
   }
 
   Future<bool?> updateUserInfo(Member? user) async {

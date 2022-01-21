@@ -26,15 +26,16 @@ class AuthController extends GetxController{
 
 
 
-  bool signInWithEmail(String email, String password) {
-    bool result = authProvider.signInWithEmail(email, password);
+  Future<bool> signInWithEmail(String email, String password) async {
+    bool result = await authProvider.signInWithEmail(email, password);
     if(result) {
       _user = authProvider.getCurrentUser();
+      print("Tlqkf!!!!! : "+_user.toString());
       update();
-      return result;
     }else{
       throw Exception("Sign Failed");
     }
+    return result;
   }
 
   void signUpWithEmail(String email, String password) async {

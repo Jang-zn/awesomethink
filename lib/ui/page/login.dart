@@ -31,8 +31,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late final AuthController authController;
-  late final UserController userController;
-  late final WorkController workController;
+  UserController? userController;
+  WorkController? workController;
 
 
   @override
@@ -42,7 +42,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     );
   }
 
-  void login() {
+  void login() async {
     FocusScopeNode currentFocus = FocusScope.of(context);
     currentFocus.unfocus();
     Get.snackbar(
@@ -52,49 +52,67 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     );
     //로그인 후 에러 안나면
       try {
-        authController.signInWithEmail(
+        bool result = await authController.signInWithEmail(
             emailController.text, pwController.text);
 
-        //controller 생성
-        userController = Get.put(
-            UserController(
-                userRepository: UserRepository(
-                    userProvider: UserProvider(),
-                    currentUser: authController.getCurrentUser()
-                ))
-        );
-        workController = Get.put(
-          WorkController(
-            workRepository: WorkRepository(
-                workProvider: WorkProvider(),
-                userInfo: userController.userInfo
-            )
-          )
+        //controller init
+        initController().then(
+            (value){
+              if(userController?.userInfo.type == UserType.admin.index){
+                Get.to(AdminMainPage(), binding: BindingsBuilder((){
+                  Get.lazyPut<AuthController>(() => authController);
+                  Get.lazyPut<UserController?>(() => userController);
+                  Get.lazyPut<WorkController?>(() => workController);
+                }));
+              }else{
+                Get.to(AwesomeMainPage(), binding: BindingsBuilder((){
+                  Get.lazyPut<AuthController>(() => authController);
+                  Get.lazyPut<UserController>(() => userController!);
+                  Get.lazyPut<WorkController>(() => workController!);
+                }));
+              }
+            }
         );
 
-
-        if(userController.userInfo.type == UserType.admin.index){
-          Get.to(AdminMainPage(), binding: BindingsBuilder((){
-            Get.lazyPut<AuthController>(() => authController);
-            Get.lazyPut<UserController>(() => userController);
-            Get.lazyPut<WorkController>(() => workController);
-          }));
-        }else{
-          Get.to(AwesomeMainPage(), binding: BindingsBuilder((){
-            Get.lazyPut<AuthController>(() => authController);
-            Get.lazyPut<UserController>(() => userController);
-            Get.lazyPut<WorkController>(() => workController);
-          }));
-        }
       }catch(e){
+        e.printError();
         Get.snackbar("Error", "이메일 또는 비밀번호를 확인해주세요", snackPosition: SnackPosition.TOP);
       }
+  }
+
+  Future<bool> initController() async{
+    print("Tlqkf : "+authController.getCurrentUser().toString());
+    if(userController==null) {
+      userController = await Get.put(
+          UserController(
+              userRepository: UserRepository(
+                  userProvider: UserProvider(),
+                  currentUser: authController.getCurrentUser()
+              ))
+      );
+    }else{
+      userController?.getUserInfo();
+    }
+    if(workController==null) {
+      workController = await Get.put(
+          WorkController(
+              workRepository: WorkRepository(
+                  workProvider: WorkProvider(),
+                  userInfo: userController?.userInfo
+              )
+          )
+      );
+    }else{
+      workController?.getWeeklyWorkList();
+      workController?.getMonthlylyWorkList();
+    }
+    return true;
   }
 
   void signUp(){
     Get.to(SignUpPage(), binding: BindingsBuilder((){
       Get.lazyPut<AuthController>(() => authController);
-      Get.lazyPut<UserController>(() => userController);
+      Get.lazyPut<UserController?>(() => userController);
     }));
   }
 

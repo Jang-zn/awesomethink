@@ -14,17 +14,19 @@ class UserRepository{
   Logger logger = Logger();
 
   UserRepository({required this.userProvider, required this.currentUser}){
-    setUserInfo();
+    setUserInfo().then(
+            (value){logger.d("init UserRepository"+userInfo.toString());
+            logger.d(currentUser);
+            });
     if(userInfo?.type==UserType.admin.index){
       setNewbieList();
       setMemberList();
     }
-    logger.d("init UserRepository");
-
   }
 
-  void setUserInfo(){
-    userInfo = Member.fromJson(userProvider.getUserInfoByUid(currentUser!.uid) as Map<String, dynamic>);
+  Future<bool> setUserInfo() async{
+    userInfo = Member.fromJson(await userProvider.getUserInfoByUid(currentUser!.uid) as Map<String, dynamic>);
+    return true;
   }
 
   void setNewbieList() async {
