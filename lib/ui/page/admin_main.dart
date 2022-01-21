@@ -3,9 +3,7 @@ import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:awesomethink/ui/page/new_member_auth.dart';
-import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
