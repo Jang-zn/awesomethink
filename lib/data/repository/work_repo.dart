@@ -5,44 +5,41 @@ import 'package:awesomethink/data/provider/work_provider.dart';
 import 'package:logger/logger.dart';
 
 class WorkRepository{
-  Member userInfo;
-  List<Work?>? monthlyWorkList;
-  List<Work?>? weeklyWorkList;
-  final WorkProvider workProvider;
-  Logger logger = Logger();
+  final WorkProvider workProvider = WorkProvider();
 
-  WorkRepository({required this.workProvider, required this.userInfo}){
-    setWeeklyWorkList();
-    setMonthlyWorkList(DateTime.now());
-    logger.d("init WorkRepository : "+userInfo.toString());
+
+  Future<List<Work>> getWeeklyWorkList(String? uid) async {
+    return (await workProvider.getWeeklyWorkList(uid))
+        .snapshots().map(
+            (snapshot) => snapshot.docs.map(
+                (doc) => Work
+                .fromJson(doc.data())
+        ).toList()
+    ).single;
   }
 
-  void setWeeklyWorkList() {
-    workProvider.getWeeklyWorkList(userInfo.uid).then((value)=>weeklyWorkList = value);
+  Future<List<Work>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
+    return (await workProvider.getMonthlyWorkList(uid, dateTime)).snapshots().map(
+            (snapshot) => snapshot.docs.map(
+                (doc) => Work
+                .fromJson(doc.data())
+        ).toList()
+    ).single;
   }
 
-  void setMonthlyWorkList(DateTime dateTime) {
-    workProvider.getMonthlyWorkList(userInfo.uid, dateTime).then((value) => monthlyWorkList = value);
+
+  Future<void> updateWorkingTimeState(Work? work, int state) async {
+    await workProvider.updateWorkingTimeState(work, state);
   }
 
-  List<Work?>? getWeeklyWorkList(){
-    return weeklyWorkList;
+
+  Future<void> setWork(Work? work) async {
+    await workProvider.setWork(work);
   }
 
-  List<Work?>? getMonthlyWorkList(){
-    return monthlyWorkList;
-  }
 
-  bool updateWorkingTimeState(Work? work, int state){
-    return workProvider.updateWorkingTimeState(work, state);
-  }
-
-  Future<bool?> setWork(Work? work) async{
-    return await workProvider.setWork(work);
-  }
-
-  Future<bool?> updateWork(Work? work) async{
-    return await workProvider.updateWork(work);
+  Future<void> updateWork(Work? work) async{
+    await workProvider.updateWork(work);
   }
 
 }

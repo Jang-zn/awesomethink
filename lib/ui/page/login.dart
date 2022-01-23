@@ -1,10 +1,6 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
-import 'package:awesomethink/data/provider/user_provider.dart';
-import 'package:awesomethink/data/provider/work_provider.dart';
-import 'package:awesomethink/data/repository/user_repo.dart';
-import 'package:awesomethink/data/repository/work_repo.dart';
 import 'package:awesomethink/ui/page/member_main.dart';
 import 'package:awesomethink/ui/page/signUp.dart';
 import 'package:awesomethink/utils/constants.dart';

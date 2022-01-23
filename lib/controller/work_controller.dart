@@ -4,9 +4,9 @@ import 'package:awesomethink/data/repository/work_repo.dart';
 import 'package:get/get.dart';
 
 class WorkController extends GetxController{
-  final WorkRepository workRepository;
+  final WorkRepository workRepository = WorkRepository();
 
-  WorkController({required this.workRepository});
+  WorkController();
 
   final _monthlyWorkList = <Work>[].obs;
   final _weeklyWorkList = <Work>[].obs;
@@ -16,25 +16,23 @@ class WorkController extends GetxController{
   set weeklyWorkList(value) => _weeklyWorkList;
   set monthlyWorkList(value) => _monthlyWorkList;
 
-  getWeeklyWorkList(){
-    weeklyWorkList = workRepository.getWeeklyWorkList();
+  Future<void> getWeeklyWorkList(String? uid) async{
+    weeklyWorkList = await workRepository.getWeeklyWorkList(uid);
   }
 
-  getMonthlylyWorkList(){
-    monthlyWorkList = workRepository.getMonthlyWorkList();
+  Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
+    monthlyWorkList = await workRepository.getMonthlyWorkList(uid, dateTime);
   }
 
-  bool updateWorkingTimeState(Work? work, int state){
-    return workRepository.updateWorkingTimeState(work, state);
+  Future<void> updateWorkingTimeState(Work? work, int state) async {
+    await workRepository.updateWorkingTimeState(work, state);
+    await getWeeklyWorkList(work!.userUid);
+    await getMonthlyWorkList(work.userUid, DateTime.now());
   }
 
-  void setWork(Work? work) async {
-    await workRepository.setWork(work);
-    getWeeklyWorkList();
-  }
-
-  void updateWork(Work? work) async{
+  Future<void> updateWork(Work? work) async{
     await workRepository.updateWork(work);
-    getWeeklyWorkList();
+    await getWeeklyWorkList(work!.userUid);
+    await getMonthlyWorkList(work.userUid, DateTime.now());
   }
 }
