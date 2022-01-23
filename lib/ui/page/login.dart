@@ -1,7 +1,6 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
-import 'package:awesomethink/data/provider/auth_provider.dart';
 import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/data/provider/work_provider.dart';
 import 'package:awesomethink/data/repository/user_repo.dart';
@@ -37,9 +36,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   @override
   void initState() {
-    authController = Get.put(
-        AuthController(authProvider: UserAuthProvider())
-    );
+    authController = Get.put(AuthController());
   }
 
   void login() async {
@@ -52,27 +49,24 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     );
     //로그인 후 에러 안나면
       try {
-        bool? result = await authController.signInWithEmail(
-          emailController.text, pwController.text).then((value){
-          //controller init
-          initController().then(
-                  (value){
-                if(userController?.userInfo.type == UserType.admin.index){
-                  Get.to(AdminMainPage(), binding: BindingsBuilder((){
-                    Get.lazyPut<AuthController>(() => authController);
-                    Get.lazyPut<UserController?>(() => userController);
-                    Get.lazyPut<WorkController?>(() => workController);
-                  }));
-                }else{
-                  Get.to(AwesomeMainPage(), binding: BindingsBuilder((){
-                    Get.lazyPut<AuthController>(() => authController);
-                    Get.lazyPut<UserController>(() => userController!);
-                    Get.lazyPut<WorkController>(() => workController!);
-                  }));
-                }
-              }
-          );
-        });
+        await authController.signInWithEmail(emailController.text, pwController.text);
+          if(authController.getCurrentUser()!.email==emailController.text) {
+            //controller init
+            await initController();
+            if (userController?.userInfo.type == UserType.admin.index) {
+              Get.to(AdminMainPage(), binding: BindingsBuilder(() {
+                Get.lazyPut<AuthController>(() => authController);
+                Get.lazyPut<UserController?>(() => userController);
+                Get.lazyPut<WorkController?>(() => workController);
+              }));
+            } else {
+              Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
+                Get.lazyPut<AuthController>(() => authController);
+                Get.lazyPut<UserController>(() => userController!);
+                Get.lazyPut<WorkController>(() => workController!);
+              }));
+            }
+          }
       }catch(e){
         e.printError();
         e.printInfo();

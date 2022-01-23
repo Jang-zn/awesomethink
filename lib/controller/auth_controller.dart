@@ -4,38 +4,27 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 class AuthController extends GetxController{
-  final UserAuthProvider authProvider;
+  final UserAuthProvider authProvider = UserAuthProvider();
   Logger logger = Logger();
-  User? _user; //FirebaseUser -> User 로 바뀜
 
-  AuthController({required this.authProvider}){
+  final Rxn<User?> _user =  Rxn<User?>(); //FirebaseUser -> User 로 바뀜
+
+  AuthController(){
     _prepareUser();
     logger.d("init UserAuthProvider"+_user.toString());
   }
 
   _prepareUser() {
-    _user = authProvider.getCurrentUser();
+    _user.value = authProvider.getCurrentUser();
   }
 
   //현재유저
   User? getCurrentUser() {
-    return _user;
+    return _user.value;
   }
 
-
-
-
-  Future<bool?> signInWithEmail(String email, String password) async {
-    bool? result = await authProvider.signInWithEmail(email, password).then(
-            (value){
-              if(value!) {
-                _user = authProvider.getCurrentUser();
-                update();
-              }else{
-                throw Exception("Sign Failed");
-              }
-            });
-    return result;
+  Future<void> signInWithEmail(String email, String password) async {
+    _user.value = (await authProvider.signInWithEmail(email, password)).user;
   }
 
   void signUpWithEmail(String email, String password) async {
@@ -51,8 +40,7 @@ class AuthController extends GetxController{
 
 
   void signOut() {
-    _user=null;
+    _user(null);
     authProvider.signOut();
-    update();
   }
 }

@@ -29,15 +29,8 @@ class UserAuthProvider {
 
 
   // 이메일/비밀번호로 Firebase에 로그인
-  Future<bool?> signInWithEmail(String email, String password) async {
-    try {
-      fAuth.signInWithEmailAndPassword(email: email, password: password).then(
-          (value){return true;}
-      );
-    } on Exception catch (e) {
-      logger.e(e.toString());
-      return false;
-    }
+  Future<UserCredential> signInWithEmail(String email, String password) async {
+    return await fAuth.signInWithEmailAndPassword(email: email, password: password);
   }
 
   // Firebase로부터 로그아웃
