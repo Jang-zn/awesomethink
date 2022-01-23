@@ -4,12 +4,16 @@ import 'package:awesomethink/data/repository/user_repo.dart';
 import 'package:get/get.dart';
 
 class UserController extends GetxController{
-  final UserRepository userRepository;
+  final UserRepository userRepository = UserRepository();
 
-  UserController({required this.userRepository});
-
+  UserController();
+  //현재 유저정보
   final _userInfo = Member().obs;
+
+  //state false 인 유저
   final _newbieList = <Member>[].obs;
+
+  //state true 인 유저
   final _memberList = <Member>[].obs;
 
   get userInfo => _userInfo.value;
@@ -19,16 +23,17 @@ class UserController extends GetxController{
   get memberList => _memberList;
   set memberList(value) => _memberList;
 
-  void getUserInfo(){
-    userInfo = userRepository.getUserInfo();
+
+  void getUserInfo(String? uid) async{
+    userInfo.value = await userRepository.getUserInfo(uid);
   }
 
-  void getNewbieList(){
-    newbieList = userRepository.getNewbieList();
+  void getNewbieList() async{
+    newbieList = await userRepository.getNewbieList();
   }
 
-  void getMemberList(){
-    memberList = userRepository.getMemberList();
+  void getMemberList() async{
+    memberList = await userRepository.getMemberList();
   }
 
   void updateUserInfo(Member? user) async{

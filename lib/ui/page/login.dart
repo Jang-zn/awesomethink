@@ -52,7 +52,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
         await authController.signInWithEmail(emailController.text, pwController.text);
           if(authController.getCurrentUser()!.email==emailController.text) {
             //controller init
-            await initController();
+            initController();
             if (userController?.userInfo.type == UserType.admin.index) {
               Get.to(AdminMainPage(), binding: BindingsBuilder(() {
                 Get.lazyPut<AuthController>(() => authController);
@@ -74,33 +74,10 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       }
   }
 
-  Future<bool> initController() async{
-    print("Tlqkf : "+authController.getCurrentUser().toString());
-    if(userController==null) {
-      userController = await Get.put(
-          UserController(
-              userRepository: UserRepository(
-                  userProvider: UserProvider(),
-                  currentUser: authController.getCurrentUser()
-              ))
-      );
-    }else{
-      userController?.getUserInfo();
-    }
-    if(workController==null) {
-      workController = await Get.put(
-          WorkController(
-              workRepository: WorkRepository(
-                  workProvider: WorkProvider(),
-                  userInfo: userController?.userInfo
-              )
-          )
-      );
-    }else{
-      workController?.getWeeklyWorkList();
-      workController?.getMonthlylyWorkList();
-    }
-    return true;
+
+  void initController(){
+      userController = Get.put(UserController());
+      workController = Get.put(WorkController());
   }
 
   void signUp(){

@@ -17,11 +17,7 @@ class AuthPage extends StatelessWidget {
 
 
 
-  final AuthController _authController = Get.put(
-      AuthController(
-          authProvider: UserAuthProvider()
-      )
-  );
+  final AuthController _authController = Get.put(AuthController());
 
   late final UserController _userController = Get.put(
     UserController(

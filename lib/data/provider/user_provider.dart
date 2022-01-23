@@ -3,55 +3,36 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class UserProvider{
-
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  late CollectionReference userCollection = firestore.collection("user");
-  late Stream<QuerySnapshot> currentStream = firestore.collection("user").snapshots();
 
-  storeUserData(Member user) async{
-    DocumentReference documentReference = userCollection.doc(user.uid);
-
+  //가입정보 저장
+  void setUserData(Member user) async{
+    DocumentReference documentReference = firestore.collection("user").doc(user.uid);
     var data = user.toJson();
-
-    await documentReference.set(data).whenComplete(() {
-    }).catchError((e)=>(e));
+    await documentReference.set(data).catchError((e)=>(e));
   }
 
-  Stream<QuerySnapshot> retrieveUsers(){
-    Stream<QuerySnapshot> queryUsers = userCollection
-        .orderBy('joinedDate', descending: true)
-        .snapshots();
-
-    return queryUsers;
-  }
-
-
-  Future<List<Member?>> getNewbieList() async {
-    return await firestore
-        .collection("user")
+  //신규가입 목록
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getNewbieList() async {
+    return firestore.collection("user")
         .where("state",isEqualTo: false)
-        .snapshots().map(
-            (snapshot) => snapshot.docs.map(
-                (doc)=> Member.fromJson(doc.data())
-            ).toList()
-        ).single;
+        .snapshots();
   }
 
-  Future<List<Member?>> getMemberList() async {
-    return await firestore
+  //직원목록
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMemberList() async {
+    return firestore
         .collection("user")
         .where("state",isEqualTo: true)
-        .snapshots().map(
-            (snapshot) => snapshot.docs.map(
-                (doc)=> Member.fromJson(doc.data())
-        ).toList()
-    ).single;
+        .snapshots();
   }
 
+  //uid 로 user정보
   Future<DocumentSnapshot> getUserInfoByUid(String? uid) {
     return firestore.collection("user").doc(uid).snapshots().single;
   }
 
+  //user정보 업데이트
   Future<bool?> updateUserInfo(Member? user) async {
     firestore.collection("user").where("uid",isEqualTo: user?.uid)
         .get().then(
