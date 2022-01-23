@@ -35,4 +35,10 @@ class WorkController extends GetxController{
     await getWeeklyWorkList(work!.userUid);
     await getMonthlyWorkList(work.userUid, DateTime.now());
   }
+
+  Future<void> setWork(Work? work) async{
+    await workRepository.setWork(work);
+    await getWeeklyWorkList(work!.userUid);
+    await getMonthlyWorkList(work.userUid, DateTime.now());
+  }
 }

@@ -8,7 +8,7 @@ class WorkRepository{
   final WorkProvider workProvider = WorkProvider();
 
 
-  Future<List<Work>> getWeeklyWorkList(String? uid) async {
+  Future<List<Work?>> getWeeklyWorkList(String? uid) async {
     return (await workProvider.getWeeklyWorkList(uid))
         .snapshots().map(
             (snapshot) => snapshot.docs.map(
@@ -18,7 +18,7 @@ class WorkRepository{
     ).single;
   }
 
-  Future<List<Work>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
+  Future<List<Work?>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
     return (await workProvider.getMonthlyWorkList(uid, dateTime)).snapshots().map(
             (snapshot) => snapshot.docs.map(
                 (doc) => Work

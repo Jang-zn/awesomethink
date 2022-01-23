@@ -6,7 +6,7 @@ class UserProvider{
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   //가입정보 저장
-  void setUserData(Member user) async{
+  Future<void> setUserInfo(Member user) async{
     DocumentReference documentReference = firestore.collection("user").doc(user.uid);
     var data = user.toJson();
     await documentReference.set(data).catchError((e)=>(e));
@@ -27,7 +27,7 @@ class UserProvider{
         .snapshots();
   }
 
-  //uid 로 user정보
+  //uid 로 user정보 가져옴
   Future<DocumentSnapshot> getUserInfoByUid(String? uid) {
     return firestore.collection("user").doc(uid).snapshots().single;
   }

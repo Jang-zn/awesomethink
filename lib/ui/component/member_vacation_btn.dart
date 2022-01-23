@@ -5,33 +5,14 @@ import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-class VacationBtn extends StatefulWidget {
-  VacationBtn(
-      {Key? key}): super(key: key);
-
-  @override
-  _VacationBtnState createState() =>
-      _VacationBtnState();
-}
-
-class _VacationBtnState extends State<VacationBtn> {
-  late final WorkController workController;
-  late final UserController userController;
-  List<Work?>? weeklyWorkList;
+class VacationBtn extends StatelessWidget {
+  VacationBtn({Key? key, required this.context}) : super(key: key);
+  BuildContext context;
+  final WorkController workController = Get.find<WorkController>();
+  final UserController userController = Get.find<UserController>();
   bool vacationWait = false;
   DateTime? vacationStart;
   DateTime? vacationEnd;
-  _VacationBtnState();
-
-
-  @override
-  void initState() {
-      workController = Get.find<WorkController>();
-      userController = Get.find<UserController>();
-      weeklyWorkList = workController.getWeeklyWorkList();
-  }
-
 
   void showCalendar(String soe) {
    Future<DateTime?> selectedDate = showDatePicker(
@@ -97,7 +78,7 @@ class _VacationBtnState extends State<VacationBtn> {
 
   void checkVacationState() {
     try {
-      for (Work? w in weeklyWorkList!) {
+      for (Work? w in workController.weeklyWorkList) {
         if(w!.workingTimeState==WorkingTimeState.vacationWait.index){
           vacationWait=true;
         }

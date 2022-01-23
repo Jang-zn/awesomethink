@@ -32,8 +32,8 @@ class Member{
     phone=json['phone'];
     type=json['type'];
     state=json['state'];
-    joinedDate=json['joinedDate'];
-    retiredDate=json['retiredDate'];
+    joinedDate=json['joinedDate']?.toDate();
+    retiredDate=json['retiredDate']?.toDate();
   }
 
   Map<String, dynamic> toJson(){

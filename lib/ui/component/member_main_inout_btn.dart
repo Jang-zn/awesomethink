@@ -4,40 +4,20 @@ import 'package:awesomethink/data/model/work.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class WorkInOutBtn extends StatefulWidget {
-  WorkInOutBtn(
-      {Key? key, }): super(key: key);
 
+class WorkInOutBtn extends StatelessWidget {
+  WorkInOutBtn({Key? key}) : super(key: key);
 
-
-  @override
-  _WorkInOutBtnState createState() =>
-      _WorkInOutBtnState();
-}
-
-class _WorkInOutBtnState extends State<WorkInOutBtn> {
-  late final WorkController workController;
-  late final UserController userController;
-  List<Work?>? weeklyWorkList;
+  final WorkController workController = Get.find<WorkController>();
+  final UserController userController = Get.find<UserController>();
   Work? today;
 
-  _WorkInOutBtnState();
-
-
-  @override
-  void initState() {
-    workController = Get.find<WorkController>();
-    userController = Get.find<UserController>();
-    weeklyWorkList = workController.getWeeklyWorkList();
-  }
-
-
   bool checkDuplication(){
-    int? year = weeklyWorkList?.first?.startTime?.year;
-    int? month = weeklyWorkList?.first?.startTime?.month;
-    int? day = weeklyWorkList?.first?.startTime?.day;
+    int? year = workController.weeklyWorkList.first?.startTime?.year;
+    int? month = workController.weeklyWorkList.first?.startTime?.month;
+    int? day = workController.weeklyWorkList.first?.startTime?.day;
     bool result = true;
-    for(Work? w in weeklyWorkList!){
+    for(Work? w in workController.weeklyWorkList){
       //중복이면 false 하고 반복 중단
       if(w?.startTime!.year==year&&w?.startTime!.month==month&&w?.startTime!.day==day){
         result = false;
@@ -74,7 +54,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   //퇴근체크
   bool isOut(){
     bool result = true;
-    for(Work? w in weeklyWorkList!){
+    for(Work? w in workController.weeklyWorkList){
       if(w!.endTime==null){
         result = false;
         break;
@@ -87,7 +67,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   Widget build(BuildContext context) {
 
     //case 1. 출근기록 X --> list empty
-    if(weeklyWorkList!.isEmpty) {
+    if(workController.weeklyWorkList.isEmpty) {
       print("case1");
       return ElevatedButton(
         child: const Text("출근"),

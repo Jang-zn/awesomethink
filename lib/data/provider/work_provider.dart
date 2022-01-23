@@ -1,6 +1,5 @@
 import 'package:awesomethink/data/model/work.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:logger/logger.dart';
 
 class WorkProvider {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -11,7 +10,6 @@ class WorkProvider {
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
     DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
-
     return firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월요일부터 일요일까지
@@ -44,10 +42,10 @@ class WorkProvider {
 
   //Work 생성
   Future<void> setWork(Work? work) async {
-    firestore.collection("work").doc().set(work!.toJson()).then((value) {
-    }).onError((error, stackTrace) {
-      print(stackTrace);
-    });
+    firestore.collection("work").doc().set(work!.toJson())
+        .onError((error, stackTrace) {
+          print(stackTrace);
+       });
   }
 
   //Work 수정

@@ -48,13 +48,14 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
         await authController.signInWithEmail(emailController.text, pwController.text);
           if(authController.getCurrentUser()!.email==emailController.text) {
             //controller init
-            initController();
+            await initController();
 
+            //Admin / Normal 구분
             if (userController.userInfo.type == UserType.admin.index) {
               Get.to(AdminMainPage(), binding: BindingsBuilder(() {
                 Get.lazyPut<AuthController>(() => authController);
-                Get.lazyPut<UserController?>(() => userController);
-                Get.lazyPut<WorkController?>(() => workController);
+                Get.lazyPut<UserController>(() => userController);
+                Get.lazyPut<WorkController>(() => workController);
               }));
             } else {
               Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
@@ -72,20 +73,27 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   }
 
 
-  void initController() {
+  Future<void> initController() async {
+    try {
       userController = Get.put(UserController());
-      userController.getUserInfo(authController.getCurrentUser()!.uid);
-      userController.getMemberList();
-      userController.getNewbieList();
+
+      userController.getUserInfo(authController.getCurrentUser()!.uid).then((_)=>print("2"));
+      await userController.getMemberList().then((_)=>print("3"));
+      await userController.getNewbieList().then((_)=>print("4"));
       workController = Get.put(WorkController());
-      workController.getWeeklyWorkList(authController.getCurrentUser()!.uid);
-      workController.getMonthlyWorkList(authController.getCurrentUser()!.uid, DateTime.now());
+      await workController.getWeeklyWorkList(
+          authController.getCurrentUser()!.uid).then((_)=>print("5"));;
+      await workController.getMonthlyWorkList(
+          authController.getCurrentUser()!.uid, DateTime.now()).then((_)=>print("6"));;
+    }catch(e){
+      e.printError();
+    }
   }
 
   void signUp(){
-    Get.to(SignUpPage(), binding: BindingsBuilder((){
-      Get.lazyPut<AuthController>(() => authController);
-      Get.lazyPut<UserController?>(() => userController);
+    Get.to(SignUpPage(), binding: BindingsBuilder(
+    (){
+      Get.lazyPut<AuthController>(()=>authController);
     }));
   }
 

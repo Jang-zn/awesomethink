@@ -37,6 +37,12 @@ class UserRepository{
     return await userProvider.updateUserInfo(user);
   }
 
+  Future<void> setUserInfo(Member user) async{
+    return await userProvider.setUserInfo(user);
+  }
+
+
+
 
 
 

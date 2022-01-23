@@ -1,8 +1,11 @@
 import 'dart:collection';
+import 'package:awesomethink/controller/auth_controller.dart';
+import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/service/signup_validation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -20,6 +23,8 @@ class SignUpPageState extends State<SignUpPage> {
   Map<String, String> userMap = HashMap();
   List<String> position = ["사원","팀장","사장"];
   String? selectedValue;
+  late final UserController userController;
+  late final AuthController authController;
 
   SignUpPageState(){
     selectedValue= position[0];
@@ -31,6 +36,11 @@ class SignUpPageState extends State<SignUpPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 
+  @override
+  void initState() {
+    userController = Get.put(UserController());
+    authController = Get.find<AuthController>();
+  }
 
   @override
   void didChangeDependencies() {
@@ -47,7 +57,6 @@ class SignUpPageState extends State<SignUpPage> {
         )
     );
   }
-
 
 
   Widget SignUpForm() {
@@ -186,23 +195,19 @@ class SignUpPageState extends State<SignUpPage> {
           ],
         ),
       ));
-
-
       //1. Member 객체 빈거 만들고 (user) signup 성공하면
       Member user = Member();
-      bool result = true;
-
+      try{
+        await authController.signUpWithEmail(emailController.text, pwController.text);
       // 스낵바 접어주고, currentUser uid를 userMap에 넣어주고, userSignUpdata로 Member객체에 넣어줌.
-       if (result) {
          ScaffoldMessenger.of(context).hideCurrentSnackBar();
          //userMap["uid"]=fa.currentUser!.uid;
          user = user.userSignUpData(userMap);
-
          //user 콜렉션에 현재 가입한 uid를 가지는 document 생성
-         UserProvider().storeUserData(user);
+         userController.setUserInfo(user);
          //페이지 닫음
          Navigator.pop(context);
-       } else {
+       } catch(e) {
          ScaffoldMessenger.of(context)
              ..hideCurrentSnackBar()
              ..showSnackBar(

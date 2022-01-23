@@ -24,23 +24,29 @@ class UserController extends GetxController{
   set memberList(value) => _memberList;
 
 
-  void getUserInfo(String? uid) async{
+  Future<void> getUserInfo(String? uid) async{
     userInfo.value = await userRepository.getUserInfo(uid);
   }
 
-  void getNewbieList() async{
+  Future<void> getNewbieList() async{
     newbieList = await userRepository.getNewbieList();
   }
 
-  void getMemberList() async{
+  Future<void> getMemberList() async{
     memberList = await userRepository.getMemberList();
   }
 
-  void updateUserInfo(Member? user) async{
-    bool? result = await userRepository.updateUserInfo(user);
-    if(result!){
-     getNewbieList();
-    }
+  Future<void> updateUserInfo(Member? user) async{
+    await userRepository.updateUserInfo(user);
+    getNewbieList();
+    getMemberList();
+    getUserInfo(user!.uid);
+  }
+
+  Future<void> setUserInfo(Member user) async{
+    await userRepository.setUserInfo(user);
+    getNewbieList();
+    getMemberList();
   }
 
 }

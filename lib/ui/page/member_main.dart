@@ -35,7 +35,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   //필드
   String weeklyWorkingTime ="0시간 00분";
   String requiredWorkingTime ="40시간 00분";
-  List<Work>? weeklyWorkList;
+  List<Work?>? weeklyWorkList;
   //생성자
   _AwesomeMainWidgetState();
   late final UserController userController;
@@ -45,7 +45,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   void initState() {
     userController = Get.find<UserController>();
     workController = Get.find<WorkController>();
-    weeklyWorkList = workController.getWeeklyWorkList();
+    weeklyWorkList = workController.weeklyWorkList;
   }
 
   @override
@@ -68,7 +68,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
-                        child : VacationBtn()
+                        child : VacationBtn(context: context)
                     ),
                     SizedBox(
                         width:MediaQuery.of(context).size.width*0.25,
@@ -146,6 +146,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 )
             ),
             ListView.builder(
+              shrinkWrap: true,
               itemCount: weeklyWorkList?.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
@@ -170,8 +171,8 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     int requiredHour=39;
     int requiredMinute=60;
       try {
-        for (Work w in weeklyWorkList!) {
-          Map<String, int> timeMap = w.getWorkingTimeToMap();
+        for (Work? w in weeklyWorkList!) {
+          Map<String, int> timeMap = w!.getWorkingTimeToMap();
           weeklyHour += timeMap["hour"]!;
           weeklyMinute += timeMap["minute"]!;
         }
