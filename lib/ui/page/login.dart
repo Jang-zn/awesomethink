@@ -26,8 +26,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late final AuthController authController;
-  UserController? userController;
-  WorkController? workController;
+  late final UserController userController;
+  late final WorkController workController;
 
 
   @override
@@ -49,7 +49,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
           if(authController.getCurrentUser()!.email==emailController.text) {
             //controller init
             initController();
-            if (userController?.userInfo.type == UserType.admin.index) {
+
+            if (userController.userInfo.type == UserType.admin.index) {
               Get.to(AdminMainPage(), binding: BindingsBuilder(() {
                 Get.lazyPut<AuthController>(() => authController);
                 Get.lazyPut<UserController?>(() => userController);
@@ -58,8 +59,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
             } else {
               Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
                 Get.lazyPut<AuthController>(() => authController);
-                Get.lazyPut<UserController>(() => userController!);
-                Get.lazyPut<WorkController>(() => workController!);
+                Get.lazyPut<UserController>(() => userController);
+                Get.lazyPut<WorkController>(() => workController);
               }));
             }
           }
@@ -71,9 +72,14 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   }
 
 
-  void initController(){
+  void initController() {
       userController = Get.put(UserController());
+      userController.getUserInfo(authController.getCurrentUser()!.uid);
+      userController.getMemberList();
+      userController.getNewbieList();
       workController = Get.put(WorkController());
+      workController.getWeeklyWorkList(authController.getCurrentUser()!.uid);
+      workController.getMonthlyWorkList(authController.getCurrentUser()!.uid, DateTime.now());
   }
 
   void signUp(){

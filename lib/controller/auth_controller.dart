@@ -28,13 +28,8 @@ class AuthController extends GetxController{
   }
 
   void signUpWithEmail(String email, String password) async {
-    bool? result = await authProvider.signUpWithEmail(email, password).then((value){
-      if (value!) {
-        // 새로운 계정 생성이 성공하였으므로 기존 계정이 있을 경우 로그아웃 시킴
-        signOut();
-      }else{
-        throw Exception("Sign Failed");
-      }
+    await authProvider.signUpWithEmail(email, password).onError((error, stackTrace) {
+      print(stackTrace);
     });
   }
 
