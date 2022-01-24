@@ -8,13 +8,13 @@ class UserController extends GetxController{
 
   UserController();
   //현재 유저정보
-  final Rx<Member?>_userInfo = Member().obs;
+  final Rxn<Member?> _userInfo = Rxn<Member?>();
 
   //state false 인 유저
-  final _newbieList = <Member?>[].obs;
+  final Rxn<List<Member?>> _newbieList = Rxn<List<Member?>>();
 
   //state true 인 유저
-  final _memberList = <Member?>[].obs;
+  final Rxn<List<Member?>> _memberList = Rxn<List<Member?>>();
 
   get userInfo => _userInfo.value;
   set userInfo(value) => _userInfo.value;
@@ -26,15 +26,15 @@ class UserController extends GetxController{
 
 
   Future<void> getUserInfo(String? uid) async{
-    userInfo(await userRepository.getUserInfo(uid));
+    _userInfo(await userRepository.getUserInfo(uid));
   }
 
   Future<void> getNewbieList() async{
-    newbieList = await userRepository.getNewbieList();
+    _newbieList(await userRepository.getNewbieList());
   }
 
   Future<void> getMemberList() async{
-    memberList = await userRepository.getMemberList();
+    _memberList(await userRepository.getMemberList());
   }
 
   Future<void> updateUserInfo(Member? user) async{

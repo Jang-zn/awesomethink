@@ -1,6 +1,7 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
+import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
 import 'package:awesomethink/ui/component/member_vacation_btn.dart';
@@ -25,27 +26,25 @@ class AwesomeMainWidget extends StatefulWidget {
   _AwesomeMainWidgetState createState() => _AwesomeMainWidgetState();
 }
 
-void tempFunction(){
-
-}
-
 
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   //필드
   String weeklyWorkingTime ="0시간 00분";
   String requiredWorkingTime ="40시간 00분";
-  List<Work?>? weeklyWorkList;
   //생성자
   _AwesomeMainWidgetState();
+  late final AuthController authController;
   late final UserController userController;
   late final WorkController workController;
 
   @override
   void initState() {
+    authController = Get.find<AuthController>();
     userController = Get.find<UserController>();
     workController = Get.find<WorkController>();
-    weeklyWorkList = workController.weeklyWorkList;
+    workController.getWeeklyWorkList(userController.userInfo.uid);
+    workController.getMonthlyWorkList(userController.userInfo.uid, DateTime.now());
   }
 
   @override
@@ -82,7 +81,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
             ),
 
             //XXX 사원님 이번주 근무시간은 xx시간 xx분, 잔여 의무 근로시간은 xx시간 xx분 남았습니다 멘트치는곳
-            Container(
+            Obx(()=>Container(
                 margin:const EdgeInsets.symmetric(horizontal: 20),
                 padding:const EdgeInsets.all(10),
                 height: MediaQuery.of(context).size.height*0.22,
@@ -133,31 +132,32 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                       ,),
                   ],
                 )
-            ),
+            )),
             //근태관리하는곳
-            Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical:10),
-                child:Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:[
-                      Text("이번주 근무 현황"),
-                      ElevatedButton(onPressed: (){}, child: Text("근태 관리")),
-                    ]
-                )
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: weeklyWorkList?.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return WorkListTile(weeklyWorkList?[index]);
-              })]
+              Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical:10),
+                  child:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:[
+                        Text("이번주 근무 현황"),
+                        ElevatedButton(onPressed: (){}, child: Text("근태 관리")),
+                      ]
+                  )
+              ),
+              Obx(()=>ListView.builder(
+                shrinkWrap: true,
+                itemCount: workController.weeklyWorkList?.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  return WorkListTile(workController.weeklyWorkList?[index]);
+                }))]
     )));
   }
 
 
 
   void logout() {
+    userController.userInfo(null);
     Get.find<AuthController>().signOut();
   }
 
@@ -171,7 +171,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     int requiredHour=39;
     int requiredMinute=60;
       try {
-        for (Work? w in weeklyWorkList!) {
+        for (Work? w in workController.weeklyWorkList!) {
           Map<String, int> timeMap = w!.getWorkingTimeToMap();
           weeklyHour += timeMap["hour"]!;
           weeklyMinute += timeMap["minute"]!;

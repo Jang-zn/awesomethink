@@ -1,6 +1,7 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
+import 'package:awesomethink/ui/page/auth_wait_page.dart';
 import 'package:awesomethink/ui/page/member_main.dart';
 import 'package:awesomethink/ui/page/signUp.dart';
 import 'package:awesomethink/utils/constants.dart';
@@ -47,22 +48,25 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       try {
         await authController.signInWithEmail(emailController.text, pwController.text);
           if(authController.getCurrentUser()!.email==emailController.text) {
-            //controller init
             await initController();
-            print("end");
             //Admin / Normal 구분
             if (userController.userInfo.type == UserType.admin.index) {
               Get.to(AdminMainPage(), binding: BindingsBuilder(() {
                 Get.lazyPut<AuthController>(() => authController);
-                Get.lazyPut<UserController>(() => userController);
-                Get.lazyPut<WorkController>(() => workController);
+                Get.put(userController);
+                Get.put(workController);
               }));
-            } else {
+            } else if(userController.userInfo.state){
               Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
                 Get.lazyPut<AuthController>(() => authController);
-                Get.lazyPut<UserController>(() => userController);
-                Get.lazyPut<WorkController>(() => workController);
+                Get.put(userController);
+                Get.put(workController);
               }));
+            }else{
+              Get.to(AuthWaitPage(), binding: (BindingsBuilder(((){
+                Get.lazyPut<AuthController>(() => authController);
+                Get.put(userController);
+              }))));
             }
           }
       }catch(e){
@@ -75,19 +79,11 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   Future<void> initController() async {
     try {
-      print("start");
       userController = Get.put(UserController());
-       await userController.getUserInfo(authController.getCurrentUser()!.uid).then((_)=>print("2"));
-       await userController.getMemberList().then((_)=>print("3"));
-       await userController.getNewbieList().then((_)=>print("4"));
       workController = Get.put(WorkController());
-       await workController.getWeeklyWorkList(
-           authController.getCurrentUser()!.uid).then((_)=>print("5"));
-       await workController.getMonthlyWorkList(
-           authController.getCurrentUser()!.uid, DateTime.now()).then((_)=>print("6"));
+      await userController.getUserInfo(authController.getCurrentUser()!.uid);
     }catch(e){
       e.printError();
-
     }
   }
 
