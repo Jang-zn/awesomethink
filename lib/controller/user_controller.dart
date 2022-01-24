@@ -11,10 +11,10 @@ class UserController extends GetxController{
   final Rxn<Member?> _userInfo = Rxn<Member?>();
 
   //state false 인 유저
-  final Rxn<List<Member?>> _newbieList = Rxn<List<Member?>>();
+  final RxList<Member?> _newbieList = RxList<Member?>();
 
   //state true 인 유저
-  final Rxn<List<Member?>> _memberList = Rxn<List<Member?>>();
+  final RxList<Member?> _memberList = RxList<Member?>();
 
   get userInfo => _userInfo.value;
   set userInfo(value) => _userInfo.value;

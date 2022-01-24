@@ -43,14 +43,18 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     authController = Get.find<AuthController>();
     userController = Get.find<UserController>();
     workController = Get.find<WorkController>();
-    workController.getWeeklyWorkList(userController.userInfo.uid);
-    workController.getMonthlyWorkList(userController.userInfo.uid, DateTime.now());
+    getWorkList();
+  }
+
+  Future<void> getWorkList() async{
+    await workController.getWeeklyWorkList(userController.userInfo.uid);
+    await workController.getMonthlyWorkList(userController.userInfo.uid, DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
     getWeeklyWorkingTime();
-    return Scaffold(
+    return Obx(()=>Scaffold(
           body: SafeArea(
         child:Column(
           children: [
@@ -81,7 +85,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
             ),
 
             //XXX 사원님 이번주 근무시간은 xx시간 xx분, 잔여 의무 근로시간은 xx시간 xx분 남았습니다 멘트치는곳
-            Obx(()=>Container(
+            Container(
                 margin:const EdgeInsets.symmetric(horizontal: 20),
                 padding:const EdgeInsets.all(10),
                 height: MediaQuery.of(context).size.height*0.22,
@@ -132,7 +136,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                       ,),
                   ],
                 )
-            )),
+            ),
             //근태관리하는곳
               Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical:10),
@@ -144,20 +148,19 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                       ]
                   )
               ),
-              Obx(()=>ListView.builder(
+              ListView.builder(
                 shrinkWrap: true,
-                itemCount: workController.weeklyWorkList?.length,
+                itemCount: (workController.weeklyWorkList as List<Work?>).length,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
-                  return WorkListTile(workController.weeklyWorkList?[index]);
-                }))]
-    )));
+                  return WorkListTile((workController.weeklyWorkList as List<Work?>)[index]);
+                })]
+    ))));
   }
 
 
 
   void logout() {
-    userController.userInfo(null);
     Get.find<AuthController>().signOut();
   }
 

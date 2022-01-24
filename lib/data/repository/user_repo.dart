@@ -12,7 +12,7 @@ class UserRepository{
             (snapshot) => snapshot.docs
                 .map((doc)=> Member.fromJson(doc.data()!))
                 .toList()
-        ).single;
+        ).first;
   }
 
   Future<List<Member?>> getMemberList() {
@@ -21,7 +21,7 @@ class UserRepository{
             (snapshot) => snapshot.docs
             .map((doc)=> Member.fromJson(doc.data()!))
             .toList()
-    ).single;
+    ).first;
   }
 
   Future<Member?> getUserInfo(String? uid) async{

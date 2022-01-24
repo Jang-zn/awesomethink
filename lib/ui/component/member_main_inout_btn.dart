@@ -13,9 +13,12 @@ class WorkInOutBtn extends StatelessWidget {
   Work? today;
 
   bool checkDuplication(){
-    int? year = workController.weeklyWorkList.first?.startTime?.year;
-    int? month = workController.weeklyWorkList.first?.startTime?.month;
-    int? day = workController.weeklyWorkList.first?.startTime?.day;
+    if((workController.weeklyWorkList as List<Work?>).isEmpty){
+      return true;
+    }
+    int? year = workController.weeklyWorkList?[0].startTime?.year;
+    int? month = workController.weeklyWorkList?[0].startTime?.month;
+    int? day = workController.weeklyWorkList?[0].startTime?.day;
     bool result = true;
     for(Work? w in workController.weeklyWorkList){
       //중복이면 false 하고 반복 중단
@@ -30,7 +33,7 @@ class WorkInOutBtn extends StatelessWidget {
     return result;
   }
 
-  void startTodayWorkingTime() {
+  void startTodayWorkingTime() async {
     //당일 중복등록 못하게 validation
     bool check = checkDuplication();
 
@@ -38,7 +41,9 @@ class WorkInOutBtn extends StatelessWidget {
     if (check) {
       today = Work().createWork(userController.userInfo.uid);
       //work doc 생성
-      workController.setWork(today);
+      print("start");
+      await workController.setWork(today);
+      print("end");
       //당일에 퇴근후 출근 또누른경우
     } else {
       Get.snackbar("당일 중복등록 불가", "같은날 기록이 중복될 수 없습니다");
@@ -65,9 +70,14 @@ class WorkInOutBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    if((workController.weeklyWorkList as List<Work?>).isNotEmpty
+        &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year
+        &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.month==DateTime.now().month
+        &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.day==DateTime.now().day){
+      today = (workController.weeklyWorkList as List<Work?>).first;
+    }
     //case 1. 출근기록 X --> list empty
-    if(workController.weeklyWorkList.isEmpty) {
+    if((workController.weeklyWorkList as List<Work?>).isEmpty) {
       print("case1");
       return ElevatedButton(
         child: const Text("출근"),

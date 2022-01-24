@@ -15,7 +15,7 @@ class WorkRepository{
                 (doc) => Work
                 .fromJson(doc.data())
         ).toList()
-    ).single;
+    ).first;
   }
 
   Future<List<Work?>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
@@ -24,7 +24,7 @@ class WorkRepository{
                 (doc) => Work
                 .fromJson(doc.data())
         ).toList()
-    ).single;
+    ).first;
   }
 
 

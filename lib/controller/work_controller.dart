@@ -8,8 +8,8 @@ class WorkController extends GetxController{
 
   WorkController();
 
-  final _monthlyWorkList = <Work>[].obs;
-  final _weeklyWorkList = <Work>[].obs;
+  final  RxList<Work?> _monthlyWorkList = <Work?>[].obs;
+  final  RxList<Work?> _weeklyWorkList = <Work?>[].obs;
 
   get monthlyWorkList => _monthlyWorkList;
   get weeklyWorkList => _weeklyWorkList;
@@ -17,11 +17,11 @@ class WorkController extends GetxController{
   set monthlyWorkList(value) => _monthlyWorkList;
 
   Future<void> getWeeklyWorkList(String? uid) async{
-    weeklyWorkList = await workRepository.getWeeklyWorkList(uid);
+    _weeklyWorkList(await workRepository.getWeeklyWorkList(uid));
   }
 
   Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
-    monthlyWorkList = await workRepository.getMonthlyWorkList(uid, dateTime);
+    _monthlyWorkList(await workRepository.getMonthlyWorkList(uid, dateTime));
   }
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
@@ -41,4 +41,6 @@ class WorkController extends GetxController{
     await getWeeklyWorkList(work!.userUid);
     await getMonthlyWorkList(work.userUid, DateTime.now());
   }
+
+
 }
