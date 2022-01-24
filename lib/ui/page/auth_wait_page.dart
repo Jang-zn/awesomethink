@@ -1,5 +1,8 @@
-import 'package:awesomethink/data/provider/auth_provider.dart';
+import 'package:awesomethink/controller/auth_controller.dart';
+import 'package:awesomethink/ui/page/login.dart';
+import 'package:awesomethink/ui/page/member_main.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 class AuthWaitPage extends StatefulWidget {
@@ -10,12 +13,12 @@ class AuthWaitPage extends StatefulWidget {
 }
 
 class _AuthWaitPageState extends State<AuthWaitPage> {
-  UserAuthProvider? fp;
+  AuthController authController = Get.find<AuthController>();
 
   void logout() {
-    fp!.signOut();
+    authController.signOut();
+    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"));
   }
-
 
   @override
   Widget build(BuildContext context) {

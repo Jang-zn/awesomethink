@@ -4,6 +4,7 @@ import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/service/signup_validation.dart';
+import 'package:awesomethink/ui/page/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -201,12 +202,15 @@ class SignUpPageState extends State<SignUpPage> {
         await authController.signUpWithEmail(emailController.text, pwController.text);
       // 스낵바 접어주고, currentUser uid를 userMap에 넣어주고, userSignUpdata로 Member객체에 넣어줌.
          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-         //userMap["uid"]=fa.currentUser!.uid;
+         userMap["uid"]=authController.getCurrentUser()!.uid;
          user = user.userSignUpData(userMap);
          //user 콜렉션에 현재 가입한 uid를 가지는 document 생성
          userController.setUserInfo(user);
          //페이지 닫음
-         Navigator.pop(context);
+         Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+             binding: BindingsBuilder((){
+              Get.put(authController);
+         }));
        } catch(e) {
          ScaffoldMessenger.of(context)
              ..hideCurrentSnackBar()
