@@ -6,6 +6,7 @@ import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
 import 'package:awesomethink/ui/component/member_vacation_btn.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
+import 'package:awesomethink/ui/page/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -161,7 +162,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
 
   void logout() {
-    Get.find<AuthController>().signOut();
+    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+        binding: BindingsBuilder((){
+          authController.signOut();
+          Get.put(authController);
+    }));
   }
 
 

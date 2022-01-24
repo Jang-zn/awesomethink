@@ -4,38 +4,38 @@ import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class WorkListTileCheckBtn extends StatefulWidget {
-  const WorkListTileCheckBtn({Key? key, required this.work}) : super(key: key);
-  final Work work;
-  @override
-  _WorkListTileCheckBtnState createState() => _WorkListTileCheckBtnState(work: work);
-}
+class WorkListTileCheckBtn extends StatelessWidget {
 
-class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
+  WorkListTileCheckBtn({required this.work});
+  Work? work;
 
-  final Work? work;
-  bool isVisible = true;
-
-  _WorkListTileCheckBtnState({required this.work});
-  late final WorkController workController;
-
-  @override
-  void initState() {
-    isVisible = work?.workingTimeState==0?true:false;
-    workController = Get.find<WorkController>();
-  }
+  final WorkController workController = Get.find<WorkController>();
 
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
     workController.updateWorkingTimeState(work, WorkingTimeState.check.index);
   }
 
+  void getThisWork(){
+    for(Work? w in workController.weeklyWorkList){
+      if((workController.weeklyWorkList as List<Work?>).isNotEmpty
+          &&work!.startTime!.year==w!.startTime!.year
+          &&work!.startTime!.month==w.startTime!.month
+          &&work!.startTime!.day==w.startTime!.day){
+        work = w;
+        return;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getThisWork();
+    bool isVisible = work!.workingTimeState==0?true:false;
     //휴무일 경우
     if(work!.workingTimeState==WorkingTimeState.vacation.index){
       isVisible=true;
-      return Container(
+      return Obx(()=>Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
           height: 30,
@@ -51,12 +51,12 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
                   padding: EdgeInsets.zero,
                   backgroundColor: Colors.redAccent),
               onPressed: () {
-              }));
+              })));
     }
     //휴무 대기중인경우
     if(work!.workingTimeState==WorkingTimeState.vacationWait.index){
       isVisible=true;
-      return Container(
+      return Obx(()=>Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
           height: 30,
@@ -71,7 +71,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
                   padding: EdgeInsets.zero,
                   backgroundColor: Colors.orange),
               onPressed: () {
-              }));
+              })));
     }
 
     if(!isVisible){
@@ -79,7 +79,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
     }
     if (work!.workingTimeState== WorkingTimeState.wait.index&&work!.endTime!=null) {
       isVisible=true;
-      return Container(
+      return Obx(()=>Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
           height: 30,
@@ -96,7 +96,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
                   backgroundColor: Colors.lightGreen),
               onPressed: () {
                 workingCheck();
-              }));
+              })));
     } else {
       return Container();
     }

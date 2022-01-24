@@ -59,6 +59,12 @@ class WorkProvider {
               });
         }
     );
+  }
 
+  //uid 로 work정보 가져옴
+  Stream<QuerySnapshot<Map<String, dynamic>?>> getWorkByStartTime(Work? work) {
+    return firestore.collection("work")
+        .where("startTime",isEqualTo: work!.startTime)
+        .snapshots();
   }
 }

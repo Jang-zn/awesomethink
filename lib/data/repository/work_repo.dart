@@ -42,5 +42,11 @@ class WorkRepository{
     await workProvider.updateWork(work);
   }
 
+  Future<Work?> getWorkByStartTime(Work? work) async {
+    return await (workProvider.getWorkByStartTime(work)).map(
+            (snapshot)=>snapshot.docs.map(
+                (doc)=>Work.fromJson(doc.data()!)).first
+    ).first;
+  }
 }
 

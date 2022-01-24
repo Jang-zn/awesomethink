@@ -25,7 +25,7 @@ class UserRepository{
   }
 
   Future<Member?> getUserInfo(String? uid) async{
-    return (await userProvider.getUserInfoByUid(uid)).map(
+    return await (userProvider.getUserInfoByUid(uid)).map(
         (snapshot)=>snapshot.docs.map(
             (doc)=>Member.fromJson(doc.data()!)).first
     ).first;
