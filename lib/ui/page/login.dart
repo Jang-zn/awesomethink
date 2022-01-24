@@ -49,7 +49,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
           if(authController.getCurrentUser()!.email==emailController.text) {
             //controller init
             await initController();
-
+            print("end");
             //Admin / Normal 구분
             if (userController.userInfo.type == UserType.admin.index) {
               Get.to(AdminMainPage(), binding: BindingsBuilder(() {
@@ -75,18 +75,19 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   Future<void> initController() async {
     try {
+      print("start");
       userController = Get.put(UserController());
-
-      userController.getUserInfo(authController.getCurrentUser()!.uid).then((_)=>print("2"));
-      await userController.getMemberList().then((_)=>print("3"));
-      await userController.getNewbieList().then((_)=>print("4"));
+       await userController.getUserInfo(authController.getCurrentUser()!.uid).then((_)=>print("2"));
+       await userController.getMemberList().then((_)=>print("3"));
+       await userController.getNewbieList().then((_)=>print("4"));
       workController = Get.put(WorkController());
-      await workController.getWeeklyWorkList(
-          authController.getCurrentUser()!.uid).then((_)=>print("5"));;
-      await workController.getMonthlyWorkList(
-          authController.getCurrentUser()!.uid, DateTime.now()).then((_)=>print("6"));;
+       await workController.getWeeklyWorkList(
+           authController.getCurrentUser()!.uid).then((_)=>print("5"));
+       await workController.getMonthlyWorkList(
+           authController.getCurrentUser()!.uid, DateTime.now()).then((_)=>print("6"));
     }catch(e){
       e.printError();
+
     }
   }
 

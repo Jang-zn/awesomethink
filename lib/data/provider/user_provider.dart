@@ -13,14 +13,14 @@ class UserProvider{
   }
 
   //신규가입 목록
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getNewbieList() async {
+  Stream<QuerySnapshot<Map<String, dynamic>?>> getNewbieList() {
     return firestore.collection("user")
         .where("state",isEqualTo: false)
         .snapshots();
   }
 
   //직원목록
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMemberList() async {
+  Stream<QuerySnapshot<Map<String, dynamic>?>> getMemberList() {
     return firestore
         .collection("user")
         .where("state",isEqualTo: true)
@@ -28,20 +28,20 @@ class UserProvider{
   }
 
   //uid 로 user정보 가져옴
-  Future<DocumentSnapshot> getUserInfoByUid(String? uid) {
-    return firestore.collection("user").doc(uid).snapshots().single;
+  Stream<QuerySnapshot<Map<String, dynamic>?>> getUserInfoByUid(String? uid) {
+    return firestore.collection("user")
+        .where("uid",isEqualTo: uid)
+        .snapshots();
   }
 
   //user정보 업데이트
-  Future<bool?> updateUserInfo(Member? user) async {
+  Future<void> updateUserInfo(Member? user) async {
     firestore.collection("user").where("uid",isEqualTo: user?.uid)
         .get().then(
             (value){
           value.docs.first.reference.update(user!.toJson())
               .then((value) {
-            return true;
           }).onError((error, stackTrace) {
-            return false;
           });
         }
     );
