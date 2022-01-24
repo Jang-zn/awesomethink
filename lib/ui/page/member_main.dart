@@ -44,6 +44,11 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     authController = Get.find<AuthController>();
     userController = Get.find<UserController>();
     workController = Get.find<WorkController>();
+  }
+
+
+  @override
+  void didChangeDependencies() {
     getWorkList();
   }
 

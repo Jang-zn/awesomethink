@@ -2,20 +2,11 @@ import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/work_listtile_checkbtn.dart';
 import 'package:flutter/material.dart';
 
-class WorkListTile extends StatefulWidget {
-  Work? work;
+
+class WorkListTile extends StatelessWidget {
+  late final Work? work;
 
   WorkListTile(this.work);
-
-  @override
-  _WorkListTileState createState() => _WorkListTileState(this.work);
-}
-
-class _WorkListTileState extends State<WorkListTile> {
-   Work? work;
-
-  _WorkListTileState(this.work);
-
 
   @override
   Widget build(BuildContext context) {
