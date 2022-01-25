@@ -29,7 +29,6 @@ class UserRepository{
         (snapshot)=>snapshot.docs.map(
             (doc)=>Member.fromJson(doc.data()!)).first
     ).first;
-
   }
 
   Future<void> updateUserInfo(Member? user) async{

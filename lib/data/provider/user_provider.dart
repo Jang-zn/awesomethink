@@ -29,6 +29,7 @@ class UserProvider{
 
   //uid 로 user정보 가져옴
   Stream<QuerySnapshot<Map<String, dynamic>?>> getUserInfoByUid(String? uid) {
+    print("아니 씨발년아 ㅋㅋㅋ");
     return firestore.collection("user")
         .where("uid",isEqualTo: uid)
         .snapshots();

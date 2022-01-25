@@ -53,9 +53,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       try {
         await authController.signInWithEmail(emailController.text, pwController.text);
           if(authController.getCurrentUser()!.email==emailController.text) {
-            print("뭐여 씨팔"+emailController.text);
-            print("뭐여 씨팔??"+authController.getCurrentUser()!.email.toString());
-            print("뭐여 씨팔??"+authController.getCurrentUser()!.uid.toString());
             await initController();
             //Admin / Normal 구분
             if ((userController.userInfo as Member?)!.type == UserType.admin.index) {

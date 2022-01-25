@@ -199,18 +199,19 @@ class SignUpPageState extends State<SignUpPage> {
       //1. Member 객체 빈거 만들고 (user) signup 성공하면
       Member user = Member();
       try{
-        await authController.signUpWithEmail(emailController.text, pwController.text);
-      // 스낵바 접어주고, currentUser uid를 userMap에 넣어주고, userSignUpdata로 Member객체에 넣어줌.
-         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-         userMap["uid"]=authController.getCurrentUser()!.uid;
-         user = user.userSignUpData(userMap);
-         //user 콜렉션에 현재 가입한 uid를 가지는 document 생성
-         userController.setUserInfo(user);
-         //페이지 닫음
-         Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
-             binding: BindingsBuilder((){
-              Get.put(authController);
-         }));
+        await authController.signUpWithEmail(emailController.text, pwController.text).then((value){
+          // 스낵바 접어주고, currentUser uid를 userMap에 넣어주고, userSignUpdata로 Member객체에 넣어줌.
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          userMap["uid"]=authController.getCurrentUser()!.uid;
+          user = user.userSignUpData(userMap);
+          //user 콜렉션에 현재 가입한 uid를 가지는 document 생성
+          userController.setUserInfo(user);
+          //페이지 닫음
+          Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+              binding: BindingsBuilder((){
+                Get.put(authController);
+              }));
+        });
        } catch(e) {
          ScaffoldMessenger.of(context)
              ..hideCurrentSnackBar()

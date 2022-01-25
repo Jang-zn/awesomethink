@@ -25,13 +25,11 @@ class AuthController extends GetxController{
   }
 
   Future<void> signInWithEmail(String email, String password) async {
-    _user.value = (await authProvider.signInWithEmail(email, password)).user;
+    _user((await authProvider.signInWithEmail(email, password)).user);
   }
 
   Future<void> signUpWithEmail(String email, String password) async {
-    await authProvider.signUpWithEmail(email, password).onError((error, stackTrace) {
-      print(stackTrace);
-    });
+    _user((await authProvider.signUpWithEmail(email, password)).user);
   }
 
 

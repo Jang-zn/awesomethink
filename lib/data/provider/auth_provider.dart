@@ -15,16 +15,8 @@ class UserAuthProvider {
   }
 
 
-  Future<bool?> signUpWithEmail(String email, String password) async {
-    try {
-      await fAuth.createUserWithEmailAndPassword(
-          email: email, password: password).then((value){
-        return true;
-      });
-    } on Exception catch (e) {
-      logger.e(e.toString());
-      return false;
-    }
+  Future<UserCredential> signUpWithEmail(String email, String password) async {
+    return await fAuth.createUserWithEmailAndPassword(email: email, password: password);
   }
 
 
@@ -36,7 +28,6 @@ class UserAuthProvider {
   // Firebase로부터 로그아웃
   void signOut() async {
     await fAuth.signOut();
-    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"));
   }
 
 
@@ -52,5 +43,4 @@ class UserAuthProvider {
   //   var sendPasswordResetEmail = fAuth.sendPasswordResetEmail(
   //       email: getUser().email);
   // }
-
 }
