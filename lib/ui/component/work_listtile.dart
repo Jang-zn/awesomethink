@@ -1,16 +1,21 @@
+import 'package:awesomethink/controller/tile_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/work_listtile_checkbtn.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 class WorkListTile extends StatelessWidget {
-  late final Work? work;
-
+  final Work? work;
   WorkListTile(this.work);
+
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    Get.put<TileController>(TileController(work), tag:work!.startTime.toString());
+    TileController tileController =Get.find<TileController>(tag:work!.startTime.toString());
+
+    return Obx(()=>Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
           decoration: BoxDecoration(
@@ -18,27 +23,27 @@ class WorkListTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(5.0),
           ),
           child:
-          work!=null
+          tileController.work.value!=null
               ?
           Stack(children: [
             ListTile(
               title: Container(
                   margin: EdgeInsets.only(bottom: 8),
                   child: Row(children: [
-                    Text(work!.createTimeToMMDDW()),
+                    Text(tileController.work.value.createTimeToMMDDW()),
                     SizedBox(width: 10, height: 10),
-                    Text(work!.workingTimeCalc()),
+                    Text(tileController.work.value.workingTimeCalc()),
                   ])),
               subtitle: Row(
                 children: <Widget>[
-                  Text(work!.workingTimeToHHMM()),
+                  Text(tileController.work.value.workingTimeToHHMM()),
                 ],
               ),
             ),
-            WorkListTileCheckBtn(work:work!)
+            WorkListTileCheckBtn(work:tileController.work.value)
           ])
             :
               Container()
-        ));
+        )));
   }
 }

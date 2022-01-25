@@ -16,26 +16,22 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   final WorkController workController = Get.find<WorkController>();
   Work? work;
-  bool isVisible = true;
 
 
-  @override
-  void didChangeDependencies() {
-    isVisible = work?.workingTimeState==0?true:false;
-  }
+  late bool isVisible;
 
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
     workController.updateWorkingTimeState(work, WorkingTimeState.check.index);
-    setState(() {});
+    setState(() {isVisible=false;});
   }
 
 
   @override
   Widget build(BuildContext context) {
+    isVisible = work!.workingTimeState==WorkingTimeState.check.index?false:true;
     //휴무일 경우
     if(work!.workingTimeState==WorkingTimeState.vacation.index){
-      isVisible = true;
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
@@ -56,7 +52,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
     }
     //휴무 대기중인경우
     if(work!.workingTimeState==WorkingTimeState.vacationWait.index){
-      isVisible=true;
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
@@ -79,7 +74,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
       return Container();
     }
     if (work!.workingTimeState== WorkingTimeState.wait.index&&work!.endTime!=null) {
-      isVisible=true;
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,

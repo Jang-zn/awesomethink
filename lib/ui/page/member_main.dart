@@ -171,12 +171,14 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
         binding: BindingsBuilder((){
           authController.signOut();
           Get.put(authController);
+          workController.dispose();
+          userController.dispose();
     }));
   }
 
 
   //주단위 시간계산
-  void getWeeklyWorkingTime() async{
+  void getWeeklyWorkingTime() {
     print("주간 시간계산");
     //변수
     int weeklyHour=0;

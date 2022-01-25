@@ -4,9 +4,14 @@ import 'package:awesomethink/data/model/work.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+class WorkInOutBtn extends StatefulWidget {
+  const WorkInOutBtn({Key? key}) : super(key: key);
 
-class WorkInOutBtn extends StatelessWidget {
-  WorkInOutBtn({Key? key}) : super(key: key);
+  @override
+  _WorkInOutBtnState createState() => _WorkInOutBtnState();
+}
+
+class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   final WorkController workController = Get.find<WorkController>();
   final UserController userController = Get.find<UserController>();
@@ -53,7 +58,10 @@ class WorkInOutBtn extends StatelessWidget {
   void endTodayWorkingTime() async {
     //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
     today?.endTime = DateTime.now();
-    workController.updateWork(today);
+    await workController.updateWork(today);
+    setState(() {
+
+    });
   }
 
   //퇴근체크

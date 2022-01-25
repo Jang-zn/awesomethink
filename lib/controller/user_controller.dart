@@ -39,15 +39,15 @@ class UserController extends GetxController{
 
   Future<void> updateUserInfo(Member? user) async{
     await userRepository.updateUserInfo(user);
-    getNewbieList();
-    getMemberList();
-    getUserInfo(user!.uid);
+    await getNewbieList();
+    await getMemberList();
+    await getUserInfo(user!.uid);
   }
 
   Future<void> setUserInfo(Member user) async{
     await userRepository.setUserInfo(user);
-    getNewbieList();
-    getMemberList();
+    await getNewbieList();
+    await getMemberList();
   }
 
 }
