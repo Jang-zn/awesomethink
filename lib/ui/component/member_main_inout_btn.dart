@@ -13,8 +13,8 @@ class WorkInOutBtn extends StatefulWidget {
 
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
-  final WorkController workController = Get.find<WorkController>();
   final UserController userController = Get.find<UserController>();
+  late final WorkController workController = Get.find<WorkController>(tag:userController.userInfo.uid);
   Work? today;
 
   bool checkDuplication(){
@@ -46,9 +46,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     if (check) {
       today = Work().createWork(userController.userInfo.uid);
       //work doc 생성
-      print("start");
       await workController.setWork(today);
-      print("end");
       //당일에 퇴근후 출근 또누른경우
     } else {
       Get.snackbar("당일 중복등록 불가", "같은날 기록이 중복될 수 없습니다");
@@ -59,13 +57,11 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
     today?.endTime = DateTime.now();
     await workController.updateWork(today);
-    setState(() {
-
-    });
   }
 
   //퇴근체크
   bool isOut(){
+    print("isOut");
     bool result = true;
     for(Work? w in workController.weeklyWorkList){
       if(w!.endTime==null){
@@ -73,11 +69,13 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
         break;
       }
     }
+    print(result);
     return result;
   }
 
   @override
   Widget build(BuildContext context) {
+    print("inout build");
     if((workController.weeklyWorkList as List<Work?>).isNotEmpty
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.month==DateTime.now().month

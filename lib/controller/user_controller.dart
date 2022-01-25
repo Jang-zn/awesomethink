@@ -27,14 +27,17 @@ class UserController extends GetxController{
 
   Future<void> getUserInfo(String? uid) async{
     _userInfo(await userRepository.getUserInfo(uid));
+    _userInfo.refresh();
   }
 
   Future<void> getNewbieList() async{
     _newbieList(await userRepository.getNewbieList());
+    _newbieList.refresh();
   }
 
   Future<void> getMemberList() async{
     _memberList(await userRepository.getMemberList());
+    _memberList.refresh();
   }
 
   Future<void> updateUserInfo(Member? user) async{

@@ -1,3 +1,4 @@
+import 'package:awesomethink/controller/tile_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
@@ -13,25 +14,22 @@ class WorkListTileCheckBtn extends StatefulWidget {
 
 class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
   _WorkListTileCheckBtnState({required this.work});
-
-  final WorkController workController = Get.find<WorkController>();
   Work? work;
-
-
-  late bool isVisible;
+  late final TileController tileController = Get.find<TileController>(tag:work!.startTime.toString());
+  late bool isVisible= tileController.work.value.workingTimeState==WorkingTimeState.check.index?false:true;
 
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
-    workController.updateWorkingTimeState(work, WorkingTimeState.check.index);
+    tileController.updateWorkingTimeState(work, WorkingTimeState.check.index);
+    Get.find<WorkController>(tag:work!.userUid).updateWorkingTimeState(work, WorkingTimeState.check.index);
     setState(() {isVisible=false;});
   }
 
 
   @override
   Widget build(BuildContext context) {
-    isVisible = work!.workingTimeState==WorkingTimeState.check.index?false:true;
     //휴무일 경우
-    if(work!.workingTimeState==WorkingTimeState.vacation.index){
+    if(tileController.work.value.workingTimeState==WorkingTimeState.vacation.index){
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
@@ -51,7 +49,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
               }));
     }
     //휴무 대기중인경우
-    if(work!.workingTimeState==WorkingTimeState.vacationWait.index){
+    if(tileController.work.value.workingTimeState==WorkingTimeState.vacationWait.index){
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
@@ -73,7 +71,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
     if(!isVisible){
       return Container();
     }
-    if (work!.workingTimeState== WorkingTimeState.wait.index&&work!.endTime!=null) {
+    if (tileController.work.value.workingTimeState== WorkingTimeState.wait.index&&tileController.work.value.endTime!=null) {
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,

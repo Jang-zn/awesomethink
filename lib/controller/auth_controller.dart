@@ -16,6 +16,7 @@ class AuthController extends GetxController{
 
   _prepareUser() {
     _user.value = authProvider.getCurrentUser();
+    _user.refresh();
   }
 
   //현재유저

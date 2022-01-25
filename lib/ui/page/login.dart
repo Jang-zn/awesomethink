@@ -36,7 +36,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   void initState() {
     authController = Get.put(AuthController());
     userController = Get.put(UserController());
-    workController = Get.put(WorkController());
   }
 
   void login() async {
@@ -54,6 +53,9 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       try {
         await authController.signInWithEmail(emailController.text, pwController.text);
           if(authController.getCurrentUser()!.email==emailController.text) {
+            print("뭐여 씨팔"+emailController.text);
+            print("뭐여 씨팔??"+authController.getCurrentUser()!.email.toString());
+            print("뭐여 씨팔??"+authController.getCurrentUser()!.uid.toString());
             await initController();
             //Admin / Normal 구분
             if ((userController.userInfo as Member?)!.type == UserType.admin.index) {
@@ -88,6 +90,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   Future<void> initController() async {
     try {
       await userController.getUserInfo(authController.getCurrentUser()!.uid);
+      workController = Get.put(WorkController(authController.getCurrentUser()!.uid),tag:authController.getCurrentUser()!.uid);
     }catch(e){
       e.printError();
     }

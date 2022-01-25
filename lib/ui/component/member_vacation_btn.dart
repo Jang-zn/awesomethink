@@ -8,8 +8,8 @@ import 'package:get/get.dart';
 class VacationBtn extends StatelessWidget {
   VacationBtn({Key? key, required this.context}) : super(key: key);
   BuildContext context;
-  final WorkController workController = Get.find<WorkController>();
   final UserController userController = Get.find<UserController>();
+  late final WorkController workController = Get.find<WorkController>(tag:userController.userInfo.uid);
   bool vacationWait = false;
   DateTime? vacationStart;
   DateTime? vacationEnd;

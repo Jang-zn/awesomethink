@@ -1,7 +1,6 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
-import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
 import 'package:awesomethink/ui/component/member_vacation_btn.dart';
@@ -30,9 +29,6 @@ class AwesomeMainWidget extends StatefulWidget {
 
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
-  //필드
-  String weeklyWorkingTime ="0시간 00분";
-  String requiredWorkingTime ="40시간 00분";
   //생성자
   _AwesomeMainWidgetState();
   late final AuthController authController;
@@ -43,7 +39,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
   void initState() {
     authController = Get.find<AuthController>();
     userController = Get.find<UserController>();
-    workController = Get.find<WorkController>();
+    workController = Get.find<WorkController>(tag:authController.getCurrentUser()!.uid);
   }
 
 
@@ -59,7 +55,6 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    getWeeklyWorkingTime();
     return Obx(()=>Scaffold(
           body: SafeArea(
         child:Column(
@@ -122,7 +117,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                             //주간 근무시간 계산후 출력
                             Container(
                                 margin:const EdgeInsets.symmetric(vertical: 4),
-                                child:Text("${weeklyWorkingTime}",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                                child:Text("${workController.weeklyWorkingTime.value}",style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                             ),
                           ],
                         ),
@@ -134,7 +129,7 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                             ),
                             Container(
                                 margin:const EdgeInsets.symmetric(vertical: 4),
-                                child:Text(requiredWorkingTime,style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                                child:Text(workController.requiredWorkingTime.value,style:TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
                             )
                           ],
                         )
@@ -159,88 +154,19 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                 itemCount: (workController.weeklyWorkList as List<Work?>).length,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
+                  print("ListView build");
                   return WorkListTile((workController.weeklyWorkList as List<Work?>)[index]);
                 })]
     ))));
   }
-
-
 
   void logout() {
     Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
         binding: BindingsBuilder((){
           authController.signOut();
           Get.put(authController);
-          workController.dispose();
-          userController.dispose();
     }));
   }
 
-
-  //주단위 시간계산
-  void getWeeklyWorkingTime() {
-    print("주간 시간계산");
-    //변수
-    int weeklyHour=0;
-    int weeklyMinute=0;
-    int requiredHour=39;
-    int requiredMinute=60;
-      try {
-        for (Work? w in workController.weeklyWorkList!) {
-          Map<String, int> timeMap = w!.getWorkingTimeToMap();
-          weeklyHour += timeMap["hour"]!;
-          weeklyMinute += timeMap["minute"]!;
-        }
-
-        // 분 합계가 60분 이상이면 단위 올려줌
-        if (weeklyMinute > 59) {
-          weeklyHour += (weeklyMinute - weeklyMinute % 60) ~/ 60;
-          weeklyMinute = weeklyMinute % 60;
-        }
-
-        //requiredHour / Minute 처리
-        requiredHour = requiredHour - weeklyHour;
-        requiredMinute = requiredMinute - weeklyMinute;
-        if (requiredHour < 0) {
-          requiredHour = 0;
-          requiredMinute = 0;
-        }
-
-        if (requiredMinute == 60) {
-          requiredMinute = 0;
-          requiredHour += 1;
-        }
-
-
-        //출력메세지 세팅
-        weeklyMinute > 0 ?
-        weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"
-            : weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
-        requiredMinute > 0 ?
-        requiredWorkingTime =
-            requiredHour.toString() + "시간 " + requiredMinute.toString() + "분"
-            : requiredWorkingTime =
-            requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
-                "분";
-      }catch(e){
-        if (requiredMinute == 60) {
-          requiredMinute = 0;
-          requiredHour += 1;
-        }
-        weeklyMinute > 0 ?
-        weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"
-            : weeklyWorkingTime =
-            weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
-        requiredMinute > 0 ?
-        requiredWorkingTime =
-            requiredHour.toString() + "시간 " + requiredMinute.toString() + "분"
-            : requiredWorkingTime =
-            requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
-                "분";
-      }
-    }
 }
 

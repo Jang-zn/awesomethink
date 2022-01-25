@@ -27,8 +27,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
   @override
   void initState() {
     userController = Get.find<UserController>();
-    workController = Get.find<WorkController>();
     authController = Get.find<AuthController>();
+    workController = Get.find<WorkController>(tag:userController.userInfo.uid);
     memberList = userController.memberList;
     workList = workController.weeklyWorkList;
   }
