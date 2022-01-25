@@ -1,13 +1,12 @@
-import 'package:awesomethink/ui/page/login.dart';
+import 'package:awesomethink/data/provider/contant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 class UserAuthProvider {
   Logger logger = Logger();
   final FirebaseAuth fAuth = FirebaseAuth.instance; //provider 인증 인스턴스
-  final FirebaseFirestore firestore = FirebaseFirestore.instance; //firestore 인스턴스
+  final FirebaseFirestore firestore = ProviderConstance.firestore;//firestore 인스턴스
 
 
   User? getCurrentUser(){

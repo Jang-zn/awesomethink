@@ -48,5 +48,10 @@ class WorkRepository{
                 (doc)=>Work.fromJson(doc.data()!)).first
     ).first;
   }
+
+  //임시기능
+  void deleteAllWork(){
+    workProvider.deleteAllWork();
+  }
 }
 

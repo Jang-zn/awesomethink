@@ -21,13 +21,14 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
     tileController.updateWorkingTimeState(work, WorkingTimeState.check.index);
-    Get.find<WorkController>(tag:work!.userUid).updateWorkingTimeState(work, WorkingTimeState.check.index);
+    Get.put<WorkController>(WorkController(work!.userUid!),tag:work!.userUid).updateWorkingTimeState(work, WorkingTimeState.check.index);
     setState(() {isVisible=false;});
   }
 
 
   @override
   Widget build(BuildContext context) {
+     print(tileController.work.toString());
     //휴무일 경우
     if(tileController.work.value.workingTimeState==WorkingTimeState.vacation.index){
       return Container(

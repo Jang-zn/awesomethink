@@ -149,18 +149,22 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                       ]
                   )
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: (workController.weeklyWorkList as List<Work?>).length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  print("ListView build");
-                  return WorkListTile((workController.weeklyWorkList as List<Work?>)[index]);
-                })]
+              Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: (workController.weeklyWorkList as List<Work?>).length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      print("ListView build");
+                      print("ListTile work : "+(workController.weeklyWorkList as List<Work?>)[index].toString());
+                      return WorkListTile((workController.weeklyWorkList as List<Work?>)[index]);
+                  })),]
     ))));
   }
 
   void logout() {
+    workController.onDelete();
+    userController.onDelete();
     Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
         binding: BindingsBuilder((){
           authController.signOut();

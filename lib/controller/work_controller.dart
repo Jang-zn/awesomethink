@@ -123,4 +123,9 @@ class WorkController extends GetxController{
     }
   }
 
+  //임시기능
+  void deleteAllWork(){
+    workRepository.deleteAllWork();
+  }
+
 }

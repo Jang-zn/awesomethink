@@ -12,8 +12,7 @@ class WorkListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put<TileController>(TileController(work), tag:work!.startTime.toString());
-    TileController tileController =Get.find<TileController>(tag:work!.startTime.toString());
+    TileController tileController=Get.put<TileController>(TileController(work), tag:work!.startTime.toString());
 
     return Obx(()=>Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),

@@ -13,9 +13,11 @@ class WorkInOutBtn extends StatefulWidget {
 
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
-  final UserController userController = Get.find<UserController>();
-  late final WorkController workController = Get.find<WorkController>(tag:userController.userInfo.uid);
+  late UserController userController;
+  late WorkController workController;
+
   Work? today;
+  late bool out;
 
   bool checkDuplication(){
     if((workController.weeklyWorkList as List<Work?>).isEmpty){
@@ -53,28 +55,31 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     }
   }
 
-  void endTodayWorkingTime() async {
+  void endTodayWorkingTime() {
     //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
     today?.endTime = DateTime.now();
-    await workController.updateWork(today);
+    workController.updateWork(today);
   }
 
   //퇴근체크
-  bool isOut(){
+  void isOut(){
     print("isOut");
-    bool result = true;
+    out = true;
     for(Work? w in workController.weeklyWorkList){
       if(w!.endTime==null){
-        result = false;
+        print(w.toString());
+        out = false;
         break;
       }
     }
-    print(result);
-    return result;
+    print("out "+out.toString());
   }
 
   @override
   Widget build(BuildContext context) {
+    userController = Get.find<UserController>();
+    workController = Get.find<WorkController>(tag:userController.userInfo.uid);
+
     print("inout build");
     if((workController.weeklyWorkList as List<Work?>).isNotEmpty
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year
@@ -82,6 +87,8 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.day==DateTime.now().day){
       today = (workController.weeklyWorkList as List<Work?>).first;
     }
+    isOut();
+
     //case 1. 출근기록 X --> list empty
     if((workController.weeklyWorkList as List<Work?>).isEmpty) {
       print("case1");
@@ -95,7 +102,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     }
 
     //case 2. 출근기록 있음 / 근데 퇴근 안누름
-    if(!isOut()){
+    if(!out){
       print("case2");
       return ElevatedButton(
           child: const Text("퇴근"),

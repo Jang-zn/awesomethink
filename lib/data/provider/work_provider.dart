@@ -1,8 +1,9 @@
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/data/provider/contant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorkProvider {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = ProviderConstance.firestore;
 
   //uid에 해당하는 유저의 주간 업무일정
   Future<Query<Map<String, dynamic>>> getWeeklyWorkList(String? uid) async{
@@ -66,5 +67,14 @@ class WorkProvider {
     return firestore.collection("work")
         .where("startTime",isEqualTo: work!.startTime)
         .snapshots();
+  }
+
+  //임시기능
+  void deleteAllWork(){
+    firestore.collection("work")
+        .get()
+        .then((val) {
+          val.docs.forEach((element) {element.reference.delete();});
+    });
   }
 }

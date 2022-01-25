@@ -1,9 +1,10 @@
 import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/provider/contant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class UserProvider{
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore = ProviderConstance.firestore;
 
   //가입정보 저장
   Future<void> setUserInfo(Member user) async{
@@ -29,7 +30,6 @@ class UserProvider{
 
   //uid 로 user정보 가져옴
   Stream<QuerySnapshot<Map<String, dynamic>?>> getUserInfoByUid(String? uid) {
-    print("아니 씨발년아 ㅋㅋㅋ");
     return firestore.collection("user")
         .where("uid",isEqualTo: uid)
         .snapshots();

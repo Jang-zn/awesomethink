@@ -179,6 +179,12 @@ class SignUpPageState extends State<SignUpPage> {
                   child: Text("Submit"),
                   onPressed: submit,
                 )),
+            Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: ElevatedButton(
+                  child: Text("뒤로가기"),
+                  onPressed: Get.back
+                )),
             //TODO 프사 등록, 안하면 기본이미지
           ]))
     ]));

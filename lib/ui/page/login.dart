@@ -100,6 +100,10 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     }));
   }
 
+  void deleteAllWork(){
+    Get.put(WorkController("temp"), tag:"temp").deleteAllWork();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,6 +154,11 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                       width:MediaQuery.of(context).size.width*0.5,
                       child:ElevatedButton(onPressed: signUp,
                           child: const Text("SignUp")),
+                  ),
+                  Container(
+                    width:MediaQuery.of(context).size.width*0.5,
+                    child:ElevatedButton(onPressed: deleteAllWork,
+                        child: const Text("DeleteAllWork")),
                   ),
                 ],
               )
