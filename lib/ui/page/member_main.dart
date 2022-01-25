@@ -42,19 +42,9 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
     workController = Get.find<WorkController>(tag:authController.getCurrentUser()!.uid);
   }
 
-
-  @override
-  void didChangeDependencies() {
-    getWorkList();
-  }
-
-  Future<void> getWorkList() async{
-    await workController.getWeeklyWorkList(userController.userInfo.uid);
-    await workController.getMonthlyWorkList(userController.userInfo.uid, DateTime.now());
-  }
-
   @override
   Widget build(BuildContext context) {
+    print("main build");
     return Obx(()=>Scaffold(
           body: SafeArea(
         child:Column(

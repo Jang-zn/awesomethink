@@ -15,7 +15,7 @@ class WorkListTileCheckBtn extends StatefulWidget {
 class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
   _WorkListTileCheckBtnState({required this.work});
   Work? work;
-  late final TileController tileController = Get.find<TileController>(tag:work!.startTime.toString());
+  late final TileController tileController=Get.put<TileController>(TileController(work), tag:work!.startTime.toString());
   late bool isVisible= tileController.work.value.workingTimeState==WorkingTimeState.check.index?false:true;
 
   void workingCheck () {
@@ -28,7 +28,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   @override
   Widget build(BuildContext context) {
-     print(tileController.work.toString());
+     print("btn : "+tileController.work.toString());
     //휴무일 경우
     if(tileController.work.value.workingTimeState==WorkingTimeState.vacation.index){
       return Container(

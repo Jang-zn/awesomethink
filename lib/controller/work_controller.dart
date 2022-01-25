@@ -10,7 +10,7 @@ class WorkController extends GetxController{
     getWeeklyWorkList(uid);
     getMonthlyWorkList(uid, DateTime.now());
   }
-
+  final RxBool _inOut = true.obs;
   final  RxList<Work?> _monthlyWorkList = <Work?>[].obs;
   final  RxList<Work?> _weeklyWorkList = <Work?>[].obs;
   final RxString _weeklyWorkingTime ="0시간 00분".obs;
@@ -27,35 +27,37 @@ class WorkController extends GetxController{
   set monthlyWorkingTime(value) => _monthlyWorkingTime;
   get requiredWorkingTime => _requiredWorkingTime;
   set requiredWorkingTime(value) => _requiredWorkingTime;
+  get inOut => _inOut.value;
+  set inOut(value) => _inOut;
 
   Future<void> getWeeklyWorkList(String? uid) async{
     _weeklyWorkList(await workRepository.getWeeklyWorkList(uid));
     getWeeklyWorkingTime();
-    _weeklyWorkList.refresh();
-    _weeklyWorkingTime.refresh();
+    checkInOut();
   }
 
   Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
     _monthlyWorkList(await workRepository.getMonthlyWorkList(uid, dateTime));
-    _monthlyWorkList.refresh();
   }
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
     await workRepository.updateWorkingTimeState(work, state);
-    await getWeeklyWorkList(work!.userUid);
-    await getMonthlyWorkList(work.userUid, DateTime.now());
+    getWeeklyWorkList(work!.userUid);
+    getMonthlyWorkList(work.userUid, DateTime.now());
   }
 
   Future<void> updateWork(Work? work) async{
     await workRepository.updateWork(work).then((_)=>print("1"));
-    await getWeeklyWorkList(work!.userUid).then((_)=>print("2"));
-    await getMonthlyWorkList(work.userUid, DateTime.now()).then((_)=>print("3"));
+    getWeeklyWorkList(work!.userUid).then((_)=>print("2"));
+    print("updateWork : "+_weeklyWorkList.toString());
+    print("inout : "+_inOut.toString());
+    getMonthlyWorkList(work.userUid, DateTime.now()).then((_)=>print("3"));
   }
 
   Future<void> setWork(Work? work) async{
     await workRepository.setWork(work);
-    await getWeeklyWorkList(work!.userUid);
-    await getMonthlyWorkList(work.userUid, DateTime.now());
+    getWeeklyWorkList(work!.userUid);
+    getMonthlyWorkList(work.userUid, DateTime.now());
   }
 
   void getWeeklyWorkingTime() {
@@ -121,6 +123,16 @@ class WorkController extends GetxController{
           requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
               "분";
     }
+  }
+
+  void checkInOut(){
+    for(Work? w in _weeklyWorkList){
+      if(w!.endTime==null){
+        _inOut(false);
+        return;
+      }
+    }
+    _inOut(true);
   }
 
   //임시기능

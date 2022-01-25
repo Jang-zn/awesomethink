@@ -17,18 +17,19 @@ class TileController extends GetxController{
 
   Future<void> getThisWork() async{
     _work(await workRepository.getWorkByStartTime(_work.value));
-    _work.refresh();
+    refresh();
   }
 
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
     await workRepository.updateWorkingTimeState(work, state);
-    getThisWork();
+    await getThisWork();
+    print("tileController : "+_work.toString());
   }
 
   Future<void> updateWork(Work? work) async{
     await workRepository.updateWork(work);
-    getThisWork();
+    await getThisWork();
   }
 
 
