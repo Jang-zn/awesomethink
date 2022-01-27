@@ -6,13 +6,14 @@ class WorkRepository{
 
 
   Future<List<Work?>> getWeeklyWorkList(String? uid) async {
-    List<Work?> result=[];
-    (await workProvider.getWeeklyWorkList(uid)).snapshots().map(
-            (snapshot) => snapshot.docs.map(
-                (doc) {
-                  result.add(Work.fromJson(doc.data()));
-                }
-        )
+    List<Work?> result = [];
+    (await workProvider.getWeeklyWorkList(uid)).get().then(
+            (value) {
+              value.docs.forEach((doc) {
+                result.add(Work.fromJson(doc.data()));
+                print("add"+doc.data().toString());
+              });
+            }
     );
     return result;
   }

@@ -5,14 +5,8 @@ import 'package:get/get.dart';
 
 class WorkController extends GetxController{
   final WorkRepository workRepository = WorkRepository();
-
-  WorkController(String uid){
-    Future.wait([
-      getWeeklyWorkList(uid),
-      getMonthlyWorkList(uid, DateTime.now())
-    ]);
-  }
-
+  String? uid;
+  WorkController(this.uid);
 
   final RxBool _inOut = true.obs;
   final  RxList<Work?> _monthlyWorkList = <Work?>[].obs;
@@ -37,9 +31,14 @@ class WorkController extends GetxController{
 
   @override
   void onInit() {
+    print("onInit workController");
+    getAllWorkList(uid, DateTime.now());
     ever(_weeklyWorkList, (_)=>print("changed : ${_weeklyWorkList.toString()}"));
     ever(_weeklyWorkList, (_)=>print("when : ${DateTime.now()}"));
-    debounce(_weeklyWorkList, (_)=>print("debounce : ${_weeklyWorkList.toString()}"),time:Duration(seconds: 2));
+    debounce(_weeklyWorkList, (_){
+      print("debounce : ${_weeklyWorkList.toString()}");
+      _weeklyWorkList.refresh();
+    }, time:Duration(seconds: 1));
     debounce(_weeklyWorkList, (_)=>print("debounce when : ${DateTime.now()}"), time:Duration(seconds:2));
   }
 
