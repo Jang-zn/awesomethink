@@ -40,7 +40,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     return result;
   }
 
-  void startTodayWorkingTime() async {
+  void startTodayWorkingTime() {
     //당일 중복등록 못하게 validation
     bool check = checkDuplication();
 
@@ -48,23 +48,26 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     if (check) {
       today = Work().createWork(userController.userInfo.uid);
       //work doc 생성
-      await workController.setWork(today);
+      Future.wait([workController.setWork(today)]);
       //당일에 퇴근후 출근 또누른경우
     } else {
       Get.snackbar("당일 중복등록 불가", "같은날 기록이 중복될 수 없습니다");
     }
   }
 
-  void endTodayWorkingTime() async {
+  void endTodayWorkingTime() {
     //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
     today?.endTime = DateTime.now();
-    await workController.updateWork(today);
+    today?.checkOut=true;
+    Future.wait([workController.updateWork(today)]);
+    setState(() {});
   }
 
 
   @override
   Widget build(BuildContext context) {
     print("inout build");
+    print("hash : "+workController.hashCode.toString());
     out = workController.inOut;
     if((workController.weeklyWorkList as List<Work?>).isNotEmpty
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year

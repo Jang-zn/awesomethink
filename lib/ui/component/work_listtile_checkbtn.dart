@@ -1,4 +1,3 @@
-import 'package:awesomethink/controller/tile_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
@@ -15,22 +14,19 @@ class WorkListTileCheckBtn extends StatefulWidget {
 class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
   _WorkListTileCheckBtnState({required this.work});
   Work? work;
-  late final TileController tileController=Get.put<TileController>(TileController(work), tag:work!.startTime.toString());
-  late bool isVisible= tileController.work.value.workingTimeState==WorkingTimeState.check.index?false:true;
+  late final WorkController workController=Get.find<WorkController>(tag: work!.userUid);
 
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
-    tileController.updateWorkingTimeState(work, WorkingTimeState.check.index);
-    Get.put<WorkController>(WorkController(work!.userUid!),tag:work!.userUid).updateWorkingTimeState(work, WorkingTimeState.check.index);
-    setState(() {isVisible=false;});
+    Future.wait([workController.updateWorkingTimeState(work, WorkingTimeState.check.index)]).whenComplete(() => print("workingTimeState update end"));
   }
 
 
   @override
   Widget build(BuildContext context) {
-     print("btn : "+tileController.work.toString());
+     print("btn : "+work.toString());
     //휴무일 경우
-    if(tileController.work.value.workingTimeState==WorkingTimeState.vacation.index){
+    if(work!.workingTimeState==WorkingTimeState.vacation.index){
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
@@ -50,7 +46,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
               }));
     }
     //휴무 대기중인경우
-    if(tileController.work.value.workingTimeState==WorkingTimeState.vacationWait.index){
+    if(work!.workingTimeState==WorkingTimeState.vacationWait.index){
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,
@@ -69,10 +65,12 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
               }));
     }
 
-    if(!isVisible){
+    if(work!.workingTimeState==WorkingTimeState.check.index){
       return Container();
     }
-    if (tileController.work.value.workingTimeState== WorkingTimeState.wait.index&&tileController.work.value.endTime!=null) {
+
+    //퇴근후 확정 안한경우
+    if (work!.workingTimeState== WorkingTimeState.wait.index&&work!.endTime!=null) {
       return Container(
           margin: EdgeInsets.only(top: 20, left: 250),
           width: 60,

@@ -113,6 +113,7 @@ class Work{
       vacation.endTime = DateTime(start.year,start.month,start.day+i,18,0);
       vacation.workingTimeState = WorkingTimeState.vacationWait.index;
       vacation.updateDate = DateTime.now();
+      vacation.checkOut=true;
       vacation.vacation = Vacation(startVacation: start, endVacation: end);
       vacationList.add(vacation);
     }

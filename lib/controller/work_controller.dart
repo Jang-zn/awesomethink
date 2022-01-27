@@ -7,9 +7,13 @@ class WorkController extends GetxController{
   final WorkRepository workRepository = WorkRepository();
 
   WorkController(String uid){
-    getWeeklyWorkList(uid);
-    getMonthlyWorkList(uid, DateTime.now());
+    Future.wait([
+      getWeeklyWorkList(uid),
+      getMonthlyWorkList(uid, DateTime.now())
+    ]);
   }
+
+
   final RxBool _inOut = true.obs;
   final  RxList<Work?> _monthlyWorkList = <Work?>[].obs;
   final  RxList<Work?> _weeklyWorkList = <Work?>[].obs;
@@ -30,7 +34,17 @@ class WorkController extends GetxController{
   get inOut => _inOut.value;
   set inOut(value) => _inOut;
 
+
+  @override
+  void onInit() {
+    ever(_weeklyWorkList, (_)=>print("changed : ${_weeklyWorkList.toString()}"));
+    ever(_weeklyWorkList, (_)=>print("when : ${DateTime.now()}"));
+    debounce(_weeklyWorkList, (_)=>print("debounce : ${_weeklyWorkList.toString()}"),time:Duration(seconds: 2));
+    debounce(_weeklyWorkList, (_)=>print("debounce when : ${DateTime.now()}"), time:Duration(seconds:2));
+  }
+
   Future<void> getAllWorkList(String? uid, DateTime dateTime) async{
+    print("getAllWorkList");
     await Future.wait([
       getWeeklyWorkList(uid),
       getMonthlyWorkList(uid, dateTime)
@@ -38,6 +52,7 @@ class WorkController extends GetxController{
   }
 
   Future<void> getWeeklyWorkList(String? uid) async{
+    print("getWeeklyWorkList");
     _weeklyWorkList(await workRepository.getWeeklyWorkList(uid));
     getWeeklyWorkingTime();
     checkInOut();
@@ -48,26 +63,29 @@ class WorkController extends GetxController{
   }
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
+    print("updateWorkingTimeState");
     await workRepository.updateWorkingTimeState(work, state);
-    getAllWorkList(work!.userUid, DateTime.now());
+    await getAllWorkList(work!.userUid, DateTime.now());
   }
 
   Future<void> updateWork(Work? work) async{
+    print("updateWork");
     await workRepository.updateWork(work);
-    await Future.wait([
-      getAllWorkList(work!.userUid, DateTime.now())
-    ]);
-
+    await getAllWorkList(work!.userUid, DateTime.now());
   }
 
   Future<void> setWork(Work? work) async{
+    print("setWork");
     await workRepository.setWork(work);
-    await Future.wait([
-      getAllWorkList(work!.userUid, DateTime.now())
-    ]);
+    await getAllWorkList(work!.userUid, DateTime.now());
+
   }
 
+
+
+
   void getWeeklyWorkingTime() {
+    print("getWeeklyWorkingTime");
     print("주간 시간계산");
     //변수
     int weeklyHour=0;
@@ -133,15 +151,14 @@ class WorkController extends GetxController{
   }
 
   void checkInOut(){
-    for(Work? w in _weeklyWorkList){
-      if(w!.endTime==null){
+    print("checkInOut");
+    for(Work? w in _weeklyWorkList) {
+      if(!w!.checkOut!){
         _inOut(false);
-        _inOut.refresh();
         return;
       }
     }
     _inOut(true);
-    _inOut.refresh();
   }
 
   //임시기능
