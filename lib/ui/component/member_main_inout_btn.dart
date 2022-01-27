@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
@@ -57,10 +59,21 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
   void endTodayWorkingTime() {
     //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
-    today?.endTime = DateTime.now();
+    //TODO endTime -> DateTime.now로 바꿔야됨 지금은 임시로 랜덤줌
+    today?.endTime = DateTime.now().add(Duration(hours: Random(0).nextInt(8), minutes: Random(0).nextInt(59)));
     today?.checkOut=true;
-    Future.wait([workController.updateWork(today)]);
-    setState(() {});
+    Future.wait([workController.updateWork(today)]).whenComplete(() {
+      setState(() {});
+    });
+  }
+
+  bool isOut(){
+    for(Work? w in workController.weeklyWorkList){
+      if(w!.checkOut==false){
+        return false;
+      }
+    }
+    return true;
   }
 
 
@@ -68,7 +81,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   Widget build(BuildContext context) {
     print("inout build");
     print("hash : "+workController.hashCode.toString());
-    out = workController.inOut;
+    out = isOut();
     if((workController.weeklyWorkList as List<Work?>).isNotEmpty
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.month==DateTime.now().month

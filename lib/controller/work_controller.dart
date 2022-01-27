@@ -31,13 +31,14 @@ class WorkController extends GetxController{
 
   @override
   void onInit() {
-    print("onInit workController");
-    getAllWorkList(uid, DateTime.now());
-    ever(_weeklyWorkList, (_)=>print("changed : ${_weeklyWorkList.toString()}"));
+    ever(_weeklyWorkList,
+            (_) {
+              print("changed : ${_weeklyWorkList.toString()}");
+            });
     ever(_weeklyWorkList, (_)=>print("when : ${DateTime.now()}"));
     debounce(_weeklyWorkList, (_){
       print("debounce : ${_weeklyWorkList.toString()}");
-      _weeklyWorkList.refresh();
+      refresh();
     }, time:Duration(seconds: 1));
     debounce(_weeklyWorkList, (_)=>print("debounce when : ${DateTime.now()}"), time:Duration(seconds:2));
   }
@@ -51,10 +52,13 @@ class WorkController extends GetxController{
   }
 
   Future<void> getWeeklyWorkList(String? uid) async{
-    print("getWeeklyWorkList");
-    _weeklyWorkList(await workRepository.getWeeklyWorkList(uid));
+    print(1);
+    _weeklyWorkList.value = await workRepository.getWeeklyWorkList(uid);
+    print(2);
     getWeeklyWorkingTime();
+    print(3);
     checkInOut();
+    print("getWeeklyWorkList");
   }
 
   Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {

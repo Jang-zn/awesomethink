@@ -31,15 +31,13 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   //생성자
   _AwesomeMainWidgetState();
-  late final AuthController authController;
-  late final UserController userController;
-  late final WorkController workController;
+  final AuthController authController = Get.find<AuthController>();
+  final UserController userController = Get.find<UserController>();
+  late final WorkController workController = Get.find<WorkController>(tag:authController.getCurrentUser()!.uid);
 
   @override
   void initState() {
-    authController = Get.find<AuthController>();
-    userController = Get.find<UserController>();
-    workController = Get.find<WorkController>(tag:authController.getCurrentUser()!.uid);
+    super.initState();
   }
 
   @override

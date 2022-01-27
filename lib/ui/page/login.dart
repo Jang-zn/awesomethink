@@ -53,28 +53,28 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       try {
         await authController.signInWithEmail(emailController.text, pwController.text);
           if(authController.getCurrentUser()!.email==emailController.text) {
-            await initController();
-            //Admin / Normal 구분
-            if ((userController.userInfo as Member?)!.type == UserType.admin.index) {
-              Get.to(AdminMainPage(), binding: BindingsBuilder(() {
-                Get.lazyPut<AuthController>(() => authController);
-                Get.put(userController);
-                Get.put(workController);
-              }));
-            } else if((userController.userInfo as Member?)!.state == false){
-              print("씨발 뭔데"+userController.userInfo.toString());
-              Get.to(AuthWaitPage(), binding: (BindingsBuilder(((){
-                Get.lazyPut<AuthController>(() => authController);
-                Get.put(userController);
-              }))));
-            }else{
-              print(userController.userInfo.toString());
-              Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
-                Get.lazyPut<AuthController>(() => authController);
-                Get.put(userController);
-                Get.put(workController);
-              }));
-            }
+            await initController().whenComplete(() {
+              //Admin / Normal 구분
+              if ((userController.userInfo as Member?)!.type == UserType.admin.index) {
+                Get.to(AdminMainPage(), binding: BindingsBuilder(() {
+                  Get.lazyPut<AuthController>(() => authController);
+                  Get.put(userController);
+                  Get.put(workController);
+                }));
+              } else if((userController.userInfo as Member?)!.state == false){
+                Get.to(AuthWaitPage(), binding: (BindingsBuilder(((){
+                  Get.lazyPut<AuthController>(() => authController);
+                  Get.put(userController);
+                }))));
+              }else{
+                print(userController.userInfo.toString());
+                Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
+                  Get.lazyPut<AuthController>(() => authController);
+                  Get.put(userController);
+                  Get.put(workController);
+                }));
+              }
+            });
           }
       }catch(e){
         e.printError();
@@ -86,8 +86,10 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   Future<void> initController() async {
     try {
-      await userController.getUserInfo(authController.getCurrentUser()!.uid);
       workController = Get.put(WorkController(authController.getCurrentUser()!.uid),tag:authController.getCurrentUser()!.uid);
+      await Future.wait([
+        userController.getUserInfo(authController.getCurrentUser()!.uid),
+        workController.getAllWorkList(authController.getCurrentUser()!.uid, DateTime.now())]).whenComplete(() => print("씨발 왤케느려 개새꺄"+workController.weeklyWorkList.toString()));
     }catch(e){
       e.printError();
     }
