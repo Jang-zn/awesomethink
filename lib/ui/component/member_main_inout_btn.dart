@@ -23,9 +23,9 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     if((workController.weeklyWorkList as List<Work?>).isEmpty){
       return true;
     }
-    int? year = workController.weeklyWorkList?[0].startTime?.year;
-    int? month = workController.weeklyWorkList?[0].startTime?.month;
-    int? day = workController.weeklyWorkList?[0].startTime?.day;
+    int? year = DateTime.now().year;
+    int? month = DateTime.now().month;
+    int? day = DateTime.now().day;
     bool result = true;
     for(Work? w in workController.weeklyWorkList){
       //중복이면 false 하고 반복 중단

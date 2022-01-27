@@ -8,9 +8,10 @@ class Work{
   int? workingTimeState;
   DateTime? updateDate;
   Vacation? vacation;
+  bool? checkOut;
 
 
-  Work({this.userUid, this.startTime, this.endTime, this.workingTimeState, this.updateDate, this.vacation});
+  Work({this.userUid, this.startTime, this.endTime, this.workingTimeState, this.updateDate, this.vacation, this.checkOut});
 
   Work.fromJson(Map<String, dynamic> json){
     userUid=json['userUid'];
@@ -19,6 +20,7 @@ class Work{
     workingTimeState=json['workingTimeState'];
     updateDate=json['updateDate']?.toDate();
     vacation = json['vacation']!=null?Vacation.fromJson(json['vacation']):null; //null체크 + fromJson으로 넣어주기
+    checkOut=json['checkOut'];
   }
 
   Map<String, dynamic> toJson(){
@@ -29,6 +31,7 @@ class Work{
     data['workingTimeState']=workingTimeState;
     data['updateDate']=updateDate;
     data['vacation']=vacation?.toJson(); //toJson 한번 더 해야됨
+    data['checkOut']=checkOut;
     return data;
   }
 
@@ -93,6 +96,7 @@ class Work{
     work.workingTimeState = WorkingTimeState.wait.index;
     work.updateDate = DateTime.now();
     work.vacation = null;
+    work.checkOut=false;
     return work;
   }
 

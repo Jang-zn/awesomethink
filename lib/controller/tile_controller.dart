@@ -16,7 +16,7 @@ class TileController extends GetxController{
   set work(value) => _work;
 
   Future<void> getThisWork() async{
-    _work.value = (await Future.wait(workRepository.getWorkByStartTime(_work.value) as Work)).first;
+    _work.value = (await Future.wait([workRepository.getWorkByStartTime(_work.value)])).first;
     refresh();
   }
 

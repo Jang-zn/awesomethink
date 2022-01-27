@@ -30,6 +30,13 @@ class WorkController extends GetxController{
   get inOut => _inOut.value;
   set inOut(value) => _inOut;
 
+  Future<void> getAllWorkList(String? uid, DateTime dateTime) async{
+    await Future.wait([
+      getWeeklyWorkList(uid),
+      getMonthlyWorkList(uid, dateTime)
+    ]);
+  }
+
   Future<void> getWeeklyWorkList(String? uid) async{
     _weeklyWorkList(await workRepository.getWeeklyWorkList(uid));
     getWeeklyWorkingTime();
@@ -42,22 +49,22 @@ class WorkController extends GetxController{
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
     await workRepository.updateWorkingTimeState(work, state);
-    getWeeklyWorkList(work!.userUid);
-    getMonthlyWorkList(work.userUid, DateTime.now());
+    getAllWorkList(work!.userUid, DateTime.now());
   }
 
   Future<void> updateWork(Work? work) async{
-    await workRepository.updateWork(work).then((_)=>print("1"));
-    getWeeklyWorkList(work!.userUid).then((_)=>print("2"));
-    print("updateWork : "+_weeklyWorkList.toString());
-    print("inout : "+_inOut.toString());
-    getMonthlyWorkList(work.userUid, DateTime.now()).then((_)=>print("3"));
+    await workRepository.updateWork(work);
+    await Future.wait([
+      getAllWorkList(work!.userUid, DateTime.now())
+    ]);
+
   }
 
   Future<void> setWork(Work? work) async{
     await workRepository.setWork(work);
-    getWeeklyWorkList(work!.userUid);
-    getMonthlyWorkList(work.userUid, DateTime.now());
+    await Future.wait([
+      getAllWorkList(work!.userUid, DateTime.now())
+    ]);
   }
 
   void getWeeklyWorkingTime() {
@@ -129,10 +136,12 @@ class WorkController extends GetxController{
     for(Work? w in _weeklyWorkList){
       if(w!.endTime==null){
         _inOut(false);
+        _inOut.refresh();
         return;
       }
     }
     _inOut(true);
+    _inOut.refresh();
   }
 
   //임시기능
