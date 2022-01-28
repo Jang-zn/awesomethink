@@ -10,6 +10,7 @@ class WorkRepository{
               (snapshot) {
                 final List<Work?> list = <Work?>[];
                 snapshot.docs.forEach((element) {
+                  print("getWeeklyList from repository "+Work.fromJson(element.data()).toString());
                   list.add(Work.fromJson(element.data()));
                 });
                 return list;
@@ -30,8 +31,17 @@ class WorkRepository{
   }
 
 
-  Future<void> updateWorkingTimeState(Work? work, int state) async {
-    await workProvider.updateWorkingTimeState(work, state);
+  Stream<List<Work?>> updateWorkingTimeState(Work? work, int state) {
+    return workProvider.updateWorkingTimeState(work, state).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          snapshot.docs.forEach((element) {
+            print("updateWorkingTimeState from repository "+Work.fromJson(element.data()).toString());
+            list.add(Work.fromJson(element.data()));
+          });
+          return list;
+        }
+    );
   }
 
 
@@ -40,8 +50,17 @@ class WorkRepository{
   }
 
 
-  Future<void> updateWork(Work? work) async{
-    await workProvider.updateWork(work);
+  Stream<List<Work?>> updateWork(Work? work) {
+    return workProvider.updateWork(work).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          snapshot.docs.forEach((element) {
+            print("updateWork from repository "+Work.fromJson(element.data()).toString());
+            list.add(Work.fromJson(element.data()));
+          });
+          return list;
+        }
+    );
   }
 
   Future<Work?> getWorkByStartTime(Work? work) async {

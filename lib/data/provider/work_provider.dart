@@ -30,15 +30,17 @@ class WorkProvider {
   }
 
   //WorkingTimeState 수정
-  Future<void> updateWorkingTimeState(Work? work, int state) async {
-    firestore.collection("work")
+  Stream<QuerySnapshot<Map<String, dynamic>>> updateWorkingTimeState(Work? work, int state) {
+    Future.wait([firestore.collection("work")
         .where("startTime",isEqualTo: work!.startTime)
         .get()
         .then((val) {
-      val.docs.first.reference.update({"workingTimeState": state});
+          work.workingTimeState=state;
+      val.docs.first.reference.set(work.toJson());
     }).onError((error, stackTrace) {
       print(stackTrace);
-    });
+    })]);
+    return getWeeklyWorkList(work.userUid);
   }
 
   //Work 생성
@@ -50,16 +52,17 @@ class WorkProvider {
   }
 
   //Work 수정
-  Future<void> updateWork(Work? work) async {
-    firestore.collection("work").where("startTime",isEqualTo: work?.startTime)
+  Stream<QuerySnapshot<Map<String, dynamic>>> updateWork(Work? work) {
+    Future.wait([firestore.collection("work").where("startTime",isEqualTo: work?.startTime)
         .get().then(
         (value){
-          value.docs.first.reference.update(work!.toJson())
+          value.docs.first.reference.set(work!.toJson())
               .onError((error, stackTrace) {
                 print(stackTrace);
               });
         }
-    );
+    )]);
+    return getWeeklyWorkList(work!.userUid);
   }
 
   //uid 로 work정보 가져옴

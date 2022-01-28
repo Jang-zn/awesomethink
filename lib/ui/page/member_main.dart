@@ -29,11 +29,7 @@ class AwesomeMainWidget extends StatefulWidget {
 
 class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
-  //생성자
   _AwesomeMainWidgetState();
-  final AuthController authController = Get.find<AuthController>();
-  final UserController userController = Get.find<UserController>();
-  late final WorkController workController = Get.find<WorkController>(tag:authController.getCurrentUser()!.uid);
 
   @override
   void initState() {
@@ -42,6 +38,19 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.find<AuthController>();
+    final UserController userController = Get.find<UserController>();
+    late final WorkController workController = Get.find<WorkController>(tag:authController.getCurrentUser()!.uid);
+    void logout() {
+      workController.onDelete();
+      userController.onDelete();
+      Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+          binding: BindingsBuilder((){
+            authController.signOut();
+            Get.put(authController);
+          }));
+    }
+
     print("main build");
     return Obx(()=>Scaffold(
           body: SafeArea(
@@ -149,16 +158,5 @@ class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
                   })),]
     ))));
   }
-
-  void logout() {
-    workController.onDelete();
-    userController.onDelete();
-    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
-        binding: BindingsBuilder((){
-          authController.signOut();
-          Get.put(authController);
-    }));
-  }
-
 }
 

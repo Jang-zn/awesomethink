@@ -66,18 +66,12 @@ class WorkController extends GetxController{
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
     print("updateWorkingTimeState");
-    await Future.wait([
-      workRepository.updateWorkingTimeState(work, state),
-      getAllWorkList(work!.userUid, DateTime.now()),
-    ]);
+    _weeklyWorkList(await workRepository.updateWorkingTimeState(work, state).first);
   }
 
   Future<void> updateWork(Work? work) async{
     print("updateWork");
-    await Future.wait([
-      workRepository.updateWork(work),
-      getAllWorkList(work!.userUid, DateTime.now()),
-    ]);
+    _weeklyWorkList(await workRepository.updateWork(work).first);
   }
 
   Future<void> setWork(Work? work) async{
