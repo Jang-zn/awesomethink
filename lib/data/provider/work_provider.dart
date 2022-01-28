@@ -6,17 +6,16 @@ class WorkProvider {
   FirebaseFirestore firestore = ProviderConstance.firestore;
 
   //uid에 해당하는 유저의 주간 업무일정
-  Stream<QuerySnapshot<Map<String, dynamic>>> getWeeklyWorkList(String? uid){
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getWeeklyWorkList(String? uid) async{
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
     DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
-    return firestore.collection("work")
+    return Future.delayed(Duration(milliseconds: 400),()=>firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월요일부터 일요일까지
-        .orderBy("startTime",descending: true).snapshots();
+        .orderBy("startTime",descending: true).snapshots());
   }
-
   //uid에 해당하는 유저의 월간 업무일정
   Stream<QuerySnapshot<Map<String, dynamic>>> getMonthlyWorkList(String? uid, DateTime dateTime) {
     DateTime monthFirst = DateTime(dateTime.year, dateTime.month, 1);
@@ -31,7 +30,7 @@ class WorkProvider {
 
 
   //WorkingTimeState 수정
-  Stream<QuerySnapshot<Map<String, dynamic>>> updateWorkingTimeState(Work? work, int state) {
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> updateWorkingTimeState(Work? work, int state) async{
     Future.wait([firestore.collection("work")
         .where("startTime",isEqualTo: work!.startTime)
         .get()
@@ -41,7 +40,7 @@ class WorkProvider {
     }).onError((error, stackTrace) {
       print(stackTrace);
     })]);
-    return getWeeklyWorkList(work.userUid);
+    return await getWeeklyWorkList(work.userUid);
   }
 
   //Work 생성
@@ -53,7 +52,7 @@ class WorkProvider {
   }
 
   //Work 수정
-  Stream<QuerySnapshot<Map<String, dynamic>>> updateWork(Work? work) {
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> updateWork(Work? work) async {
     Future.wait([firestore.collection("work").where("startTime",isEqualTo: work?.startTime)
         .get().then(
         (value){
@@ -63,7 +62,7 @@ class WorkProvider {
               });
         }
     )]);
-    return getWeeklyWorkList(work!.userUid);
+    return await getWeeklyWorkList(work!.userUid);
   }
 
   //uid 로 work정보 가져옴
