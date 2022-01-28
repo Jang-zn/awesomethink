@@ -29,6 +29,7 @@ class WorkProvider {
         .orderBy("startTime",descending: true).snapshots();
   }
 
+
   //WorkingTimeState 수정
   Stream<QuerySnapshot<Map<String, dynamic>>> updateWorkingTimeState(Work? work, int state) {
     Future.wait([firestore.collection("work")
