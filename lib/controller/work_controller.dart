@@ -44,6 +44,7 @@ class WorkController extends GetxController{
       getWeeklyWorkList(uid),
       getMonthlyWorkList(uid, dateTime)
     ]);
+    refresh();
   }
 
   Future<void> getWeeklyWorkList(String? uid) async{
@@ -51,20 +52,24 @@ class WorkController extends GetxController{
     getWeeklyWorkingTime();
     checkInOut();
     print("getWeeklyWorkList");
+    refresh();
   }
 
   Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
     _monthlyWorkList.value = await (await workRepository.getMonthlyWorkList(uid, dateTime)).first;
+    refresh();
   }
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
     print("updateWorkingTimeState");
     _weeklyWorkList.value = await (await workRepository.updateWorkingTimeState(work, state)).first;
+    refresh();
   }
 
   Future<void> updateWork(Work? work) async{
     print("updateWork");
     _weeklyWorkList.value = await (await workRepository.updateWork(work)).first;
+    refresh();
   }
 
   Future<void> setWork(Work? work) async{
@@ -73,6 +78,7 @@ class WorkController extends GetxController{
       workRepository.setWork(work),
       getAllWorkList(work!.userUid, DateTime.now())
     ]);
+    refresh();
   }
 
   void getWeeklyWorkingTime() {
@@ -125,21 +131,6 @@ class WorkController extends GetxController{
       update();
     }catch(e){
       print("calc error : "+e.toString());
-      if (requiredMinute == 60) {
-        requiredMinute = 0;
-        requiredHour += 1;
-      }
-      weeklyMinute > 0 ?
-      weeklyWorkingTime.value =
-          weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분"
-          : weeklyWorkingTime =
-          weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
-      requiredMinute > 0 ?
-      requiredWorkingTime.value =
-          requiredHour.toString() + "시간 " + requiredMinute.toString() + "분"
-          : requiredWorkingTime =
-          requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
-              "분";
       update();
     }
   }
@@ -149,10 +140,12 @@ class WorkController extends GetxController{
     for(Work? w in _weeklyWorkList) {
       if(!w!.checkOut!){
         _inOut(false);
+        refresh();
         return;
       }
     }
     _inOut(true);
+    refresh();
   }
 
   //임시기능

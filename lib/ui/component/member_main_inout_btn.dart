@@ -60,7 +60,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     void endTodayWorkingTime() async {
       //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
       //TODO endTime -> DateTime.now로 바꿔야됨 지금은 임시로 랜덤줌
-      today?.endTime = DateTime.now().add(Duration(hours: Random(0).nextInt(8), minutes: Random(0).nextInt(59)));
+      today?.endTime = DateTime.now().add(Duration(hours: Random().nextInt(8), minutes: Random().nextInt(59)));
       today?.checkOut=true;
       await Future.wait([workController.updateWork(today)]).whenComplete(() {
         setState(() {});

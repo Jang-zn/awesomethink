@@ -16,7 +16,7 @@ class WorkListTile extends StatefulWidget {
 class _WorkListTileState extends State<WorkListTile> {
   _WorkListTileState(this.work);
 
-  Work? work;
+  final Work? work;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +29,9 @@ class _WorkListTileState extends State<WorkListTile> {
         }
       }
     }
+
+    print("씨발 왜안되냐고 : "+work.hashCode.toString());
+    print("어? 씨발 좀 : "+workController.weeklyWorkList[getIndex()].toString());
 
 
     return Obx(

@@ -17,12 +17,10 @@ class AwesomeMainPage extends StatelessWidget {
   final AuthController authController = Get.find<AuthController>();
   final UserController userController = Get.find<UserController>();
   late final WorkController workController =
-  Get.find<WorkController>(tag: authController.getCurrentUser()!.uid);
-
+      Get.find<WorkController>(tag: authController.getCurrentUser()!.uid);
 
   @override
   Widget build(BuildContext context) {
-
     void logout() {
       workController.onDelete();
       userController.onDelete();
@@ -138,15 +136,16 @@ class AwesomeMainPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      (workController.weeklyWorkList as List<Work?>).length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    print("ListTile work : " + (workController.weeklyWorkList as List<Work?>)[index].toString());
-                    return WorkListTile((workController.weeklyWorkList as List<Work?>)[index]);
-                  },
+                child: GetBuilder<WorkController>(
+                  builder: (wc) => ListView.builder(
+                    shrinkWrap: true,
+                    itemCount:
+                        (wc.weeklyWorkList as List<Work?>).length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      return WorkListTile(wc.weeklyWorkList.value[index]);
+                    },
+                  ),
                 ),
               ),
             ],
