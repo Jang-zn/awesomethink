@@ -53,7 +53,7 @@ class WorkController extends GetxController{
 
   Future<void> getWeeklyWorkList(String? uid) async{
     print(1);
-    _weeklyWorkList.value = await workRepository.getWeeklyWorkList(uid);
+    _weeklyWorkList.value = await workRepository.getWeeklyWorkList(uid).first;
     print(2);
     getWeeklyWorkingTime();
     print(3);

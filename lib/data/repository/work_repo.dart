@@ -5,8 +5,16 @@ class WorkRepository{
   final WorkProvider workProvider = WorkProvider();
 
 
-  Future<List<Work?>> getWeeklyWorkList(String? uid) async {
-
+  Stream<List<Work?>> getWeeklyWorkList(String? uid) {
+      return (workProvider.getWeeklyWorkList(uid)).map(
+              (ds) {
+                final List<Work?> list = <Work?>[];
+                ds.docs.forEach((element) {
+                  list.add(Work.fromJson(element.data()));
+                });
+                return list;
+              }
+      );
   }
 
   Future<List<Work?>> getMonthlyWorkList(String? uid, DateTime dateTime) async {

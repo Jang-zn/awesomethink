@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';

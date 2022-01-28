@@ -6,7 +6,7 @@ class WorkProvider {
   FirebaseFirestore firestore = ProviderConstance.firestore;
 
   //uid에 해당하는 유저의 주간 업무일정
-  Future<Query<Map<String, dynamic>>> getWeeklyWorkList(String? uid) async{
+  Stream<QuerySnapshot<Map<String, dynamic>>> getWeeklyWorkList(String? uid){
     //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
@@ -14,7 +14,7 @@ class WorkProvider {
     return firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월요일부터 일요일까지
-        .orderBy("startTime",descending: true);
+        .orderBy("startTime",descending: true).snapshots();
   }
 
   //uid에 해당하는 유저의 월간 업무일정
