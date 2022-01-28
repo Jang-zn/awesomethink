@@ -14,22 +14,6 @@ class AwesomeMainPage extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return AwesomeMainWidget();
-  }
-}
-
-class AwesomeMainWidget extends StatefulWidget {
-  const AwesomeMainWidget({Key? key}) : super(key: key);
-
-  @override
-  _AwesomeMainWidgetState createState() => _AwesomeMainWidgetState();
-}
-
-class _AwesomeMainWidgetState extends State<AwesomeMainWidget> {
-  _AwesomeMainWidgetState();
-
   final AuthController authController = Get.find<AuthController>();
   final UserController userController = Get.find<UserController>();
   late final WorkController workController =
