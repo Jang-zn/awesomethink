@@ -11,21 +11,21 @@ class WorkProvider {
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
     DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
-    return Future.delayed(Duration(milliseconds: 400),()=>firestore.collection("work")
+    return Future.delayed(Duration(milliseconds: 200),()=>firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월요일부터 일요일까지
         .orderBy("startTime",descending: true).snapshots());
   }
   //uid에 해당하는 유저의 월간 업무일정
-  Stream<QuerySnapshot<Map<String, dynamic>>> getMonthlyWorkList(String? uid, DateTime dateTime) {
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMonthlyWorkList(String? uid, DateTime dateTime) {
     DateTime monthFirst = DateTime(dateTime.year, dateTime.month, 1);
     DateTime nextMonthFirst = DateTime(dateTime.year,dateTime.month+1,1);
     DateTime monthLast = DateTime(dateTime.year, dateTime.month, nextMonthFirst.day-1);
 
-    return firestore.collection("work")
+    return Future.delayed(Duration(milliseconds: 200),()=>firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: monthFirst, isLessThan: monthLast) //중에서 1일부터 말일까지
-        .orderBy("startTime",descending: true).snapshots();
+        .orderBy("startTime",descending: true).snapshots());
   }
 
 

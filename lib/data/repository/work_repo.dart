@@ -18,8 +18,8 @@ class WorkRepository{
       );
   }
 
-  Stream<List<Work?>> getMonthlyWorkList(String? uid, DateTime dateTime) {
-    return workProvider.getMonthlyWorkList(uid, dateTime).map(
+  Future<Stream<List<Work?>>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
+    return (await workProvider.getMonthlyWorkList(uid, dateTime)).map(
             (snapshot) {
               final List<Work?> list = <Work?>[];
               snapshot.docs.forEach((element) {

@@ -61,7 +61,7 @@ class WorkController extends GetxController{
   }
 
   Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
-    _monthlyWorkList(await workRepository.getMonthlyWorkList(uid, dateTime).first);
+    _monthlyWorkList.value = await (await workRepository.getMonthlyWorkList(uid, dateTime)).first;
   }
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
