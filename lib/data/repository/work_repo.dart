@@ -5,8 +5,8 @@ class WorkRepository{
   final WorkProvider workProvider = WorkProvider();
 
 
-  Stream<List<Work?>> getWeeklyWorkList(String? uid) {
-      return workProvider.getWeeklyWorkList(uid).map(
+  Future<Stream<List<Work?>>> getWeeklyWorkList(String? uid) async {
+      return (await workProvider.getWeeklyWorkList(uid)).map(
               (snapshot) {
                 final List<Work?> list = <Work?>[];
                 snapshot.docs.forEach((element) {
@@ -18,8 +18,8 @@ class WorkRepository{
       );
   }
 
-  Stream<List<Work?>> getMonthlyWorkList(String? uid, DateTime dateTime) {
-    return workProvider.getMonthlyWorkList(uid, dateTime).map(
+  Future<Stream<List<Work?>>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
+    return (await workProvider.getMonthlyWorkList(uid, dateTime)).map(
             (snapshot) {
               final List<Work?> list = <Work?>[];
               snapshot.docs.forEach((element) {
@@ -31,8 +31,8 @@ class WorkRepository{
   }
 
 
-  Stream<List<Work?>> updateWorkingTimeState(Work? work, int state) {
-    return workProvider.updateWorkingTimeState(work, state).map(
+  Future<Stream<List<Work?>>> updateWorkingTimeState(Work? work, int state) async {
+    return (await workProvider.updateWorkingTimeState(work, state)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
           snapshot.docs.forEach((element) {
@@ -50,8 +50,8 @@ class WorkRepository{
   }
 
 
-  Stream<List<Work?>> updateWork(Work? work) {
-    return workProvider.updateWork(work).map(
+  Future<Stream<List<Work?>>> updateWork(Work? work) async {
+    return (await workProvider.updateWork(work)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
           snapshot.docs.forEach((element) {
