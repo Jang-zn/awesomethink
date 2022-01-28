@@ -44,10 +44,10 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
     void startTodayWorkingTime() {
       //당일 중복등록 못하게 validation
-      bool check = checkDuplication();
+      //bool check = checkDuplication();
 
       //당일 첫 출근인경우
-      if (check) {
+      if (true) {
         today = Work().createWork(userController.userInfo.uid);
         //work doc 생성
         Future.wait([workController.setWork(today)]);

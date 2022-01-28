@@ -34,12 +34,8 @@ class WorkController extends GetxController{
     ever(_weeklyWorkList,
             (_) {
               print("changed : ${_weeklyWorkList.toString()}");
+              update();
             });
-    ever(_weeklyWorkList, (_)=>print("when : ${DateTime.now()}"));
-    debounce(_weeklyWorkList, (_){
-      print("debounce : ${_weeklyWorkList.toString()}");
-    }, time:Duration(seconds: 1));
-    debounce(_weeklyWorkList, (_)=>print("debounce when : ${DateTime.now()}"), time:Duration(seconds:2));
   }
 
   Future<void> getAllWorkList(String? uid, DateTime dateTime) async{
@@ -51,11 +47,8 @@ class WorkController extends GetxController{
   }
 
   Future<void> getWeeklyWorkList(String? uid) async{
-    print(1);
     _weeklyWorkList.value = await (await workRepository.getWeeklyWorkList(uid)).first;
-    print(2);
     getWeeklyWorkingTime();
-    print(3);
     checkInOut();
     print("getWeeklyWorkList");
   }
@@ -129,6 +122,7 @@ class WorkController extends GetxController{
           : requiredWorkingTime =
           requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
               "분";
+      update();
     }catch(e){
       print("calc error : "+e.toString());
       if (requiredMinute == 60) {
@@ -146,6 +140,7 @@ class WorkController extends GetxController{
           : requiredWorkingTime =
           requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
               "분";
+      update();
     }
   }
 

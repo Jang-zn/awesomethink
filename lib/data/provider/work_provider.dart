@@ -11,7 +11,7 @@ class WorkProvider {
     DateTime now = DateTime.now();
     DateTime lastMonday = DateTime(now.year, now.month, now.day - (now.weekday-1));
     DateTime thisSunday = DateTime(now.year, now.month, now.day + (7-now.weekday),23,59);
-    return Future.delayed(Duration(milliseconds: 200),()=>firestore.collection("work")
+    return Future.delayed(Duration(milliseconds: 500),()=>firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: lastMonday, isLessThan: thisSunday) //중에서 월요일부터 일요일까지
         .orderBy("startTime",descending: true).snapshots());
@@ -75,9 +75,10 @@ class WorkProvider {
   //임시기능
   void deleteAllWork(){
     firestore.collection("work")
+        .orderBy("startTime",descending: true)
         .get()
         .then((val) {
-          val.docs.forEach((element) {element.reference.delete();});
+          val.docs.first.reference.delete();
     });
   }
 }
