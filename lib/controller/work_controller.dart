@@ -38,7 +38,6 @@ class WorkController extends GetxController{
     ever(_weeklyWorkList, (_)=>print("when : ${DateTime.now()}"));
     debounce(_weeklyWorkList, (_){
       print("debounce : ${_weeklyWorkList.toString()}");
-      refresh();
     }, time:Duration(seconds: 1));
     debounce(_weeklyWorkList, (_)=>print("debounce when : ${DateTime.now()}"), time:Duration(seconds:2));
   }
@@ -62,30 +61,32 @@ class WorkController extends GetxController{
   }
 
   Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
-    _monthlyWorkList(await workRepository.getMonthlyWorkList(uid, dateTime));
+    _monthlyWorkList(await workRepository.getMonthlyWorkList(uid, dateTime).first);
   }
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
     print("updateWorkingTimeState");
-    await workRepository.updateWorkingTimeState(work, state);
-    await getAllWorkList(work!.userUid, DateTime.now());
+    await Future.wait([
+      workRepository.updateWorkingTimeState(work, state),
+      getAllWorkList(work!.userUid, DateTime.now()),
+    ]);
   }
 
   Future<void> updateWork(Work? work) async{
     print("updateWork");
-    await workRepository.updateWork(work);
-    await getAllWorkList(work!.userUid, DateTime.now());
+    await Future.wait([
+      workRepository.updateWork(work),
+      getAllWorkList(work!.userUid, DateTime.now()),
+    ]);
   }
 
   Future<void> setWork(Work? work) async{
     print("setWork");
-    await workRepository.setWork(work);
-    await getAllWorkList(work!.userUid, DateTime.now());
-
+    await Future.wait([
+      workRepository.setWork(work),
+      getAllWorkList(work!.userUid, DateTime.now())
+    ]);
   }
-
-
-
 
   void getWeeklyWorkingTime() {
     print("getWeeklyWorkingTime");
@@ -135,6 +136,7 @@ class WorkController extends GetxController{
           requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
               "분";
     }catch(e){
+      print("calc error : "+e.toString());
       if (requiredMinute == 60) {
         requiredMinute = 0;
         requiredHour += 1;

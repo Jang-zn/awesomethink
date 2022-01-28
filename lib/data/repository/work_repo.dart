@@ -6,10 +6,10 @@ class WorkRepository{
 
 
   Stream<List<Work?>> getWeeklyWorkList(String? uid) {
-      return (workProvider.getWeeklyWorkList(uid)).map(
-              (ds) {
+      return workProvider.getWeeklyWorkList(uid).map(
+              (snapshot) {
                 final List<Work?> list = <Work?>[];
-                ds.docs.forEach((element) {
+                snapshot.docs.forEach((element) {
                   list.add(Work.fromJson(element.data()));
                 });
                 return list;
@@ -17,16 +17,16 @@ class WorkRepository{
       );
   }
 
-  Future<List<Work?>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
-    List<Work?> result = [];
-    (await workProvider.getMonthlyWorkList(uid, dateTime)).snapshots().map(
-            (snapshot) => snapshot.docs.map(
-                (doc) {
-                  result.add(Work.fromJson(doc.data()));
-                }
-        )
+  Stream<List<Work?>> getMonthlyWorkList(String? uid, DateTime dateTime) {
+    return workProvider.getMonthlyWorkList(uid, dateTime).map(
+            (snapshot) {
+              final List<Work?> list = <Work?>[];
+              snapshot.docs.forEach((element) {
+                list.add(Work.fromJson(element.data()));
+              });
+              return list;
+            }
     );
-    return result;
   }
 
 

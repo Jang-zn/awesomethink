@@ -13,71 +13,70 @@ class WorkInOutBtn extends StatefulWidget {
 }
 
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
-
-  final UserController userController = Get.find<UserController>();
-  late final WorkController workController=Get.find<WorkController>(tag:userController.userInfo.uid);
-
-  Work? today;
-  bool? out;
-
-  bool checkDuplication(){
-    if((workController.weeklyWorkList as List<Work?>).isEmpty){
-      return true;
-    }
-    int? year = DateTime.now().year;
-    int? month = DateTime.now().month;
-    int? day = DateTime.now().day;
-    bool result = true;
-    for(Work? w in workController.weeklyWorkList){
-      //중복이면 false 하고 반복 중단
-      if(w?.startTime!.year==year&&w?.startTime!.month==month&&w?.startTime!.day==day){
-        result = false;
-        break;
-      //아니면
-      }else{
-        result = true;
-      }
-    }
-    return result;
-  }
-
-  void startTodayWorkingTime() {
-    //당일 중복등록 못하게 validation
-    bool check = checkDuplication();
-
-    //당일 첫 출근인경우
-    if (check) {
-      today = Work().createWork(userController.userInfo.uid);
-      //work doc 생성
-      Future.wait([workController.setWork(today)]);
-      //당일에 퇴근후 출근 또누른경우
-    } else {
-      Get.snackbar("당일 중복등록 불가", "같은날 기록이 중복될 수 없습니다");
-    }
-  }
-
-  void endTodayWorkingTime() {
-    //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
-    //TODO endTime -> DateTime.now로 바꿔야됨 지금은 임시로 랜덤줌
-    today?.endTime = DateTime.now().add(Duration(hours: Random(0).nextInt(8), minutes: Random(0).nextInt(59)));
-    today?.checkOut=true;
-    Future.wait([workController.updateWork(today)]).whenComplete(() {
-      setState(() {});
-    });
-  }
-
-  bool isOut(){
-    for(Work? w in workController.weeklyWorkList){
-      if(w!.checkOut==false){
-        return false;
-      }
-    }
-    return true;
-  }
-
-
   @override
   Widget build(BuildContext context) {
+    final UserController userController = Get.find<UserController>();
+    late final WorkController workController=Get.find<WorkController>(tag:userController.userInfo.uid);
+
+    Work? today;
+    bool? out;
+
+    bool checkDuplication(){
+      if((workController.weeklyWorkList as List<Work?>).isEmpty){
+        return true;
+      }
+      int? year = DateTime.now().year;
+      int? month = DateTime.now().month;
+      int? day = DateTime.now().day;
+      bool result = true;
+      for(Work? w in workController.weeklyWorkList){
+        //중복이면 false 하고 반복 중단
+        if(w?.startTime!.year==year&&w?.startTime!.month==month&&w?.startTime!.day==day){
+          result = false;
+          break;
+          //아니면
+        }else{
+          result = true;
+        }
+      }
+      return result;
+    }
+
+    void startTodayWorkingTime() {
+      //당일 중복등록 못하게 validation
+      bool check = checkDuplication();
+
+      //당일 첫 출근인경우
+      if (check) {
+        today = Work().createWork(userController.userInfo.uid);
+        //work doc 생성
+        Future.wait([workController.setWork(today)]);
+        //당일에 퇴근후 출근 또누른경우
+      } else {
+        Get.snackbar("당일 중복등록 불가", "같은날 기록이 중복될 수 없습니다");
+      }
+    }
+
+    void endTodayWorkingTime() async {
+      //TODO dialog나 snackbar로 확인후 퇴근 처리되게 변경할것
+      //TODO endTime -> DateTime.now로 바꿔야됨 지금은 임시로 랜덤줌
+      today?.endTime = DateTime.now().add(Duration(hours: Random(0).nextInt(8), minutes: Random(0).nextInt(59)));
+      today?.checkOut=true;
+      await Future.wait([workController.updateWork(today)]).whenComplete(() {
+        setState(() {});
+      });
+    }
+
+    bool isOut(){
+      for(Work? w in workController.weeklyWorkList){
+        if(w!.checkOut==false){
+          return false;
+        }
+      }
+      return true;
+    }
+
+
     print("inout build");
     print("hash : "+workController.hashCode.toString());
     out = isOut();
@@ -101,7 +100,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     }
 
     //case 2. 출근기록 있음 / 근데 퇴근 안누름
-    if(!out!){
+    if(!out){
       print("case2");
       return ElevatedButton(
           child: const Text("퇴근"),

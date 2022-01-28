@@ -18,7 +18,7 @@ class WorkProvider {
   }
 
   //uid에 해당하는 유저의 월간 업무일정
-  Future<Query<Map<String, dynamic>>> getMonthlyWorkList(String? uid, DateTime dateTime) async{
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMonthlyWorkList(String? uid, DateTime dateTime) {
     DateTime monthFirst = DateTime(dateTime.year, dateTime.month, 1);
     DateTime nextMonthFirst = DateTime(dateTime.year,dateTime.month+1,1);
     DateTime monthLast = DateTime(dateTime.year, dateTime.month, nextMonthFirst.day-1);
@@ -26,7 +26,7 @@ class WorkProvider {
     return firestore.collection("work")
         .where("userUid",isEqualTo: uid)//User id에 해당하는 work들
         .where("startTime", isGreaterThan: monthFirst, isLessThan: monthLast) //중에서 1일부터 말일까지
-        .orderBy("startTime",descending: true);
+        .orderBy("startTime",descending: true).snapshots();
   }
 
   //WorkingTimeState 수정
