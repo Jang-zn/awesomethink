@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 class WorkListTile extends StatefulWidget {
   WorkListTile(this.work, {Key? key}) : super(key: key);
+
   Work? work;
 
   @override
@@ -29,10 +30,6 @@ class _WorkListTileState extends State<WorkListTile> {
         }
       }
     }
-
-    print("씨발 왜안되냐고 : "+work.hashCode.toString());
-    print("어? 씨발 좀 : "+workController.weeklyWorkList[getIndex()].toString());
-
 
     return Obx(
       () => Padding(

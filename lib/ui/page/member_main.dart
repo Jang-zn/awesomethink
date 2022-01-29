@@ -151,7 +151,9 @@ class AwesomeMainPage extends StatelessWidget {
                     itemCount: (wc.weeklyWorkList as List<Work?>).length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
-                      return WorkListTile(wc.weeklyWorkList.value[index]);
+                      Work? w = wc.weeklyWorkList.value[index];
+                      print("Tile에 들어갈 Work : "+w.toString());
+                      return WorkListTile(w, key: UniqueKey(),);
                     },
                   ),
                 ),
