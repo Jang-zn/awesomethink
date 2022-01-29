@@ -94,13 +94,16 @@ class AwesomeMainPage extends StatelessWidget {
 
                               //주간 근무시간 계산후 출력
                               Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: Text(
-                                      "${workController.weeklyWorkingTime.value}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18))),
+                                margin: const EdgeInsets.symmetric(vertical: 4),
+                                child: Obx(
+                                  () => Text(
+                                    "${workController.weeklyWorkingTime.value}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           Column(
@@ -110,13 +113,16 @@ class AwesomeMainPage extends StatelessWidget {
                                       const EdgeInsets.symmetric(vertical: 4),
                                   child: const Text("잔여 근로시간 ")),
                               Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: Text(
-                                      workController.requiredWorkingTime.value,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18)))
+                                margin: const EdgeInsets.symmetric(vertical: 4),
+                                child: Obx(
+                                  () => Text(
+                                    workController.requiredWorkingTime.value,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -131,7 +137,10 @@ class AwesomeMainPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("이번주 근무 현황"),
-                    ElevatedButton(onPressed: () {}, child: Text("근태 관리")),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text("근태 관리"),
+                    ),
                   ],
                 ),
               ),
@@ -139,8 +148,7 @@ class AwesomeMainPage extends StatelessWidget {
                 child: GetBuilder<WorkController>(
                   builder: (wc) => ListView.builder(
                     shrinkWrap: true,
-                    itemCount:
-                        (wc.weeklyWorkList as List<Work?>).length,
+                    itemCount: (wc.weeklyWorkList as List<Work?>).length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       return WorkListTile(wc.weeklyWorkList.value[index]);
