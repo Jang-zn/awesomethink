@@ -6,20 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WorkInOutBtn extends StatefulWidget {
-  const WorkInOutBtn({Key? key}) : super(key: key);
+  const WorkInOutBtn({required this.inout, Key? key}) : super(key: key);
+  final bool? inout;
 
   @override
-  _WorkInOutBtnState createState() => _WorkInOutBtnState();
+  _WorkInOutBtnState createState() => _WorkInOutBtnState(inout);
 }
 
 class _WorkInOutBtnState extends State<WorkInOutBtn> {
+
+  _WorkInOutBtnState(this.inOut);
+  bool? inOut;
+
   @override
   Widget build(BuildContext context) {
     final UserController userController = Get.find<UserController>();
     late final WorkController workController=Get.find<WorkController>(tag:userController.userInfo.uid);
 
     Work? today;
-    bool? out;
+
 
     bool checkDuplication(){
       if((workController.weeklyWorkList as List<Work?>).isEmpty){
@@ -50,7 +55,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
       if (true) {
         today = Work().createWork(userController.userInfo.uid);
         //work doc 생성
-        Future.wait([workController.setWork(today)]);
+        workController.setWork(today);
         //당일에 퇴근후 출근 또누른경우
       } else {
         Get.snackbar("당일 중복등록 불가", "같은날 기록이 중복될 수 없습니다");
@@ -78,19 +83,9 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
       }
     }
 
-    bool isOut(){
-      for(Work? w in workController.weeklyWorkList){
-        if(w!.checkOut==false){
-          return false;
-        }
-      }
-      return true;
-    }
-
 
     print("inout build");
     print("hash : "+workController.hashCode.toString());
-    out = isOut();
     if((workController.weeklyWorkList as List<Work?>).isNotEmpty
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.month==DateTime.now().month
@@ -111,7 +106,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
     }
 
     //case 2. 출근기록 있음 / 근데 퇴근 안누름
-    if(!out){
+    if(!inOut!){
       print("case2");
       return ElevatedButton(
           child: const Text("퇴근"),

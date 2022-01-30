@@ -128,10 +128,10 @@ class WorkController extends GetxController{
           : requiredWorkingTime =
           requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +
               "분";
-      update();
+      weeklyWorkingTime.refresh();
+      requiredWorkingTime.refresh();
     }catch(e){
       print("calc error : "+e.toString());
-      update();
     }
   }
 
@@ -140,12 +140,12 @@ class WorkController extends GetxController{
     for(Work? w in _weeklyWorkList) {
       if(!w!.checkOut!){
         _inOut(false);
-        refresh();
+        _inOut.refresh();
         return;
       }
     }
     _inOut(true);
-    refresh();
+    _inOut.refresh();
   }
 
   //임시기능

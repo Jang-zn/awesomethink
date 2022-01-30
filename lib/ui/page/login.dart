@@ -89,7 +89,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       workController = Get.put(WorkController(authController.getCurrentUser()!.uid),tag:authController.getCurrentUser()!.uid);
       await Future.wait([
         userController.getUserInfo(authController.getCurrentUser()!.uid),
-        workController.getAllWorkList(authController.getCurrentUser()!.uid, DateTime.now())]).whenComplete(() => print("되냐?"+workController.weeklyWorkList.toString()));
+        workController.getAllWorkList(authController.getCurrentUser()!.uid, DateTime.now())]);
     }catch(e){
       e.printError();
     }

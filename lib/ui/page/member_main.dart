@@ -46,7 +46,7 @@ class AwesomeMainPage extends StatelessWidget {
                   children: [
                     SizedBox(
                         width: MediaQuery.of(context).size.width * 0.25,
-                        child: WorkInOutBtn()),
+                        child: WorkInOutBtn(inout : workController.inOut,key:UniqueKey())),
                     SizedBox(
                         width: MediaQuery.of(context).size.width * 0.25,
                         child: VacationBtn(context: context)),
@@ -94,16 +94,15 @@ class AwesomeMainPage extends StatelessWidget {
 
                               //주간 근무시간 계산후 출력
                               Container(
+                                key:UniqueKey(),
                                 margin: const EdgeInsets.symmetric(vertical: 4),
-                                child: Obx(
-                                  () => Text(
+                                child: Text(
                                     "${workController.weeklyWorkingTime.value}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                           Column(
@@ -113,16 +112,16 @@ class AwesomeMainPage extends StatelessWidget {
                                       const EdgeInsets.symmetric(vertical: 4),
                                   child: const Text("잔여 근로시간 ")),
                               Container(
+                                key:UniqueKey(),
                                 margin: const EdgeInsets.symmetric(vertical: 4),
-                                child: Obx(
-                                  () => Text(
+                                child:Text(
                                     workController.requiredWorkingTime.value,
+                                    key:UniqueKey(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ],
@@ -152,7 +151,7 @@ class AwesomeMainPage extends StatelessWidget {
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       Work? w = wc.weeklyWorkList.value[index];
-                      print("Tile에 들어갈 Work : "+w.toString());
+                      //UniqueKey 넣어줘야 완전 새로 빌드됨
                       return WorkListTile(w, key: UniqueKey(),);
                     },
                   ),
