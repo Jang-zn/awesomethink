@@ -94,7 +94,6 @@ class AwesomeMainPage extends StatelessWidget {
 
                               //주간 근무시간 계산후 출력
                               Container(
-                                key:UniqueKey(),
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 child: Text(
                                     "${workController.weeklyWorkingTime.value}",
