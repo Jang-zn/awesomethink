@@ -31,11 +31,11 @@ class WorkController extends GetxController{
 
   @override
   void onInit() {
-    ever(_weeklyWorkList,
+    ever(_inOut,
             (_) {
-              print("changed : ${_weeklyWorkList.toString()}");
-              update();
-            });
+          print("inOut!! : ${_inOut.toString()}");
+          update();
+        });
   }
 
   Future<void> getAllWorkList(String? uid, DateTime dateTime) async{
@@ -69,6 +69,8 @@ class WorkController extends GetxController{
   Future<void> updateWork(Work? work) async{
     print("updateWork");
     _weeklyWorkList.value = await (await workRepository.updateWork(work)).first;
+    getWeeklyWorkingTime();
+    checkInOut();
     refresh();
   }
 

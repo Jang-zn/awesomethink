@@ -22,10 +22,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
   Widget build(BuildContext context) {
     final UserController userController = Get.find<UserController>();
     late final WorkController workController=Get.find<WorkController>(tag:userController.userInfo.uid);
-
     Work? today;
-
-
     bool checkDuplication(){
       if((workController.weeklyWorkList as List<Work?>).isEmpty){
         return true;
@@ -85,7 +82,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
 
     print("inout build");
-    print("hash : "+workController.hashCode.toString());
+    print("inOut "+inOut.toString());
     if((workController.weeklyWorkList as List<Work?>).isNotEmpty
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.month==DateTime.now().month
