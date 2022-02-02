@@ -33,7 +33,6 @@ class WorkController extends GetxController{
   void onInit() {
     ever(_inOut,
             (_) {
-          print("inOut!! : ${_inOut.toString()}");
           update();
         });
   }
