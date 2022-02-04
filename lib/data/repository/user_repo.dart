@@ -10,9 +10,9 @@ class UserRepository{
   Future<Stream<List<Member?>>> getNewbieList() async {
     return (await userProvider.getNewbieList()).map((snapshot) {
       final List<Member?> list = <Member?>[];
-      snapshot.docs.forEach((element) {
+      for(var element in snapshot.docs) {
         list.add(Member.fromJson(element.data()));
-      });
+      }
       return list;
     });
   }
@@ -31,9 +31,9 @@ class UserRepository{
     return (await userProvider.getTodayWorkList()).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
-          snapshot.docs.forEach((element) {
+          for(var element in snapshot.docs) {
             list.add(Work.fromJson(element.data()));
-          });
+          }
           return list;
         }
     );

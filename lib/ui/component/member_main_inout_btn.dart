@@ -46,10 +46,10 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
     void startTodayWorkingTime() {
       //당일 중복등록 못하게 validation
-      //bool check = checkDuplication();
+      bool check = checkDuplication();
 
       //당일 첫 출근인경우
-      if (true) {
+      if (check) {
         today = Work().createWork(userController.userInfo.uid);
         //work doc 생성
         workController.setWork(today);
@@ -80,9 +80,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
       }
     }
 
-
-    print("inout build");
-    print("inOut "+inOut.toString());
     if((workController.weeklyWorkList as List<Work?>).isNotEmpty
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.year==DateTime.now().year
         &&(workController.weeklyWorkList as List<Work?>).first!.startTime!.month==DateTime.now().month
@@ -92,7 +89,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
     //case 1. 출근기록 X --> list empty
     if((workController.weeklyWorkList as List<Work?>).isEmpty) {
-      print("case1");
       return ElevatedButton(
         child: const Text("출근"),
         onPressed: startTodayWorkingTime,
@@ -104,7 +100,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
 
     //case 2. 출근기록 있음 / 근데 퇴근 안누름
     if(!inOut!){
-      print("case2");
       return ElevatedButton(
           child: const Text("퇴근"),
           onPressed: endTodayWorkingTime,
@@ -114,7 +109,6 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
       );
     }else {
       //case 3. 출퇴근기록 있음 / 아직 출근버튼 안누름
-      print("case3");
       return ElevatedButton(
         child: const Text("출근"),
         onPressed: startTodayWorkingTime,

@@ -25,7 +25,6 @@ class AwesomeThinkLoginPage extends StatefulWidget {
 class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pwController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late final AuthController authController;
   late final UserController userController;
@@ -34,6 +33,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   @override
   void initState() {
+    super.initState();
     authController = Get.put(AuthController());
     userController = Get.put(UserController());
   }
@@ -46,7 +46,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       "Login....",
       "",
       snackPosition : SnackPosition.TOP,
-      duration: Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 800),
 
     );
     //로그인 후 에러 안나면
@@ -56,18 +56,17 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
             await initController().whenComplete(() {
               //Admin / Normal 구분
               if ((userController.userInfo as Member?)!.type == UserType.admin.index) {
-                Get.to(AdminMainPage(), binding: BindingsBuilder(() {
+                Get.to(const AdminMainPage(), binding: BindingsBuilder(() {
                   Get.lazyPut<AuthController>(() => authController);
                   Get.put(userController);
                   Get.put(workController);
                 }));
               } else if((userController.userInfo as Member?)!.state == false){
-                Get.to(AuthWaitPage(), binding: (BindingsBuilder(((){
+                Get.to(const AuthWaitPage(), binding: (BindingsBuilder(((){
                   Get.lazyPut<AuthController>(() => authController);
                   Get.put(userController);
                 }))));
               }else{
-                print(userController.userInfo.toString());
                 Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
                   Get.lazyPut<AuthController>(() => authController);
                   Get.put(userController);
@@ -99,7 +98,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   }
 
   void signUp(){
-    Get.to(SignUpPage(), binding: BindingsBuilder(
+    Get.to(const SignUpPage(), binding: BindingsBuilder(
     (){
       Get.lazyPut<AuthController>(()=>authController);
     }));
@@ -127,7 +126,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
               margin:const EdgeInsets.only(top:100, bottom:20),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70),
+              margin: const EdgeInsets.symmetric(horizontal: 70),
               child : TextField(
                 controller: emailController,
                 decoration: const InputDecoration(
@@ -136,7 +135,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               child : TextField(
                   controller: pwController,
                   decoration: const InputDecoration(
@@ -147,20 +146,20 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
             ),
             Container(
-              padding:EdgeInsets.symmetric(horizontal: 30),
+              padding:const EdgeInsets.symmetric(horizontal: 30),
               child:Column(
                 children: [
-                  Container(
+                  SizedBox(
                       width:MediaQuery.of(context).size.width*0.5,
                       child:ElevatedButton(onPressed: login,
                           child: const Text("Login")),
                   ),
-                  Container(
+                  SizedBox(
                       width:MediaQuery.of(context).size.width*0.5,
                       child:ElevatedButton(onPressed: signUp,
                           child: const Text("SignUp")),
                   ),
-                  Container(
+                  SizedBox(
                     width:MediaQuery.of(context).size.width*0.5,
                     child:ElevatedButton(onPressed: deleteAllWork,
                         child: const Text("DeleteAllWork")),

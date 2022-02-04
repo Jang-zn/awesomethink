@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 class NewbieListTile extends StatelessWidget {
   Member? newbie;
-  NewbieListTile(this.newbie);
+  NewbieListTile(this.newbie, {Key? key}) : super(key: key);
   final UserController userController = Get.find<UserController>();
 
   void newbieAuth() async {
@@ -16,7 +16,7 @@ class NewbieListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
@@ -24,14 +24,14 @@ class NewbieListTile extends StatelessWidget {
         ),
         child: ListTile(
           title: Container(
-            margin:EdgeInsets.only(bottom:8),
+            margin:const EdgeInsets.only(bottom:8),
             child:Row(
               children:[
                 Text(newbie!.name!),
-                SizedBox(width: 10, height: 10),
+                const SizedBox(width: 10, height: 10),
                 Text(newbie!.position!),
-                SizedBox(width: 120, height: 10),
-                Container(
+                const SizedBox(width: 120, height: 10),
+                SizedBox(
                   width:60,
                   height:20,
                   child: TextButton(
@@ -56,7 +56,7 @@ class NewbieListTile extends StatelessWidget {
           subtitle: Row(
             children: <Widget>[
               Text(newbie!.email!),
-              SizedBox(width: 10, height: 10),
+              const SizedBox(width: 10, height: 10),
               Text(newbie!.phone!),
             ],
           ),

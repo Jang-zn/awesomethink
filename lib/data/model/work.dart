@@ -24,7 +24,7 @@ class Work{
   }
 
   Map<String, dynamic> toJson(){
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['userUid']=userUid;
     data['startTime']=startTime;
     data['endTime']=endTime;
@@ -128,7 +128,7 @@ class Work{
   }
 
   Map<String, int> getWorkingTimeToMap(){
-    Map<String, int> timeMap=Map();
+    Map<String, int> timeMap={};
     try {
       Duration duration = endTime!.difference(startTime!);
       int total = duration.inMinutes;

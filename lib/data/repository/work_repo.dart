@@ -9,10 +9,9 @@ class WorkRepository{
       return (await workProvider.getWeeklyWorkList(uid)).map(
               (snapshot) {
                 final List<Work?> list = <Work?>[];
-                snapshot.docs.forEach((element) {
-                  print("getWeeklyList from repository "+Work.fromJson(element.data()).toString());
+                for(var element in snapshot.docs) {
                   list.add(Work.fromJson(element.data()));
-                });
+                }
                 return list;
               }
       );
@@ -22,9 +21,9 @@ class WorkRepository{
     return (await workProvider.getMonthlyWorkList(uid, dateTime)).map(
             (snapshot) {
               final List<Work?> list = <Work?>[];
-              snapshot.docs.forEach((element) {
+              for(var element in snapshot.docs) {
                 list.add(Work.fromJson(element.data()));
-              });
+              }
               return list;
             }
     );
@@ -35,10 +34,10 @@ class WorkRepository{
     return (await workProvider.updateWorkingTimeState(work, state)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
-          snapshot.docs.forEach((element) {
+          for(var element in snapshot.docs) {
             print("updateWorkingTimeState from repository "+Work.fromJson(element.data()).toString());
             list.add(Work.fromJson(element.data()));
-          });
+          }
           return list;
         }
     );
@@ -54,10 +53,9 @@ class WorkRepository{
     return (await workProvider.updateWork(work)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
-          snapshot.docs.forEach((element) {
-            print("updateWork from repository "+Work.fromJson(element.data()).toString());
+          for(var element in snapshot.docs) {
             list.add(Work.fromJson(element.data()));
-          });
+          }
           return list;
         }
     );

@@ -1,8 +1,6 @@
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/ui/component/newbie_listtile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,6 +17,7 @@ class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
 
   @override
   void initState() {
+    super.initState();
     userController = Get.find<UserController>();
     newbieList = userController.newbieList;
   }

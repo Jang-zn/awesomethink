@@ -23,7 +23,7 @@ class VacationBtn extends StatelessWidget {
        lastDate: DateTime(DateTime.now().year+1),
        builder : (context, child){
          return DefaultTextStyle.merge(
-             style:TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+             style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
              child : Theme(
                data : ThemeData.dark(),
                child : Column(
@@ -93,7 +93,6 @@ class VacationBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     checkVacationState();
     if(!vacationWait) {
-      print("no vacation");
       return ElevatedButton(
         child: const Text("휴무신청"),
         onPressed: () {showCalendar("start");},
@@ -102,7 +101,6 @@ class VacationBtn extends StatelessWidget {
         ),
       );
     }else{
-      print("vacation wait");
       return ElevatedButton(
           child: const Text("승인대기"),
           onPressed: (){},

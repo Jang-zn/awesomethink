@@ -23,7 +23,7 @@ class AwesomeThink extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
         ),
-        home: AwesomeThinkLoginPage(title: 'AwesomeThink',),
+        home: const AwesomeThinkLoginPage(title: 'AwesomeThink',),
       );
   }
 }

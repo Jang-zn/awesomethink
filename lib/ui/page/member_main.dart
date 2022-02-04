@@ -24,14 +24,13 @@ class AwesomeMainPage extends StatelessWidget {
     void logout() {
       workController.onDelete();
       userController.onDelete();
-      Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+      Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"),
           binding: BindingsBuilder(() {
         authController.signOut();
         Get.put(authController);
       }));
     }
 
-    print("main build");
     return Obx(
       () => Scaffold(
         body: SafeArea(
@@ -97,7 +96,7 @@ class AwesomeMainPage extends StatelessWidget {
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 child: Text(
                                     "${workController.weeklyWorkingTime.value}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
@@ -116,7 +115,7 @@ class AwesomeMainPage extends StatelessWidget {
                                 child:Text(
                                     workController.requiredWorkingTime.value,
                                     key:UniqueKey(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
@@ -134,10 +133,10 @@ class AwesomeMainPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("이번주 근무 현황"),
+                    const Text("이번주 근무 현황"),
                     ElevatedButton(
                       onPressed: () {},
-                      child: Text("근태 관리"),
+                      child: const Text("근태 관리"),
                     ),
                   ],
                 ),

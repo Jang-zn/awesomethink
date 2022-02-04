@@ -1,6 +1,5 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/ui/page/login.dart';
-import 'package:awesomethink/ui/page/member_main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +16,7 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
 
   void logout() {
     authController.signOut();
-    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"));
+    Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"));
   }
 
   @override
@@ -37,19 +36,19 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
               margin:const EdgeInsets.only(top:150, bottom:20),
             ),
             Container(
-              padding:EdgeInsets.symmetric(horizontal: 50),
+              padding:const EdgeInsets.symmetric(horizontal: 50),
                 child:const LinearProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
                 )
             ),
             Container(
-              margin: EdgeInsets.only(top:20),
+              margin: const EdgeInsets.only(top:20),
               alignment: Alignment.center,
-              child: Text("가입 승인 대기중", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              child: const Text("가입 승인 대기중", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
             TextButton(
               onPressed: logout,
-              child: Text("뒤로가기"),
+              child: const Text("뒤로가기"),
             )
           ],
         ),

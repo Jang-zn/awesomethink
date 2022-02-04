@@ -33,7 +33,7 @@ class _WorkListTileState extends State<WorkListTile> {
 
     return Obx(
       () => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
@@ -44,11 +44,11 @@ class _WorkListTileState extends State<WorkListTile> {
                     children: [
                       ListTile(
                         title: Container(
-                          margin: EdgeInsets.only(bottom: 8),
+                          margin: const EdgeInsets.only(bottom: 8),
                           child: Row(
                             children: [
                               Text(workController.weeklyWorkList[getIndex()].createTimeToMMDDW()),
-                              SizedBox(width: 10, height: 10),
+                              const SizedBox(width: 10, height: 10),
                               Text(workController.weeklyWorkList[getIndex()].workingTimeCalc()),
                             ],
                           ),

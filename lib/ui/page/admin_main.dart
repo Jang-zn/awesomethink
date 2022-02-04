@@ -1,7 +1,6 @@
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
-import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/today_work_tile.dart';
 import 'package:awesomethink/ui/page/login.dart';
@@ -26,13 +25,14 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   @override
   void initState() {
+    super.initState();
     userController = Get.find<UserController>();
     authController = Get.find<AuthController>();
     workController = Get.find<WorkController>(tag:userController.userInfo.uid);
   }
 
   void newMemberAuthCheck(){
-    Get.to(NewMemberAuthPage(),
+    Get.to(const NewMemberAuthPage(),
       binding: BindingsBuilder((){
         Get.put(userController);
         Get.put(workController);
@@ -44,7 +44,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   void logout() {
     workController.onDelete();
     userController.onDelete();
-    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+    Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"),
         binding: BindingsBuilder(() {
           authController.signOut();
           Get.put(authController);
@@ -59,16 +59,15 @@ class _AdminMainPageState extends State<AdminMainPage> {
           automaticallyImplyLeading: false,
           //타이틀 중앙정렬
           centerTitle: true,
-          title:Text("Awesome Admin",),
+          title:const Text("Awesome Admin",),
         actions: [
           Builder(
              builder: (context) {
                 return IconButton(
                   onPressed: (){
-                    print("open");
                     Scaffold.of(context).openEndDrawer();
                   },
-                  icon: Icon(Icons.menu)
+                  icon: const Icon(Icons.menu)
                 );
               }
           )],
@@ -77,11 +76,11 @@ class _AdminMainPageState extends State<AdminMainPage> {
         child:ListView(
           children:[
             ListTile(
-              title:Text("신규가입 신청"),
+              title:const Text("신규가입 신청"),
               onTap: newMemberAuthCheck
             ),
             ListTile(
-                title:Text("로그아웃"),
+                title:const Text("로그아웃"),
                 onTap: logout
             )
           ]
@@ -93,7 +92,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
           children:[
             Container(
               margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),
-              child:Text("오늘 근무 현황",)
+              child:const Text("오늘 근무 현황",)
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
@@ -118,7 +117,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
             ),
             Container(
                 margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),
-                child:Text("주간 근무 현황",)
+                child:const Text("주간 근무 현황",)
             ),
             Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
@@ -129,8 +128,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
                 child:ListView(
                     children:[
                       Container(
-                          margin:EdgeInsets.symmetric(vertical:3),
-                          padding:EdgeInsets.symmetric(horizontal:5),
+                          margin:const EdgeInsets.symmetric(vertical:3),
+                          padding:const EdgeInsets.symmetric(horizontal:5),
                           height: MediaQuery.of(context).size.height*0.1,
                           decoration: BoxDecoration(border: Border.all(color:Colors.black)
                           ),
@@ -148,7 +147,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                               ),
                             Flexible(child: Column()),
                             Flexible(child:
-                            IconButton(icon:Icon(Icons.arrow_forward_ios), onPressed: tempFunc,)),
+                            IconButton(icon:const Icon(Icons.arrow_forward_ios), onPressed: tempFunc,)),
                           ]
                         )
                       ),

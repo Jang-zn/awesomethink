@@ -15,7 +15,7 @@ class UserProvider{
 
   //신규가입 목록
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getNewbieList() async{
-    return Future.delayed(Duration(milliseconds: 500),()=>firestore.collection("user")
+    return Future.delayed(const Duration(milliseconds: 500),()=>firestore.collection("user")
         .where("state",isEqualTo: false)
         .snapshots());
   }
@@ -36,7 +36,7 @@ class UserProvider{
     DateTime now = DateTime.now();
     DateTime todayStart = DateTime(now.year,now.month,now.day);
     DateTime todayEnd = DateTime(now.year,now.month,now.day+1);
-    return Future.delayed(Duration(milliseconds: 500),()=>firestore.collection("work")
+    return Future.delayed(const Duration(milliseconds: 500),()=>firestore.collection("work")
         .where("startTime", isGreaterThan: todayStart, isLessThan: todayEnd) //'오늘 근무만 호출'
         .orderBy("startTime",descending: true).snapshots());
   }

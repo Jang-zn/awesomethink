@@ -29,14 +29,6 @@ class WorkController extends GetxController{
   set inOut(value) => _inOut;
 
 
-  @override
-  void onInit() {
-    ever(_inOut,
-            (_) {
-          update();
-        });
-  }
-
   Future<void> getAllWorkList(String? uid, DateTime dateTime) async{
     await Future.wait([
       getWeeklyWorkList(uid),

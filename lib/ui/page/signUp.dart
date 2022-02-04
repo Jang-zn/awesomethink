@@ -2,13 +2,14 @@ import 'dart:collection';
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/provider/user_provider.dart';
 import 'package:awesomethink/service/signup_validation.dart';
 import 'package:awesomethink/ui/page/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
+
   @override
   SignUpPageState createState() {
     return SignUpPageState();
@@ -34,16 +35,18 @@ class SignUpPageState extends State<SignUpPage> {
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _passwordCheckFocus = FocusNode();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 
   @override
+  // ignore: must_call_super
   void initState() {
     userController = Get.put(UserController());
     authController = Get.find<AuthController>();
   }
 
   @override
+  // ignore: must_call_super
   void didChangeDependencies() {
     userMap["position"]=selectedValue as String;
   }
@@ -54,28 +57,28 @@ class SignUpPageState extends State<SignUpPage> {
     return Scaffold(
         body: Form(
             key: _formKey,
-            child: SignUpForm()
+            child: signUpForm()
         )
     );
   }
 
 
-  Widget SignUpForm() {
+  Widget signUpForm() {
     return SafeArea(
         child: ListView(children: [
       Container(
-          margin: EdgeInsets.symmetric(vertical: 50),
+          margin: const EdgeInsets.symmetric(vertical: 50),
           child: Column(children: [
 
             //이메일 입력
             Container(
-              margin: EdgeInsets.symmetric(vertical: 7, horizontal: 70),
+              margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 70),
               child:  TextFormField(
                   controller: emailController,
                   focusNode: _emailFocus,
                   keyboardType: TextInputType.emailAddress,
                   autovalidateMode: AutovalidateMode.always,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: 'Email',
                       hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                   validator: (value) => SignUpValidation().validateEmail(_emailFocus, value),
@@ -87,13 +90,13 @@ class SignUpPageState extends State<SignUpPage> {
 
             //비밀번호 입력
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 obscureText: true,
                 controller: pwController,
                 focusNode: _passwordFocus,
                 autovalidateMode: AutovalidateMode.always,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     hintText: 'Password',
                     hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                 validator: (value) => SignUpValidation().validatePassword(_passwordFocus, value),
@@ -105,13 +108,13 @@ class SignUpPageState extends State<SignUpPage> {
 
           //비밀번호 체크
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 obscureText: true,
                 controller: pwCheckController,
                 focusNode: _passwordCheckFocus,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     hintText: 'Password Check',
                     hintStyle:TextStyle(color: Color.fromRGBO(180, 180, 180, 100))),
                 validator: (value) => SignUpValidation().validatePasswordCheck(_passwordCheckFocus,pwController.text, value),
@@ -120,7 +123,7 @@ class SignUpPageState extends State<SignUpPage> {
 
             //이름
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 keyboardType: TextInputType.name,
                 decoration: const InputDecoration(
@@ -137,7 +140,7 @@ class SignUpPageState extends State<SignUpPage> {
 
             //연락처
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 70, vertical: 7),
+              margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 7),
               child: TextFormField(
                 decoration: const InputDecoration(
                     hintText: "Phone (000-0000-0000)",
@@ -153,7 +156,7 @@ class SignUpPageState extends State<SignUpPage> {
             //직급
             Container(
                 margin:
-                    EdgeInsets.only(top: 7, left: 70, right: 70, bottom: 40),
+                    const EdgeInsets.only(top: 7, left: 70, right: 70, bottom: 40),
                 child: DropdownButtonFormField(
                   value: selectedValue,
                   items: position.map(
@@ -173,16 +176,16 @@ class SignUpPageState extends State<SignUpPage> {
                   },
                     ),
             ),
-            Container(
+            SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: ElevatedButton(
-                  child: Text("Submit"),
+                  child: const Text("Submit"),
                   onPressed: submit,
                 )),
-            Container(
+            SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: ElevatedButton(
-                  child: Text("뒤로가기"),
+                  child: const Text("뒤로가기"),
                   onPressed: Get.back
                 )),
             //TODO 프사 등록, 안하면 기본이미지
@@ -191,12 +194,12 @@ class SignUpPageState extends State<SignUpPage> {
   }
 
   void submit() async {
-    if(this._formKey.currentState!.validate()) {
+    if(_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: Duration(seconds: 10),
+        duration: const Duration(seconds: 10),
         content: Row(
-          children: <Widget>[
+          children: const <Widget>[
             CircularProgressIndicator(),
             Text("   Signing-Up...")
           ],
@@ -213,7 +216,7 @@ class SignUpPageState extends State<SignUpPage> {
           //user 콜렉션에 현재 가입한 uid를 가지는 document 생성
           userController.setUserInfo(user);
           //페이지 닫음
-          Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+          Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"),
               binding: BindingsBuilder((){
                 Get.put(authController);
               }));

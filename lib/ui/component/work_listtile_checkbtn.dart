@@ -18,17 +18,16 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   void workingCheck () {
     //TODO 확인창 띄우고 확인하면 체크됨.
-    Future.wait([workController.updateWorkingTimeState(work, WorkingTimeState.check.index)]).whenComplete(() => print("workingTimeState update end"));
+    Future.wait([workController.updateWorkingTimeState(work, WorkingTimeState.check.index)]);
   }
 
 
   @override
   Widget build(BuildContext context) {
-     print("btn : "+work.toString());
     //휴무일 경우
     if(work!.workingTimeState==WorkingTimeState.vacation.index){
       return Container(
-          margin: EdgeInsets.only(top: 20, left: 250),
+          margin: const EdgeInsets.only(top: 20, left: 250),
           width: 60,
           height: 30,
           child: TextButton(
@@ -48,7 +47,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
     //휴무 대기중인경우
     if(work!.workingTimeState==WorkingTimeState.vacationWait.index){
       return Container(
-          margin: EdgeInsets.only(top: 20, left: 250),
+          margin: const EdgeInsets.only(top: 20, left: 250),
           width: 60,
           height: 30,
           child: TextButton(
@@ -72,7 +71,7 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
     //퇴근후 확정 안한경우
     if (work!.workingTimeState== WorkingTimeState.wait.index&&work!.endTime!=null) {
       return Container(
-          margin: EdgeInsets.only(top: 20, left: 250),
+          margin: const EdgeInsets.only(top: 20, left: 250),
           width: 60,
           height: 30,
           child: TextButton(
