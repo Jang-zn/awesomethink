@@ -3,6 +3,8 @@ import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/ui/component/today_work_tile.dart';
+import 'package:awesomethink/ui/page/login.dart';
 import 'package:awesomethink/ui/page/new_member_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,8 +45,14 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   }
 
-  void logout(){
-    authController.signOut();
+  void logout() {
+    workController.onDelete();
+    userController.onDelete();
+    Get.offAll(AwesomeThinkLoginPage(title: "AwesomeThink"),
+        binding: BindingsBuilder(() {
+          authController.signOut();
+          Get.put(authController);
+        }));
   }
 
   @override
@@ -94,55 +102,14 @@ class _AdminMainPageState extends State<AdminMainPage> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
               height:MediaQuery.of(context).size.height*0.3,
-              child:ListView(
-                children:[
-                  Container(
-                      margin:EdgeInsets.symmetric(vertical:3),
-                      padding:EdgeInsets.symmetric(horizontal:5),
-                      height: MediaQuery.of(context).size.height*0.1,
-                      decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                      ),
-                      child : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:[
-                            Flexible(
-                              child: Container(
-                                child:Icon(Icons.person,size: MediaQuery.of(context).size.width*0.12,),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color:Colors.black),
-                                  borderRadius: BorderRadius.circular(100),
-                                )
-                              )
-                            ),
-                            Flexible(child: Column()),
-                            Flexible(child: Text("출근")),
-                          ]
-                      )
-                  ),
-                  Container(
-                      margin:EdgeInsets.symmetric(vertical:3),
-                      padding:EdgeInsets.symmetric(horizontal:5),
-                      height: MediaQuery.of(context).size.height*0.1,
-                      decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                      ),
-                      child : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:[
-                            Flexible(
-                                child: Container(
-                                    child:Icon(Icons.person),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color:Colors.black)
-                                    )
-                                )
-                            ),
-                            Flexible(child: Column()),
-                            Flexible(child: Text("출근")),
-                          ]
-                      )
-                  ),
-                ]
 
+              //오늘 근무상태 리스트뷰
+              child:ListView.builder(
+                  itemCount: userController.memberList.length,
+                  itemBuilder: (context, index) {
+
+                    return TodayWorkTile();
+                  }
               )
             ),
             Container(
@@ -152,6 +119,9 @@ class _AdminMainPageState extends State<AdminMainPage> {
             Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
                 height:MediaQuery.of(context).size.height*0.3,
+
+
+                //주간 근무시간 현황
                 child:ListView(
                     children:[
                       Container(
