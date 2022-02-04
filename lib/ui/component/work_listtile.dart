@@ -59,10 +59,7 @@ class _WorkListTileState extends State<WorkListTile> {
                           ],
                         ),
                       ),
-                      workController.weeklyWorkList[getIndex()].workingTimeState == WorkingTimeState.wait.index &&
-                          workController.weeklyWorkList[getIndex()].endTime != null
-                          ? WorkListTileCheckBtn(work: workController.weeklyWorkList[getIndex()])
-                          : Container()
+                      WorkListTileCheckBtn(work: workController.weeklyWorkList[getIndex()])
                     ],
                   )
                 : Container()),

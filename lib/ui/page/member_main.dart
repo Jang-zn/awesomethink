@@ -149,6 +149,7 @@ class AwesomeMainPage extends StatelessWidget {
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       Work? w = wc.weeklyWorkList.value[index];
+                      print(w.toString());
                       //UniqueKey 넣어줘야 완전 새로 빌드됨
                       return WorkListTile(w, key: UniqueKey(),);
                     },
