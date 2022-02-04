@@ -27,7 +27,6 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
       return Text(
         "출근",
         style: TextStyle(
-            fontWeight: FontWeight.bold,
             color: Colors.green,
             fontSize: fontSize),
       );
@@ -37,7 +36,6 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
       return Text(
         "확정\n대기",
         style: TextStyle(
-            fontWeight: FontWeight.bold,
             color: Colors.green,
             fontSize: fontSize),
       );
@@ -50,7 +48,6 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
       return Text(
         "퇴근",
         style: TextStyle(
-            fontWeight: FontWeight.bold,
             color: Colors.blueGrey,
             fontSize: fontSize),
       );
@@ -61,7 +58,6 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
       return Text(
         "휴무\n신청",
         style: TextStyle(
-            fontWeight: FontWeight.bold,
             color: Colors.blueAccent,
             fontSize: fontSize),
       );
@@ -73,7 +69,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
         "휴무",
         textAlign: TextAlign.center,
         style: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: fontSize),
+            color: Colors.redAccent, fontSize: fontSize),
       );
     }
   }
@@ -116,7 +112,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
                   Text(
                     member!.name!,
                     style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold),
+                        fontSize: 17),
                   ),
                   Text(
                     work!.workingTimeToHHMM(),

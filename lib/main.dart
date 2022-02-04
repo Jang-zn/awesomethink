@@ -22,6 +22,7 @@ class AwesomeThink extends StatelessWidget {
         title: 'AwesomeThink',
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
+          fontFamily: 'ONE_Mobile_Pop',
         ),
         home: const AwesomeThinkLoginPage(title: 'AwesomeThink',),
       );

@@ -67,7 +67,7 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                     Text(
                       member!.name!,
                       style: const TextStyle(
-                          fontSize: 17, fontWeight: FontWeight.bold),
+                          fontSize: 17,),
                     ),
                     Text(
                       workController.weeklyWorkingTime.value,
@@ -85,7 +85,7 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                     const Text(
                       "남은시간",
                       style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 17,),
                     ),
                     Text(
                       workController.requiredWorkingTime.value,

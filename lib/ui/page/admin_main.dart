@@ -99,7 +99,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
             Container(
               margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.03),
               child:const Text("오늘 근무 현황",style:TextStyle(
-                fontWeight: FontWeight.bold,
+
                 fontSize: 20,
               ))
             ),
@@ -127,7 +127,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
             Container(
                 margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.03),
                 child:const Text("주간 근무 현황",style:TextStyle(
-                  fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),),
             ),
