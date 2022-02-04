@@ -1,5 +1,8 @@
 
+import 'dart:io';
+
 import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/data/repository/user_repo.dart';
 import 'package:get/get.dart';
 
@@ -11,11 +14,20 @@ class UserController extends GetxController{
   final Rxn<Member?> _userInfo = Rxn<Member?>();
 
   //state false 인 유저
-  final RxList<Member?> _newbieList = RxList<Member?>();
+  final RxList<Member?> _newbieList = <Member?>[].obs;
 
   //state true 인 유저
-  final RxList<Member?> _memberList = RxList<Member?>();
+  final RxList<Member?> _memberList = <Member?>[].obs;
 
+  //오늘 근무관련 data
+  final  RxList<Work?> _todayWorkList = <Work?>[].obs;
+  final  RxList<Member?> _todayMemberList = <Member?>[].obs;
+
+
+  get todayMemberList => _todayMemberList;
+  set todayMemberList(value) => _todayMemberList;
+  get todayWorkList => _todayWorkList;
+  set todayWorkList(value) => _todayWorkList;
   get userInfo => _userInfo.value;
   set userInfo(value) => _userInfo.value;
   get newbieList => _newbieList;
@@ -53,9 +65,30 @@ class UserController extends GetxController{
     await getMemberList();
   }
 
-  Future<void> getTodayMemberWorkList() async{
-    _memberList(await userRepository.getMemberList());
-    _memberList.refresh();
+
+  //오늘 출퇴근 확인
+  Future<void> getTodayWorkList() async{
+    _todayWorkList.value = await (await userRepository.getTodayWorkList()).first;
+    _todayMemberList.value =getTodayMemberList();
+    _todayMemberList.refresh();
   }
+
+  //출퇴근 workList가지고 todayMemberList 갱신
+  List<Member?> getTodayMemberList() {
+    List<Member?> today=[];
+    for(Work? w in _todayWorkList){
+      for(Member? m in _memberList){
+        if(w!.userUid==m!.uid){
+          today.add(m);
+          break;
+        }
+      }
+    }
+    print("todayMember : "+today.toString());
+    print("todayWork : "+today.toString());
+    return today;
+  }
+
+
 
 }

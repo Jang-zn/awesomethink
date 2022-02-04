@@ -57,8 +57,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
               //Admin / Normal 구분
               if ((userController.userInfo as Member?)!.type == UserType.admin.index) {
                 Get.to(AdminMainPage(), binding: BindingsBuilder(() {
-                  userController.getMemberList();
-                  userController.getNewbieList();
                   Get.lazyPut<AuthController>(() => authController);
                   Get.put(userController);
                   Get.put(workController);
@@ -90,6 +88,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     try {
       workController = Get.put(WorkController(authController.getCurrentUser()!.uid),tag:authController.getCurrentUser()!.uid);
       await Future.wait([
+        userController.getMemberList(),
+        userController.getNewbieList(),
         userController.getUserInfo(authController.getCurrentUser()!.uid),
         workController.getAllWorkList(authController.getCurrentUser()!.uid, DateTime.now())]);
     }catch(e){

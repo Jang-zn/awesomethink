@@ -50,7 +50,6 @@ class WorkController extends GetxController{
     _weeklyWorkList.value = await (await workRepository.getWeeklyWorkList(uid)).first;
     getWeeklyWorkingTime();
     checkInOut();
-    print("getWeeklyWorkList");
     refresh();
   }
 
@@ -60,13 +59,11 @@ class WorkController extends GetxController{
   }
 
   Future<void> updateWorkingTimeState(Work? work, int state) async {
-    print("updateWorkingTimeState");
     _weeklyWorkList.value = await (await workRepository.updateWorkingTimeState(work, state)).first;
     refresh();
   }
 
   Future<void> updateWork(Work? work) async{
-    print("updateWork");
     _weeklyWorkList.value = await (await workRepository.updateWork(work)).first;
     getWeeklyWorkingTime();
     checkInOut();
@@ -74,7 +71,6 @@ class WorkController extends GetxController{
   }
 
   Future<void> setWork(Work? work) async{
-    print("setWork");
     await Future.wait([
       workRepository.setWork(work),
       getAllWorkList(work!.userUid, DateTime.now())
@@ -83,8 +79,6 @@ class WorkController extends GetxController{
   }
 
   void getWeeklyWorkingTime() {
-    print("getWeeklyWorkingTime");
-    print("주간 시간계산");
     //변수
     int weeklyHour=0;
     int weeklyMinute=0;
@@ -116,7 +110,6 @@ class WorkController extends GetxController{
         requiredHour += 1;
       }
 
-
       //출력메세지 세팅
       weeklyMinute > 0 ?
       weeklyWorkingTime.value =
@@ -137,7 +130,6 @@ class WorkController extends GetxController{
   }
 
   void checkInOut(){
-    print("checkInOut");
     for(Work? w in _weeklyWorkList) {
       if(!w!.checkOut!){
         _inOut(false);

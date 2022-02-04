@@ -20,8 +20,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
   late final UserController userController;
   late final WorkController workController;
   late final AuthController authController;
-  late List<Member?> memberList;
-  late List<Work?> workList;
 
   void tempFunc(){  }
 
@@ -31,8 +29,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
     userController = Get.find<UserController>();
     authController = Get.find<AuthController>();
     workController = Get.find<WorkController>(tag:userController.userInfo.uid);
-    memberList = userController.memberList;
-    workList = workController.weeklyWorkList;
   }
 
   void newMemberAuthCheck(){
@@ -105,10 +101,17 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
               //오늘 근무상태 리스트뷰
               child:ListView.builder(
-                  itemCount: userController.memberList.length,
+                  key:UniqueKey(),
+                  itemCount: userController.todayMemberList.length,
                   itemBuilder: (context, index) {
-
-                    return TodayWorkTile();
+                    Work? work;
+                    for(Work? w in userController.todayWorkList){
+                      if(w!.userUid==userController.todayMemberList[index].uid){
+                        work=w;
+                        break;
+                      }
+                    }
+                    return TodayWorkTile(userController.todayMemberList[index], work);
                   }
               )
             ),

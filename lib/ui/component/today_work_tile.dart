@@ -1,13 +1,21 @@
+import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/data/model/work.dart';
 import 'package:flutter/material.dart';
 
 class TodayWorkTile extends StatefulWidget {
-  const TodayWorkTile({Key? key}) : super(key: key);
+  TodayWorkTile(this.member, this.work);
+  Work? work;
+  Member? member;
 
   @override
-  _TodayWorkTileState createState() => _TodayWorkTileState();
+  _TodayWorkTileState createState() => _TodayWorkTileState(member, work);
 }
 
 class _TodayWorkTileState extends State<TodayWorkTile> {
+  Member? member;
+  Work? work;
+  _TodayWorkTileState(this.member, this.work);
+
   @override
   Widget build(BuildContext context) {
     return Container(
