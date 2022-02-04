@@ -80,6 +80,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
               onTap: newMemberAuthCheck
             ),
             ListTile(
+                title:const Text("휴뮤신청 승인"),
+                onTap: (){}
+            ),
+            ListTile(
                 title:const Text("로그아웃"),
                 onTap: logout
             )
@@ -87,7 +91,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
         ),
       ),
       body:ListView(
-        children:[Column(
+        children:[
+          Column(
           crossAxisAlignment:CrossAxisAlignment.start,
           children:[
             Container(
@@ -96,7 +101,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
-              height:MediaQuery.of(context).size.height*0.3,
+              height:MediaQuery.of(context).size.height*0.35,
 
               //오늘 근무상태 리스트뷰
               child:Obx(()=>ListView.builder(
@@ -116,12 +121,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
             ),
             ),
             Container(
-                margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),
+                margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.03),
                 child:const Text("주간 근무 현황",)
             ),
             Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
-                height:MediaQuery.of(context).size.height*0.3,
+                height:MediaQuery.of(context).size.height*0.35,
 
 
                 //주간 근무시간 현황
