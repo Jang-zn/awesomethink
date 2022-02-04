@@ -1,5 +1,6 @@
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/provider/contant.dart';
+import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -26,6 +27,8 @@ class UserProvider{
     return firestore
         .collection("user")
         .where("state",isEqualTo: true)
+        .where("type", isEqualTo: UserType.normal.index)
+        .orderBy("joinedDate")
         .snapshots();
   }
 

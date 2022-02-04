@@ -2,6 +2,7 @@ import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/ui/component/member_weekly_work_tile.dart';
 import 'package:awesomethink/ui/component/today_work_tile.dart';
 import 'package:awesomethink/ui/page/login.dart';
 import 'package:awesomethink/ui/page/new_member_auth.dart';
@@ -96,12 +97,15 @@ class _AdminMainPageState extends State<AdminMainPage> {
           crossAxisAlignment:CrossAxisAlignment.start,
           children:[
             Container(
-              margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),
-              child:const Text("오늘 근무 현황",)
+              margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.03),
+              child:const Text("오늘 근무 현황",style:TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ))
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
-              height:MediaQuery.of(context).size.height*0.35,
+              height:MediaQuery.of(context).size.height*0.4,
 
               //오늘 근무상태 리스트뷰
               child:Obx(()=>ListView.builder(
@@ -122,45 +126,23 @@ class _AdminMainPageState extends State<AdminMainPage> {
             ),
             Container(
                 margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.03),
-                child:const Text("주간 근무 현황",)
+                child:const Text("주간 근무 현황",style:TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),),
             ),
             Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.15,vertical: MediaQuery.of(context).size.width*0.03 ),
-                height:MediaQuery.of(context).size.height*0.35,
-
+                height:MediaQuery.of(context).size.height*0.4,
 
                 //주간 근무시간 현황
-                child:ListView(
-                    children:[
-                      Container(
-                          margin:const EdgeInsets.symmetric(vertical:3),
-                          padding:const EdgeInsets.symmetric(horizontal:5),
-                          height: MediaQuery.of(context).size.height*0.1,
-                          decoration: BoxDecoration(border: Border.all(color:Colors.black)
-                          ),
-                        child : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children:[
-                              Flexible(
-                                  child: Container(
-                                      child:Icon(Icons.person,size: MediaQuery.of(context).size.width*0.12,),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color:Colors.black),
-                                        borderRadius: BorderRadius.circular(100),
-                                      )
-                                  )
-                              ),
-                            Flexible(child: Column()),
-                            Flexible(child:
-                            IconButton(icon:const Icon(Icons.arrow_forward_ios), onPressed: tempFunc,)),
-                          ]
-                        )
-                      ),
-
-                    ]
-
-                )
-            )
+                child:ListView.builder(
+                  itemCount:userController.memberList.length,
+                  itemBuilder: (context, index){
+                    return WeeklyWorkTile(userController.memberList[index]);
+                  },
+                ),
+            ),
           ]
         )
       ])

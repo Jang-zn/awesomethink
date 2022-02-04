@@ -22,7 +22,6 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
 
   Widget? memberState() {
     double? fontSize = 18;
-
     //출근
     if (work!.endTime == null) {
       return Text(
@@ -33,6 +32,18 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
             fontSize: fontSize),
       );
     }
+    //퇴근하고 확정 안누름
+    if (work!.endTime != null&&work!.workingTimeState == WorkingTimeState.wait.index) {
+      return Text(
+        "확정\n대기",
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+            fontSize: fontSize),
+      );
+    }
+
+
     //퇴근
     if (work!.endTime != null &&
         work!.workingTimeState == WorkingTimeState.check.index) {
@@ -51,7 +62,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
         "휴무\n신청",
         style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.deepOrangeAccent,
+            color: Colors.blueAccent,
             fontSize: fontSize),
       );
     }
@@ -62,7 +73,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
         "휴무",
         textAlign: TextAlign.center,
         style: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.red, fontSize: fontSize),
+            fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: fontSize),
       );
     }
   }
@@ -74,7 +85,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
       padding: const EdgeInsets.symmetric(horizontal: 5),
       height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(Random(2).nextInt(255), Random().nextInt(255),
+        color: Color.fromRGBO(Random().nextInt(50), Random().nextInt(200),
             Random().nextInt(255), 0.3),
         borderRadius: BorderRadius.circular(15),
       ),
@@ -87,7 +98,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
               child: Icon(
                 Icons.person,
                 size: MediaQuery.of(context).size.width * 0.12,
-                color: Color.fromRGBO(Random().nextInt(150),
+                color: Color.fromRGBO(Random().nextInt(50),
                     Random().nextInt(150), Random().nextInt(150), 0.8),
               ),
               decoration: BoxDecoration(
