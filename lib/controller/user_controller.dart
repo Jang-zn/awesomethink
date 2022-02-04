@@ -40,7 +40,7 @@ class UserController extends GetxController{
   }
 
   Future<void> getNewbieList() async{
-    _newbieList(await userRepository.getNewbieList());
+    _newbieList.value = await (await userRepository.getNewbieList()).first;
     _newbieList.refresh();
   }
 
@@ -50,10 +50,12 @@ class UserController extends GetxController{
   }
 
   Future<void> updateUserInfo(Member? user) async{
-    await userRepository.updateUserInfo(user);
-    await getNewbieList();
-    await getMemberList();
-    await getUserInfo(user!.uid);
+    Future.wait
+      ([userRepository.updateUserInfo(user),
+        getNewbieList(),
+        getMemberList(),
+        getUserInfo(user!.uid),
+    ]);
   }
 
   Future<void> setUserInfo(Member user) async{
@@ -81,8 +83,6 @@ class UserController extends GetxController{
         }
       }
     }
-    print("todayMember : "+today.toString());
-    print("todayWork : "+today.toString());
     return today;
   }
 

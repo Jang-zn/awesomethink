@@ -46,13 +46,13 @@ class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
         body: SafeArea(
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-                child:ListView.builder(
+                child:Obx(()=>ListView.builder(
                     itemCount: newbieList.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index){
                       return NewbieListTile(newbieList[index]);
                     }
-                )
+                ),)
             )));
   }
 }

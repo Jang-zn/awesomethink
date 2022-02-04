@@ -7,13 +7,14 @@ class UserRepository{
 
   UserRepository();
 
-  Future<List<Member?>> getNewbieList() {
-    return (userProvider.getNewbieList())
-        .map(
-            (snapshot) => snapshot.docs
-                .map((doc)=> Member.fromJson(doc.data()!))
-                .toList()
-        ).first;
+  Future<Stream<List<Member?>>> getNewbieList() async {
+    return (await userProvider.getNewbieList()).map((snapshot) {
+      final List<Member?> list = <Member?>[];
+      snapshot.docs.forEach((element) {
+        list.add(Member.fromJson(element.data()));
+      });
+      return list;
+    });
   }
 
   Future<List<Member?>> getMemberList() {

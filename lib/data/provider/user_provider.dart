@@ -14,11 +14,12 @@ class UserProvider{
   }
 
   //신규가입 목록
-  Stream<QuerySnapshot<Map<String, dynamic>?>> getNewbieList() {
-    return firestore.collection("user")
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getNewbieList() async{
+    return Future.delayed(Duration(milliseconds: 500),()=>firestore.collection("user")
         .where("state",isEqualTo: false)
-        .snapshots();
+        .snapshots());
   }
+
 
   //직원목록
   Stream<QuerySnapshot<Map<String, dynamic>?>> getMemberList() {
@@ -29,7 +30,7 @@ class UserProvider{
   }
 
   //오늘 출근현황
-  //오늘 workList 받고, 이거 컨트롤러 가져가서 userUid랑 맞는 user들만 갖다가 띄워준다..?
+  //오늘 workList 받고, 이거 컨트롤러 가져가서 userUid랑 맞는 user들만 갖다가 띄워준다
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getTodayWorkList() async{
     //오늘날짜
     DateTime now = DateTime.now();

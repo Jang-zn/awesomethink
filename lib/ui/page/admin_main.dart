@@ -100,7 +100,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
               height:MediaQuery.of(context).size.height*0.3,
 
               //오늘 근무상태 리스트뷰
-              child:ListView.builder(
+              child:Obx(()=>ListView.builder(
                   key:UniqueKey(),
                   itemCount: userController.todayMemberList.length,
                   itemBuilder: (context, index) {
@@ -114,6 +114,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                     return TodayWorkTile(userController.todayMemberList[index], work);
                   }
               )
+            ),
             ),
             Container(
                 margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.1),

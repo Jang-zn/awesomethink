@@ -8,9 +8,9 @@ class NewbieListTile extends StatelessWidget {
   NewbieListTile(this.newbie);
   final UserController userController = Get.find<UserController>();
 
-  void newbieAuth(){
+  void newbieAuth() async {
     newbie?.state=true;
-    userController.updateUserInfo(newbie);
+    await userController.updateUserInfo(newbie);
   }
 
   @override
