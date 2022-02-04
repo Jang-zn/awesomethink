@@ -90,6 +90,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       await Future.wait([
         userController.getMemberList(),
         userController.getNewbieList(),
+        userController.getTodayWorkList(),
         userController.getUserInfo(authController.getCurrentUser()!.uid),
         workController.getAllWorkList(authController.getCurrentUser()!.uid, DateTime.now())]);
     }catch(e){

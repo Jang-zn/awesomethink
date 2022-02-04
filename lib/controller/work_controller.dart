@@ -38,7 +38,6 @@ class WorkController extends GetxController{
   }
 
   Future<void> getAllWorkList(String? uid, DateTime dateTime) async{
-    print("getAllWorkList");
     await Future.wait([
       getWeeklyWorkList(uid),
       getMonthlyWorkList(uid, dateTime)

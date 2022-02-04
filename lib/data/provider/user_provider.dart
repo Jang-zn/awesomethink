@@ -34,8 +34,9 @@ class UserProvider{
     //오늘날짜
     DateTime now = DateTime.now();
     DateTime todayStart = DateTime(now.year,now.month,now.day);
+    DateTime todayEnd = DateTime(now.year,now.month,now.day+1);
     return Future.delayed(Duration(milliseconds: 500),()=>firestore.collection("work")
-        .where("startTime", isGreaterThan: todayStart) //중에서 월요일부터 일요일까지
+        .where("startTime", isGreaterThan: todayStart, isLessThan: todayEnd) //'오늘 근무만 호출'
         .orderBy("startTime",descending: true).snapshots());
   }
 
