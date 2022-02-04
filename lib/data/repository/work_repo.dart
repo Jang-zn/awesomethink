@@ -35,7 +35,6 @@ class WorkRepository{
             (snapshot) {
           final List<Work?> list = <Work?>[];
           for(var element in snapshot.docs) {
-            print("updateWorkingTimeState from repository "+Work.fromJson(element.data()).toString());
             list.add(Work.fromJson(element.data()));
           }
           return list;

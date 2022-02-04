@@ -24,7 +24,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
 
   @override
   Widget build(BuildContext context) {
-    print("btn"+work.toString());
     //휴무일 경우
     if(work!.workingTimeState==WorkingTimeState.vacation.index){
       return Container(

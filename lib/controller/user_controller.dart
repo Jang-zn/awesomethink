@@ -45,7 +45,7 @@ class UserController extends GetxController{
   }
 
   Future<void> getMemberList() async{
-    _memberList(await userRepository.getMemberList());
+    _memberList.value = await (await userRepository.getMemberList()).first;
     _memberList.refresh();
   }
 

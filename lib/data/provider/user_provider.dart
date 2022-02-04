@@ -23,13 +23,13 @@ class UserProvider{
 
 
   //직원목록
-  Stream<QuerySnapshot<Map<String, dynamic>?>> getMemberList() {
-    return firestore
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMemberList() {
+    return Future.delayed(const Duration(milliseconds: 500),()=>firestore
         .collection("user")
         .where("state",isEqualTo: true)
         .where("type", isEqualTo: UserType.normal.index)
         .orderBy("joinedDate")
-        .snapshots();
+        .snapshots());
   }
 
   //오늘 출근현황

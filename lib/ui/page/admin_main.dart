@@ -54,7 +54,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(()=>Scaffold(
       appBar: AppBar(
           //뒤로가기 버튼 삭제
           automaticallyImplyLeading: false,
@@ -108,7 +108,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
               height:MediaQuery.of(context).size.height*0.4,
 
               //오늘 근무상태 리스트뷰
-              child:Obx(()=>ListView.builder(
+              child:ListView.builder(
                   key:UniqueKey(),
                   itemCount: userController.todayMemberList.length,
                   itemBuilder: (context, index) {
@@ -122,7 +122,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                     return TodayWorkTile(userController.todayMemberList[index], work);
                   }
               )
-            ),
             ),
             Container(
                 margin:EdgeInsets.only(left: MediaQuery.of(context).size.width*0.1, right: MediaQuery.of(context).size.width*0.1, top:MediaQuery.of(context).size.width*0.03),
@@ -138,6 +137,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                 child:ListView.builder(
                   itemCount:userController.memberList.length,
                   itemBuilder: (context, index){
+                    print("member : "+userController.memberList[index].toString());
                     return WeeklyWorkTile(userController.memberList[index]);
                   },
                 ),
@@ -145,6 +145,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
           ]
         )
       ])
+    ),
     );
   }
 }
