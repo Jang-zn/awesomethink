@@ -18,12 +18,14 @@ class UserRepository {
   }
 
   Future<Stream<List<Member?>>> getMemberList() async {
-    return (await userProvider.getMemberList()).map((snapshot) {
-      final List<Member?> list = <Member?>[];
-      for (var element in snapshot.docs) {
-        list.add(Member.fromJson(element.data()));
-      }
-      return list;
+    return (await userProvider.getMemberList()).map(
+            (snapshot) {
+              final List<Member?> list = <Member?>[];
+              for (var element in snapshot.docs) {
+                list.add(Member.fromJson(element.data()));
+             }
+              print(list.length);
+              return list;
     });
   }
 

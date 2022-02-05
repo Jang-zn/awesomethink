@@ -24,7 +24,8 @@ class UserProvider{
 
   //직원목록
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMemberList() {
-    return Future.delayed(const Duration(milliseconds: 500),()=>firestore
+    return Future.delayed(Duration(milliseconds: 400),
+            ()=>firestore
         .collection("user")
         .where("state",isEqualTo: true)
         .where("type", isEqualTo: UserType.normal.index)

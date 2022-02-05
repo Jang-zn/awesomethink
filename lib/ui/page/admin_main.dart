@@ -54,6 +54,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("admin build");
     return Obx(()=>Scaffold(
       appBar: AppBar(
           //뒤로가기 버튼 삭제
@@ -135,9 +136,9 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
                 //주간 근무시간 현황
                 child:ListView.builder(
+                  key:UniqueKey(),
                   itemCount:userController.memberList.length,
                   itemBuilder: (context, index){
-                    print("member : "+userController.memberList[index].toString());
                     return WeeklyWorkTile(userController.memberList[index]);
                   },
                 ),

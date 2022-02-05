@@ -66,7 +66,11 @@ class Work{
     String result="";
     Duration duration;
     if(endTime!=null){
-     duration=endTime!.difference(startTime!);
+      try {
+        duration = endTime!.difference(startTime!);
+      }catch(e){
+        duration=startTime!.difference(startTime!);
+      }
      int total = duration.inMinutes;
 
      //휴게시간 4시간마다 30분
@@ -129,8 +133,12 @@ class Work{
 
   Map<String, int> getWorkingTimeToMap(){
     Map<String, int> timeMap={};
+    Duration duration;
     try {
-      Duration duration = endTime!.difference(startTime!);
+      duration = endTime!.difference(startTime!);
+    }catch(e){
+      duration = startTime!.difference(startTime!);
+    }
       int total = duration.inMinutes;
 
       //휴게시간 4시간마다 30분
@@ -147,9 +155,6 @@ class Work{
       timeMap.putIfAbsent("hour", () => h);
       timeMap.putIfAbsent("minute", () => m);
       return timeMap;
-    }catch(e){
-      return timeMap;
-    }
 
   }
 
