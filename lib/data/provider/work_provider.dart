@@ -72,13 +72,13 @@ class WorkProvider {
         .snapshots();
   }
 
-  //임시기능
-  void deleteAllWork(){
-    firestore.collection("work")
-        .orderBy("startTime",descending: true)
-        .get()
-        .then((val) {
-          val.docs.first.reference.delete();
-    });
-  }
+  // //임시기능
+  // void deleteAllWork(){
+  //   firestore.collection("work")
+  //       .orderBy("startTime",descending: true)
+  //       .get()
+  //       .then((val) {
+  //         val.docs.first.reference.delete();
+  //   });
+  // }
 }

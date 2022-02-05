@@ -104,9 +104,9 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     }));
   }
 
-  void deleteAllWork(){
-    Get.put(WorkController("temp"), tag:"temp").deleteAllWork();
-  }
+  // void deleteAllWork(){
+  //   Get.put(WorkController("temp"), tag:"temp").deleteAllWork();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -159,11 +159,11 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                       child:ElevatedButton(onPressed: signUp,
                           child: const Text("SignUp")),
                   ),
-                  SizedBox(
-                    width:MediaQuery.of(context).size.width*0.5,
-                    child:ElevatedButton(onPressed: deleteAllWork,
-                        child: const Text("DeleteAllWork")),
-                  ),
+                  // SizedBox(
+                  //   width:MediaQuery.of(context).size.width*0.5,
+                  //   child:ElevatedButton(onPressed: deleteAllWork,
+                  //       child: const Text("DeleteAllWork")),
+                  // ),
                 ],
               )
             )

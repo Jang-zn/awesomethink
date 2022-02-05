@@ -132,9 +132,9 @@ class WorkController extends GetxController{
     _inOut.refresh();
   }
 
-  //임시기능
-  void deleteAllWork(){
-    workRepository.deleteAllWork();
-  }
+  // //임시기능
+  // void deleteAllWork(){
+  //   workRepository.deleteAllWork();
+  // }
 
 }
