@@ -24,7 +24,6 @@ class UserRepository {
               for (var element in snapshot.docs) {
                 list.add(Member.fromJson(element.data()));
              }
-              print(list.length);
               return list;
     });
   }

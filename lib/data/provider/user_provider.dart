@@ -23,7 +23,7 @@ class UserProvider{
 
 
   //직원목록
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMemberList() {
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMemberList() async {
     return Future.delayed(Duration(milliseconds: 400),
             ()=>firestore
         .collection("user")
