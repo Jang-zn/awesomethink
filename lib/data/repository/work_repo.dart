@@ -67,7 +67,7 @@ class WorkRepository{
   }
 
   Future<Stream<List<Work?>>> rejectVacation(Work? vacation) async {
-    return (await workProvider.acceptVacation(vacation)).map(
+    return (await workProvider.rejectVacation(vacation)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
           for(var element in snapshot.docs) {
