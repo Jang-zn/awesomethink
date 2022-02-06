@@ -124,6 +124,11 @@ class Work{
     return vacationList;
   }
 
+  //휴가 기간 String으로 변환
+  String getVacationPeriod(){
+    return "${vacation!.startVacation!.month}/${vacation!.startVacation!.day} ~ ${vacation!.endVacation!.month}/${vacation!.endVacation!.day} : ${vacation!.endVacation!.difference(vacation!.startVacation!).inDays+1}일";
+  }
+
 
 
   @override

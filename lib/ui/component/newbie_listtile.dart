@@ -38,7 +38,6 @@ class NewbieListTile extends StatelessWidget {
                     child: const Text("승인",
                         style:TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
                           fontSize: 13,
                         )
                     ),

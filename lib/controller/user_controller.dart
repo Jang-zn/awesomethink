@@ -33,15 +33,6 @@ class UserController extends GetxController{
   set memberList(value) => _memberList;
 
 
-  @override
-  void onInit() {
-    ever(_todayMemberList,(_){
-      print("today : "+_todayMemberList.length.toString());
-    });
-    ever(_memberList,(_){
-      print("all : "+_memberList.length.toString());
-    });
-  }
 
   Future<void> getUserInfo(String? uid) async{
     _userInfo(await userRepository.getUserInfo(uid));

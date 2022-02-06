@@ -16,16 +16,12 @@ class VacationListTile extends StatelessWidget {
 
   //TODO 휴가 승인
   void vacationAuth() async {
-    await Future.wait([
-
-    ]);
+    await workController.acceptVacation(vacation);
   }
 
   //TODO 휴가 반려
   void vacationCancle() async {
-    await Future.wait([
-
-    ]);
+    await workController.rejectVacation(vacation);
   }
 
   @override
@@ -41,11 +37,13 @@ class VacationListTile extends StatelessWidget {
           title: Container(
             margin:const EdgeInsets.only(bottom:8),
             child:Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children:[
                 Text(member!.name!),
                 const SizedBox(width: 10, height: 10),
                 Text(member!.position!),
-                const SizedBox(width: 120, height: 10),
+                const SizedBox(width: 60, height: 10),
                 SizedBox(
                   width:60,
                   height:20,
@@ -53,7 +51,6 @@ class VacationListTile extends StatelessWidget {
                     child: const Text("승인",
                         style:TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
                           fontSize: 13,
                         )
                     ),
@@ -72,14 +69,13 @@ class VacationListTile extends StatelessWidget {
                         child: const Text("반려",
                             style:TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
                               fontSize: 13,
                             )
                         ),
                         style: TextButton.styleFrom(
                             primary: Colors.black,
                             padding:EdgeInsets.zero,
-                            backgroundColor: Colors.lightGreen
+                            backgroundColor: Colors.redAccent
                         ),
                         onPressed: vacationCancle
                     )
@@ -89,9 +85,7 @@ class VacationListTile extends StatelessWidget {
           ),
           subtitle: Row(
             children: <Widget>[
-              Text(newbie!.email!),
-              const SizedBox(width: 10, height: 10),
-              Text(newbie!.phone!),
+              Text(vacation!.getVacationPeriod()),
             ],
           ),
         ),

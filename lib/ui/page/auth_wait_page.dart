@@ -44,7 +44,7 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
             Container(
               margin: const EdgeInsets.only(top:20),
               alignment: Alignment.center,
-              child: const Text("가입 승인 대기중", style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              child: const Text("가입 승인 대기중", style:TextStyle(fontSize: 16)),
             ),
             TextButton(
               onPressed: logout,

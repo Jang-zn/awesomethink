@@ -34,7 +34,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
               child: const Text("휴무",
                   style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
                     fontSize: 13,
                   )),
               style: TextButton.styleFrom(
@@ -54,7 +53,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
               child: const Text("대기",
                   style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
                     fontSize: 13,
                   )),
               style: TextButton.styleFrom(
@@ -78,7 +76,6 @@ class _WorkListTileCheckBtnState extends State<WorkListTileCheckBtn> {
               child: const Text("확정",
                   style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
                     fontSize: 13,
                   )),
               style: TextButton.styleFrom(

@@ -8,16 +8,24 @@ import 'package:awesomethink/ui/component/work_listtile.dart';
 import 'package:awesomethink/ui/page/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+class AwesomeMainPage extends StatefulWidget {
+  const AwesomeMainPage({Key? key}) : super(key: key);
 
-class AwesomeMainPage extends StatelessWidget {
-  AwesomeMainPage({
-    Key? key,
-  }) : super(key: key);
+  @override
+  _AwesomeMainPageState createState() => _AwesomeMainPageState();
+}
 
-  final AuthController authController = Get.find<AuthController>();
-  final UserController userController = Get.find<UserController>();
-  late final WorkController workController =
-      Get.find<WorkController>(tag: authController.getCurrentUser()!.uid);
+class _AwesomeMainPageState extends State<AwesomeMainPage> {
+  late final AuthController authController;
+  late final UserController userController;
+  late final WorkController workController;
+
+  @override
+  void initState() {
+    authController = Get.find<AuthController>();
+    userController = Get.find<UserController>();
+    workController = Get.find<WorkController>(tag : authController.getCurrentUser()!.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +39,7 @@ class AwesomeMainPage extends StatelessWidget {
       }));
     }
 
+    print("memeberMain build");
     return Obx(
       () => Scaffold(
         body: SafeArea(
@@ -75,7 +84,6 @@ class AwesomeMainPage extends StatelessWidget {
                             children: [
                               Text("${userController.userInfo.name} ",
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
                                       fontSize: 25)),
                               Text("${userController.userInfo.position} 님",
                                   style: const TextStyle(fontSize: 18))
@@ -97,7 +105,6 @@ class AwesomeMainPage extends StatelessWidget {
                                 child: Text(
                                     "${workController.weeklyWorkingTime.value}",
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
                                 ),
@@ -116,7 +123,6 @@ class AwesomeMainPage extends StatelessWidget {
                                     workController.requiredWorkingTime.value,
                                     key:UniqueKey(),
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
                                 ),

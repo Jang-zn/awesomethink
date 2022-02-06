@@ -62,6 +62,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
   @override
   Widget build(BuildContext context) {
     print("admin build");
+    if(Get.parameters=="build"){
+      userController.getTodayWorkList();
+      userController.getTodayMemberList();
+    }
     return Obx(()=>Scaffold(
       appBar: AppBar(
           //뒤로가기 버튼 삭제

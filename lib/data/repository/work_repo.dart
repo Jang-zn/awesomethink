@@ -17,6 +17,18 @@ class WorkRepository{
       );
   }
 
+  Future<Stream<List<Work?>>> getVacationList() async {
+    return (await workProvider.getVacationList()).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          for(var element in snapshot.docs) {
+            list.add(Work.fromJson(element.data()));
+          }
+          return list;
+        }
+    );
+  }
+
   Future<Stream<List<Work?>>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
     return (await workProvider.getMonthlyWorkList(uid, dateTime)).map(
             (snapshot) {
@@ -42,9 +54,37 @@ class WorkRepository{
     );
   }
 
+  Future<Stream<List<Work?>>> acceptVacation(Work? vacation) async {
+    return (await workProvider.acceptVacation(vacation)).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          for(var element in snapshot.docs) {
+            list.add(Work.fromJson(element.data()));
+          }
+          return list;
+        }
+    );
+  }
+
+  Future<Stream<List<Work?>>> rejectVacation(Work? vacation) async {
+    return (await workProvider.acceptVacation(vacation)).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          for(var element in snapshot.docs) {
+            list.add(Work.fromJson(element.data()));
+          }
+          return list;
+        }
+    );
+  }
+
 
   Future<void> setWork(Work? work) async {
     await workProvider.setWork(work);
+  }
+
+  Future<Work?> getTodayWork(DateTime today) async {
+    return Work.fromJson((await workProvider.getTodayWork(today)).docs.first.data());
   }
 
 

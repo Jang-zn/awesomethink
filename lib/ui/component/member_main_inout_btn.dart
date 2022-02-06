@@ -70,7 +70,7 @@ class _WorkInOutBtnState extends State<WorkInOutBtn> {
           setState(() {});
         });
       }else{
-        Work? work = workController.weeklyWorkList.first;
+        Work? work = await workController.getTodayWork(DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day));
         work?.endTime = DateTime.now().add(Duration(
             hours: Random().nextInt(8), minutes: Random().nextInt(59)));
         work?.checkOut = true;

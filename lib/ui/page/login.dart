@@ -56,18 +56,18 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
             await initController().whenComplete(() {
               //Admin / Normal 구분
               if ((userController.userInfo as Member?)!.type == UserType.admin.index) {
-                Get.offAll(const AdminMainPage(), binding: BindingsBuilder(() {
-                  Get.lazyPut<AuthController>(() => authController);
+                Get.to(const AdminMainPage(), binding: BindingsBuilder(() {
+                  Get.put(authController);
                   Get.put(userController);
                   Get.put(workController);
                 }));
               } else if((userController.userInfo as Member?)!.state == false){
-                Get.offAll(const AuthWaitPage(), binding: (BindingsBuilder(((){
+                Get.to(const AuthWaitPage(), binding: (BindingsBuilder(((){
                   Get.lazyPut<AuthController>(() => authController);
                   Get.put(userController);
                 }))));
               }else{
-                Get.offAll(AwesomeMainPage(), binding: BindingsBuilder(() {
+                Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
                   Get.lazyPut<AuthController>(() => authController);
                   Get.put(userController);
                   Get.put(workController);

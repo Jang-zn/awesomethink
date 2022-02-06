@@ -26,32 +26,39 @@ class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
     Get.back();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: backPage,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
           ),
+          onPressed: backPage,
         ),
-        body: SafeArea(
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-                child:Obx(()=>ListView.builder(
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+          child: Column(
+            children: [
+              const Text("신규 가입 신청", style:TextStyle(fontSize: 20)),
+              Obx(
+                () => ListView.builder(
+                    shrinkWrap: true,
                     itemCount: newbieList.length,
                     scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index){
+                    itemBuilder: (context, index) {
                       return NewbieListTile(newbieList[index]);
-                    }
-                ),)
-            )));
+                    }),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

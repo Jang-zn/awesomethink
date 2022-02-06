@@ -23,7 +23,7 @@ class VacationBtn extends StatelessWidget {
        lastDate: DateTime(DateTime.now().year+1),
        builder : (context, child){
          return DefaultTextStyle.merge(
-             style:const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+             style:const TextStyle(fontSize: 20),
              child : Theme(
                data : ThemeData.dark(),
                child : Column(
