@@ -6,6 +6,7 @@ import 'package:awesomethink/ui/component/member_weekly_work_tile.dart';
 import 'package:awesomethink/ui/component/today_work_tile.dart';
 import 'package:awesomethink/ui/page/login.dart';
 import 'package:awesomethink/ui/page/new_member_auth.dart';
+import 'package:awesomethink/ui/page/vacation_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +39,15 @@ class _AdminMainPageState extends State<AdminMainPage> {
         Get.put(userController);
       })
     );
+  }
 
+  void vacationAuthCheck(){
+    Get.to(const VacationAuthPage(),
+        binding: BindingsBuilder((){
+          Get.put(userController);
+          Get.put(WorkController(authController.getCurrentUser()!.uid));
+        })
+    );
   }
 
   void logout() {
@@ -81,7 +90,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
             ),
             ListTile(
                 title:const Text("휴뮤신청 승인"),
-                onTap: (){}
+                onTap: vacationAuthCheck
             ),
             ListTile(
                 title:const Text("로그아웃"),
