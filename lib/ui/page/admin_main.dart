@@ -62,6 +62,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   @override
   Widget build(BuildContext context) {
     //TODO 휴가 승인/반려된거 화면에 반영되게 처리해야됨
+    //adminController를 하나 만들어야되나..?
     print("admin build");
     return Obx(()=>Scaffold(
       appBar: AppBar(
