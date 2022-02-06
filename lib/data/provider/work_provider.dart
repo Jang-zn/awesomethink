@@ -1,9 +1,8 @@
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/data/provider/contant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorkProvider {
-  FirebaseFirestore firestore = ProviderConstance.firestore;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   //uid에 해당하는 유저의 주간 업무일정
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getWeeklyWorkList(String? uid) async{
