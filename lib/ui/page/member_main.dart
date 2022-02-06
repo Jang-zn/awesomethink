@@ -140,10 +140,10 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("이번주 근무 현황"),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("근태 관리"),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {},
+                    //   child: const Text("근태 관리"),
+                    // ),
                   ],
                 ),
               ),
