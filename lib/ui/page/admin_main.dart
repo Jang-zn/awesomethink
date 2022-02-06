@@ -61,11 +61,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO 휴가 승인/반려된거 화면에 반영되게 처리해야됨
     print("admin build");
-    if(Get.parameters=="build"){
-      userController.getTodayWorkList();
-      userController.getTodayMemberList();
-    }
     return Obx(()=>Scaffold(
       appBar: AppBar(
           //뒤로가기 버튼 삭제
