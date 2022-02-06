@@ -18,7 +18,7 @@ class AdminMainPage extends StatefulWidget {
 
 class _AdminMainPageState extends State<AdminMainPage> {
   late final UserController userController;
-  late final WorkController workController;
+
   late final AuthController authController;
 
   void tempFunc(){  }
@@ -29,21 +29,19 @@ class _AdminMainPageState extends State<AdminMainPage> {
     super.initState();
     userController = Get.find<UserController>();
     authController = Get.find<AuthController>();
-    workController = Get.find<WorkController>(tag:userController.userInfo.uid);
+
   }
 
   void newMemberAuthCheck(){
     Get.to(const NewMemberAuthPage(),
       binding: BindingsBuilder((){
         Get.put(userController);
-        Get.put(workController);
       })
     );
 
   }
 
   void logout() {
-    workController.onDelete();
     userController.onDelete();
     Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"),
         binding: BindingsBuilder(() {
