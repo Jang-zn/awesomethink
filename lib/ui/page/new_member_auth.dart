@@ -1,3 +1,4 @@
+import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/ui/component/newbie_listtile.dart';
@@ -13,13 +14,13 @@ class NewMemberAuthPage extends StatefulWidget {
 
 class _NewMemberAuthPageState extends State<NewMemberAuthPage> {
   late List<Member?> newbieList;
-  late final UserController userController;
+  late final AdminController adminController;
 
   @override
   void initState() {
     super.initState();
-    userController = Get.find<UserController>();
-    newbieList = userController.newbieList;
+    adminController = Get.find<AdminController>();
+    newbieList = adminController.newbieList;
   }
 
   void backPage() {

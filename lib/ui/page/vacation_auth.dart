@@ -1,9 +1,11 @@
+import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/ui/component/vacation_listtile.dart';
 import 'package:awesomethink/ui/page/admin_main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,24 +17,19 @@ class VacationAuthPage extends StatefulWidget {
 }
 
 class _VacationAuthPageState extends State<VacationAuthPage> {
-  late final UserController userController;
-  late final WorkController workController;
+  late final AdminController adminController;
 
   @override
   void initState() {
     super.initState();
-    userController = Get.find<UserController>();
-    workController = Get.find<WorkController>();
-    workController.getVacationList().then((_) {
-      print("vaction auth init");
-    });
+    adminController = Get.find<AdminController>();
   }
 
-  void backPage() {
+  void backPage() async{
+    await Future.wait(
+        [FirebaseFirestore.instance.clearPersistence()]);
     Get.offAll(const AdminMainPage(), arguments: "build" ,binding: BindingsBuilder((){
       Get.find<AuthController>();
-      Get.put(userController);
-      Get.put(workController);
     }));
   }
 
@@ -60,19 +57,19 @@ class _VacationAuthPageState extends State<VacationAuthPage> {
                 height: MediaQuery.of(context).size.height*0.7,
                 child:ListView.builder(
                   shrinkWrap: true,
-                  itemCount: workController.vacationList.length,
+                  itemCount: adminController.vacationList.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
                     Member? member;
-                    for (Member? m in userController.memberList) {
+                    for (Member? m in adminController.memberList) {
                       if (m!.uid ==
-                          workController.vacationList[index].userUid) {
+                          adminController.vacationList[index].userUid) {
                         member = m;
                         break;
                       }
                     }
                     return VacationListTile(
-                        member, workController.vacationList[index]);
+                        member, adminController.vacationList[index]);
                   }),
             ),),
           ]),

@@ -18,31 +18,12 @@ class AdminController extends GetxController{
   final RxList<Member?> _memberList = <Member?>[].obs;
   
   //Work 관련 Data
-  final RxList<Work?> _monthlyWorkList = <Work?>[].obs;
-  final RxList<Work?> _weeklyWorkList = <Work?>[].obs;
   final RxList<Work?> _vacationList = <Work?>[].obs;
-  final RxString _weeklyWorkingTime ="0시간 00분".obs;
-  final RxString _monthlyWorkingTime ="0시간 00분".obs;
-  final RxString _requiredWorkingTime ="40시간 00분".obs;
-
-  get monthlyWorkList => _monthlyWorkList;
-  set monthlyWorkList(value) => _monthlyWorkList;
-
-  get weeklyWorkList => _weeklyWorkList;
-  set weeklyWorkList(value) => _weeklyWorkList;
 
   get vacationList => _vacationList;
   set vacationList(value) => _vacationList;
 
-  get weeklyWorkingTime => _weeklyWorkingTime;
-  set weeklyWorkingTime(value) => _weeklyWorkingTime;
 
-  get monthlyWorkingTime => _monthlyWorkingTime;
-  set monthlyWorkingTime(value) => _monthlyWorkingTime;
-
-  get requiredWorkingTime => _requiredWorkingTime;
-  set requiredWorkingTime(value) => _requiredWorkingTime;
-  
 
 
   get todayMemberList => _todayMemberList;
@@ -86,24 +67,6 @@ class AdminController extends GetxController{
     return today;
   }
 
-  Future<void> getAllWorkList(String? uid, DateTime dateTime) async{
-    await Future.wait([
-      getWeeklyWorkList(uid),
-      getMonthlyWorkList(uid, dateTime)
-    ]);
-    refresh();
-  }
-
-  Future<void> getWeeklyWorkList(String? uid) async{
-    _weeklyWorkList.value = await (await adminRepository.getWeeklyWorkList(uid)).first;
-    getWeeklyWorkingTime();
-    refresh();
-  }
-
-  Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
-    _monthlyWorkList.value = await (await adminRepository.getMonthlyWorkList(uid, dateTime)).first;
-    _monthlyWorkList.refresh();
-  }
 
   Future<void> getVacationList() async {
     List<Work?> list = await (await adminRepository.getVacationList()).first;
@@ -178,59 +141,6 @@ class AdminController extends GetxController{
     }
     _vacationList.value =result;
     _vacationList.refresh();
-  }
-
-  void getWeeklyWorkingTime() {
-    //변수
-    int weeklyHour=0;
-    int weeklyMinute=0;
-    int requiredHour=39;
-    int requiredMinute=60;
-    try {
-      for (Work? w in _weeklyWorkList) {
-        Map<String, int> timeMap = w!.getWorkingTimeToMap();
-        weeklyHour += timeMap["hour"]!;
-        weeklyMinute += timeMap["minute"]!;
-      }
-
-      // 분 합계가 60분 이상이면 단위 올려줌
-      if (weeklyMinute > 59) {
-        weeklyHour += (weeklyMinute - weeklyMinute % 60) ~/ 60;
-        weeklyMinute = weeklyMinute % 60;
-      }
-
-      //requiredHour / Minute 처리
-      requiredHour = requiredHour - weeklyHour;
-      requiredMinute = requiredMinute - weeklyMinute;
-      if (requiredHour < 0) {
-        requiredHour = 0;
-        requiredMinute = 0;
-      }
-
-      if (requiredMinute == 60) {
-        requiredMinute = 0;
-        requiredHour += 1;
-      }
-
-      //출력메세지 세팅
-      if(weeklyMinute>0){
-        _weeklyWorkingTime.value = weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분";
-      }else{
-        _weeklyWorkingTime.value = weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
-      }
-
-      if(requiredMinute>0){
-        _requiredWorkingTime.value = requiredHour.toString() + "시간 " + requiredMinute.toString()+"분";
-      }else{
-        requiredWorkingTime = requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +"분";
-      }
-
-      _weeklyWorkingTime.refresh();
-      _requiredWorkingTime.refresh();
-
-    }catch(e){
-      print("calc error : "+e.toString());
-    }
   }
   
 }

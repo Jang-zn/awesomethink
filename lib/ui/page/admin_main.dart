@@ -1,3 +1,4 @@
+import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
@@ -19,17 +20,14 @@ class AdminMainPage extends StatefulWidget {
 }
 
 class _AdminMainPageState extends State<AdminMainPage> {
-  late final UserController userController;
-
   late final AuthController authController;
-
-  void tempFunc(){  }
+  late final AdminController adminController;
 
 
   @override
   void initState() {
     super.initState();
-    userController = Get.find<UserController>();
+    adminController = Get.find<AdminController>();
     authController = Get.find<AuthController>();
 
   }
@@ -37,7 +35,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
   void newMemberAuthCheck(){
     Get.to(const NewMemberAuthPage(),
       binding: BindingsBuilder((){
-        Get.put(userController);
+        Get.put(adminController);
       })
     );
   }
@@ -45,14 +43,14 @@ class _AdminMainPageState extends State<AdminMainPage> {
   void vacationAuthCheck(){
     Get.to(const VacationAuthPage(),
         binding: BindingsBuilder((){
-          Get.put(userController);
+          Get.put(adminController);
           Get.put(WorkController(authController.getCurrentUser()!.uid));
         })
     );
   }
 
   void logout() async {
-    userController.onDelete();
+    adminController.onDelete();
     authController.signOut();
     await FirebaseFirestore.instance.terminate();
     await FirebaseFirestore.instance.clearPersistence();
@@ -120,16 +118,16 @@ class _AdminMainPageState extends State<AdminMainPage> {
               //오늘 근무상태 리스트뷰
               child:ListView.builder(
                   key:UniqueKey(),
-                  itemCount: userController.todayMemberList.length,
+                  itemCount: adminController.todayMemberList.length,
                   itemBuilder: (context, index) {
                     Work? work;
-                    for(Work? w in userController.todayWorkList){
-                      if(w!.userUid==userController.todayMemberList[index].uid){
+                    for(Work? w in adminController.todayWorkList){
+                      if(w!.userUid==adminController.todayMemberList[index].uid){
                         work=w;
                         break;
                       }
                     }
-                    return TodayWorkTile(userController.todayMemberList[index], work);
+                    return TodayWorkTile(adminController.todayMemberList[index], work);
                   }
               )
             ),
@@ -146,9 +144,9 @@ class _AdminMainPageState extends State<AdminMainPage> {
                 //주간 근무시간 현황
                 child:ListView.builder(
                   key:UniqueKey(),
-                  itemCount:userController.memberList.length,
+                  itemCount:adminController.memberList.length,
                   itemBuilder: (context, index){
-                    return WeeklyWorkTile(userController.memberList[index]);
+                    return WeeklyWorkTile(adminController.memberList[index]);
                   },
                 ),
             ),

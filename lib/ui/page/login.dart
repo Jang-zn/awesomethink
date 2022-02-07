@@ -1,3 +1,4 @@
+import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
@@ -29,6 +30,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   late final AuthController authController;
   late final UserController userController;
   late final WorkController workController;
+  late final AdminController adminController;
 
 
   @override
@@ -36,6 +38,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     super.initState();
     authController = Get.put(AuthController());
     userController = Get.put(UserController());
+    adminController = Get.put(AdminController());
   }
 
   void login() async {
@@ -60,6 +63,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                   Get.put(authController);
                   Get.put(userController);
                   Get.put(workController);
+                  Get.put(adminController);
                 }));
               } else if((userController.userInfo as Member?)!.state == false){
                 Get.to(const AuthWaitPage(), binding: (BindingsBuilder(((){
@@ -84,16 +88,31 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
 
   Future<void> initController() async {
-    try {
-      workController = Get.put(WorkController(authController.getCurrentUser()!.uid),tag:authController.getCurrentUser()!.uid);
-      await Future.wait([
-        userController.getMemberList(),
-        userController.getNewbieList(),
-        userController.getTodayWorkList(),
-        userController.getUserInfo(authController.getCurrentUser()!.uid),
-        workController.getAllWorkList(authController.getCurrentUser()!.uid, DateTime.now())]);
-    }catch(e){
-      e.printError();
+    if (authController.getCurrentUser()!.email != "admin@admin.com"){
+      try {
+        workController = Get.put(
+            WorkController(authController.getCurrentUser()!.uid),
+            tag: authController.getCurrentUser()!.uid);
+        await Future.wait([
+          userController.getUserInfo(authController.getCurrentUser()!.uid),
+          workController.getAllWorkList(
+              authController.getCurrentUser()!.uid, DateTime.now())
+        ]);
+      } catch (e) {
+        e.printError();
+      }
+    }else{
+      try {
+        await Future.wait([
+          adminController.getMemberList(),
+          adminController.getNewbieList(),
+          adminController.getTodayWorkList(),
+          adminController.getVacationList(),
+        ]);
+      }catch(e){
+        print("admin init error");
+        e.printError();
+      }
     }
   }
 

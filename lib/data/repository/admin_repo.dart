@@ -38,32 +38,8 @@ class AdminRepository{
     });
   }
 
-  Future<Stream<List<Work?>>> getWeeklyWorkList(String? uid) async {
-    return (await adminProvider.getWeeklyWorkList(uid)).map(
-            (snapshot) {
-          final List<Work?> list = <Work?>[];
-          for(var element in snapshot.docs) {
-            list.add(Work.fromJson(element.data()));
-          }
-          return list;
-        }
-    );
-  }
-
   Future<Stream<List<Work?>>> getVacationList() async {
     return (await adminProvider.getVacationList()).map(
-            (snapshot) {
-          final List<Work?> list = <Work?>[];
-          for(var element in snapshot.docs) {
-            list.add(Work.fromJson(element.data()));
-          }
-          return list;
-        }
-    );
-  }
-
-  Future<Stream<List<Work?>>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
-    return (await adminProvider.getMonthlyWorkList(uid, dateTime)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
           for(var element in snapshot.docs) {

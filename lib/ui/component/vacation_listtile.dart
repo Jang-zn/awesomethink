@@ -1,3 +1,4 @@
+import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
@@ -12,16 +13,16 @@ class VacationListTile extends StatelessWidget {
 
   VacationListTile(this.member, this.vacation, {Key? key}) : super(key: key);
 
-  final WorkController workController = Get.find<WorkController>();
+  final AdminController adminController = Get.find<AdminController>();
 
   //TODO 휴가 승인
   void vacationAuth() async {
-    await workController.acceptVacation(vacation);
+    await adminController.acceptVacation(vacation);
   }
 
   //TODO 휴가 반려
   void vacationCancle() async {
-    await workController.rejectVacation(vacation);
+    await adminController.rejectVacation(vacation);
   }
 
   @override
