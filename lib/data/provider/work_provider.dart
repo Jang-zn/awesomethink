@@ -46,16 +46,7 @@ class WorkProvider {
             .snapshots());
   }
 
-  //휴무신청한 리스트 조회
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getVacationList() async {
-    return Future.delayed(
-        const Duration(milliseconds: 500),
-        () => firestore
-            .collection("work")
-            .where("workingTimeState",
-                isEqualTo: WorkingTimeState.vacationWait.index) //휴무신청인거 다가져오기
-            .snapshots());
-  }
+
 
   //WorkingTimeState 수정
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> updateWorkingTimeState(
@@ -120,48 +111,4 @@ class WorkProvider {
         .where("startTime", isGreaterThan: today, isLessThan: today.add(const Duration(days:1)))
         .get();
   }
-
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> acceptVacation(Work? vacation) async {
-    await firestore
-        .collection("work")
-        .where("userUid", isEqualTo: vacation!.userUid)
-        .where("workingTimeState",
-            isEqualTo: WorkingTimeState.vacationWait.index)
-        .get()
-        .then(
-      (val) {
-        for (var doc in val.docs) {
-          doc.reference
-              .update({"workingTimeState": WorkingTimeState.vacation.index});
-        }
-      },
-    );
-    return await getVacationList();
-  }
-
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> rejectVacation(Work? vacation) async {
-      await firestore
-          .collection("work")
-          .where("userUid", isEqualTo: vacation!.userUid)
-          .where("workingTimeState", isEqualTo: WorkingTimeState.vacationWait.index)
-          .get()
-          .then(
-        (val) {
-          for (var doc in val.docs) {
-            doc.reference.delete();
-          }
-        },
-      );
-    return await getVacationList();
-  }
-
-// //임시기능
-// void deleteAllWork(){
-//   firestore.collection("work")
-//       .orderBy("startTime",descending: true)
-//       .get()
-//       .then((val) {
-//         val.docs.first.reference.delete();
-//   });
-// }
 }

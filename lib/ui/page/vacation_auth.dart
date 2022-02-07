@@ -2,8 +2,6 @@ import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/ui/component/newbie_listtile.dart';
 import 'package:awesomethink/ui/component/vacation_listtile.dart';
 import 'package:awesomethink/ui/page/admin_main.dart';
 import 'package:flutter/material.dart';

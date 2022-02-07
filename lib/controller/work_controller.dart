@@ -11,7 +11,6 @@ class WorkController extends GetxController{
   final RxBool _inOut = true.obs;
   final RxList<Work?> _monthlyWorkList = <Work?>[].obs;
   final RxList<Work?> _weeklyWorkList = <Work?>[].obs;
-  final RxList<Work?> _vacationList = <Work?>[].obs;
   final RxString _weeklyWorkingTime ="0시간 00분".obs;
   final RxString _monthlyWorkingTime ="0시간 00분".obs;
   final RxString _requiredWorkingTime ="40시간 00분".obs;
@@ -21,9 +20,6 @@ class WorkController extends GetxController{
 
   get weeklyWorkList => _weeklyWorkList;
   set weeklyWorkList(value) => _weeklyWorkList;
-
-  get vacationList => _vacationList;
-  set vacationList(value) => _vacationList;
 
   get weeklyWorkingTime => _weeklyWorkingTime;
   set weeklyWorkingTime(value) => _weeklyWorkingTime;
@@ -59,30 +55,6 @@ class WorkController extends GetxController{
     _monthlyWorkList.refresh();
   }
 
-  Future<void> getVacationList() async {
-    List<Work?> list = await (await workRepository.getVacationList()).first;
-    List<Work?> result = [];
-    for(Work? w in list){
-      //result 비었으면 걍 하나 추가
-      if(result.isEmpty){
-        result.add(w);
-        continue;
-      }
-      //result 안비어있으면
-      for(int i=0;i<result.length;i++){
-        //UID 같고, 휴가 시작일이 같으면(이미 result에 휴가로 지정되어있으면) break --> 더 볼거 없음
-        if(w!.userUid==result[i]!.userUid&&w.vacation!.startVacation==result[i]!.vacation!.startVacation){
-          break;
-        }
-        //다르면 result 전부랑 비교해봤는지 체크하고 끝이면 add
-        if(i==result.length-1){
-          result.add(w);
-        }
-      }
-    }
-    _vacationList.value =result;
-    _vacationList.refresh();
-  }
 
   Future<Work?> getTodayWork(DateTime today){
     return workRepository.getTodayWork(today);
@@ -98,56 +70,6 @@ class WorkController extends GetxController{
     getWeeklyWorkingTime();
     checkInOut();
     refresh();
-  }
-
-  Future<void> acceptVacation(Work? vacation) async{
-    List<Work?> list = await (await workRepository.acceptVacation(vacation)).first;
-    List<Work?> result = [];
-    for(Work? w in list){
-      //result 비었으면 걍 하나 추가
-      if(result.isEmpty){
-        result.add(w);
-        continue;
-      }
-      //result 안비어있으면
-      for(int i=0;i<result.length;i++){
-        //UID 같고, 휴가 시작일이 같으면(이미 result에 휴가로 지정되어있으면) break --> 더 볼거 없음
-        if(w!.userUid==result[i]!.userUid&&w.vacation!.startVacation==result[i]!.vacation!.startVacation){
-          break;
-        }
-        //다르면 result 전부랑 비교해봤는지 체크하고 끝이면 add
-        if(i==result.length-1){
-          result.add(w);
-        }
-      }
-    }
-    _vacationList.value =result;
-    _vacationList.refresh();
-  }
-
-  Future<void> rejectVacation(Work? vacation) async{
-    List<Work?> list = await (await workRepository.rejectVacation(vacation)).first;
-    List<Work?> result = [];
-    for(Work? w in list){
-      //result 비었으면 걍 하나 추가
-      if(result.isEmpty){
-        result.add(w);
-        continue;
-      }
-      //result 안비어있으면
-      for(int i=0;i<result.length;i++){
-        //UID 같고, 휴가 시작일이 같으면(이미 result에 휴가로 지정되어있으면) break --> 더 볼거 없음
-        if(w!.userUid==result[i]!.userUid&&w.vacation!.startVacation==result[i]!.vacation!.startVacation){
-          break;
-        }
-        //다르면 result 전부랑 비교해봤는지 체크하고 끝이면 add
-        if(i==result.length-1){
-          result.add(w);
-        }
-      }
-    }
-    _vacationList.value =result;
-    _vacationList.refresh();
   }
 
   Future<void> setWork(Work? work) async{
