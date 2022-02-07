@@ -64,7 +64,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
     //TODO 휴가 승인/반려된거 화면에 반영되게 처리해야됨
     //adminController를 하나 만들어야되나..?
     print("admin build");
-    return Obx(()=>Scaffold(
+    return Obx(()=>WillPopScope(child: Scaffold(
       appBar: AppBar(
           //뒤로가기 버튼 삭제
           automaticallyImplyLeading: false,
@@ -156,6 +156,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
         )
       ])
     ),
+    onWillPop:null),
     );
   }
 }

@@ -30,7 +30,7 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return WillPopScope(child: Scaffold(
       resizeToAvoidBottomInset : true,
       body: SafeArea(
         child:ListView(
@@ -61,6 +61,6 @@ class _AuthWaitPageState extends State<AuthWaitPage> {
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    ), onWillPop: null);
   }
 }
