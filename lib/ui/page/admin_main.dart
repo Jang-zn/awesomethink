@@ -7,6 +7,7 @@ import 'package:awesomethink/ui/component/today_work_tile.dart';
 import 'package:awesomethink/ui/page/login.dart';
 import 'package:awesomethink/ui/page/new_member_auth.dart';
 import 'package:awesomethink/ui/page/vacation_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -50,13 +51,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
     );
   }
 
-  void logout() {
+  void logout() async {
     userController.onDelete();
-    Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"),
-        binding: BindingsBuilder(() {
-          authController.signOut();
-          Get.put(authController);
-        }));
+    authController.signOut();
+    await FirebaseFirestore.instance.terminate();
+    await FirebaseFirestore.instance.clearPersistence();
+    Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"));
   }
 
   @override

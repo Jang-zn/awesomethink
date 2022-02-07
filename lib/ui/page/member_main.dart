@@ -6,8 +6,10 @@ import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
 import 'package:awesomethink/ui/component/member_vacation_btn.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
 import 'package:awesomethink/ui/page/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 class AwesomeMainPage extends StatefulWidget {
   const AwesomeMainPage({Key? key}) : super(key: key);
 
@@ -24,21 +26,21 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
   void initState() {
     authController = Get.find<AuthController>();
     userController = Get.find<UserController>();
-    workController = Get.find<WorkController>(tag : authController.getCurrentUser()!.uid);
+    workController =
+        Get.find<WorkController>(tag: authController.getCurrentUser()!.uid);
+  }
+
+  void logout() async {
+    workController.onDelete();
+    userController.onDelete();
+    authController.signOut();
+    await FirebaseFirestore.instance.terminate();
+    await FirebaseFirestore.instance.clearPersistence();
+    Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"));
   }
 
   @override
   Widget build(BuildContext context) {
-    void logout() {
-      workController.onDelete();
-      userController.onDelete();
-      Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"),
-          binding: BindingsBuilder(() {
-        authController.signOut();
-        Get.put(authController);
-      }));
-    }
-
     print("memeberMain build");
     return Obx(
       () => Scaffold(
@@ -54,7 +56,8 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                   children: [
                     SizedBox(
                         width: MediaQuery.of(context).size.width * 0.25,
-                        child: WorkInOutBtn(inout : workController.inOut,key:UniqueKey())),
+                        child: WorkInOutBtn(
+                            inout: workController.inOut, key: UniqueKey())),
                     SizedBox(
                         width: MediaQuery.of(context).size.width * 0.25,
                         child: VacationBtn(context: context)),
@@ -83,8 +86,7 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                           child: Row(
                             children: [
                               Text("${userController.userInfo.name} ",
-                                  style: const TextStyle(
-                                      fontSize: 25)),
+                                  style: const TextStyle(fontSize: 25)),
                               Text("${userController.userInfo.position} 님",
                                   style: const TextStyle(fontSize: 18))
                             ],
@@ -103,11 +105,10 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                               Container(
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 child: Text(
-                                    "${workController.weeklyWorkingTime.value}",
-                                    style: const TextStyle(
-                                        fontSize: 18),
-                                  ),
+                                  "${workController.weeklyWorkingTime.value}",
+                                  style: const TextStyle(fontSize: 18),
                                 ),
+                              ),
                             ],
                           ),
                           Column(
@@ -117,15 +118,14 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                                       const EdgeInsets.symmetric(vertical: 4),
                                   child: const Text("잔여 근로시간 ")),
                               Container(
-                                key:UniqueKey(),
+                                key: UniqueKey(),
                                 margin: const EdgeInsets.symmetric(vertical: 4),
-                                child:Text(
-                                    workController.requiredWorkingTime.value,
-                                    key:UniqueKey(),
-                                    style: const TextStyle(
-                                        fontSize: 18),
-                                  ),
+                                child: Text(
+                                  workController.requiredWorkingTime.value,
+                                  key: UniqueKey(),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
+                              ),
                             ],
                           ),
                         ],
@@ -156,7 +156,10 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                     itemBuilder: (context, index) {
                       Work? w = wc.weeklyWorkList.value[index];
                       //UniqueKey 넣어줘야 완전 새로 빌드됨
-                      return WorkListTile(w, key: UniqueKey(),);
+                      return WorkListTile(
+                        w,
+                        key: UniqueKey(),
+                      );
                     },
                   ),
                 ),

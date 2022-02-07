@@ -1,5 +1,8 @@
 import 'package:awesomethink/controller/auth_controller.dart';
+import 'package:awesomethink/controller/user_controller.dart';
+import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/ui/page/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,8 +17,13 @@ class AuthWaitPage extends StatefulWidget {
 class _AuthWaitPageState extends State<AuthWaitPage> {
   AuthController authController = Get.find<AuthController>();
 
-  void logout() {
+  void logout() async {
+
+    Get.find<UserController>().onDelete();
+    Get.find<WorkController>(tag:authController.getCurrentUser()!.uid).onDelete();
     authController.signOut();
+    await FirebaseFirestore.instance.terminate();
+    await FirebaseFirestore.instance.clearPersistence();
     Get.offAll(const AwesomeThinkLoginPage(title: "AwesomeThink"));
   }
 
