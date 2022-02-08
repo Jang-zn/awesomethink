@@ -28,8 +28,11 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
     workController.getWeeklyWorkingTime();
   }
 
-  void moveDetailPage(){
-    Get.snackbar("test", "",);
+  void moveDetailPage() {
+    Get.snackbar(
+      "test",
+      "",
+    );
   }
 
   @override
@@ -79,26 +82,32 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                     ),
                   ],
                 )),
-            InkWell(
-              onTap: moveDetailPage,
-              child: Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "남은시간",
-                      style: TextStyle(
-                        fontSize: 17,
+            Material(
+              borderRadius: BorderRadius.circular(15),
+              color: Color.fromRGBO(200, 240, 200, 1),
+              child: InkWell(
+                splashColor: Color.fromRGBO(130, 230, 130, 1),
+                borderRadius: BorderRadius.circular(15),
+                onTap: moveDetailPage,
+                child: Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "남은시간",
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
                       ),
-                    ),
-                    Text(
-                      workController.requiredWorkingTime.value,
-                      style: const TextStyle(
-                        fontSize: 15,
+                      Text(
+                        workController.requiredWorkingTime.value,
+                        style: const TextStyle(
+                          fontSize: 15,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
