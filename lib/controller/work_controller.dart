@@ -124,7 +124,7 @@ class WorkController extends GetxController{
       if(requiredMinute>0){
         _requiredWorkingTime.value = requiredHour.toString() + "시간 " + requiredMinute.toString()+"분";
       }else{
-        requiredWorkingTime = requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +"분";
+        _requiredWorkingTime.value = requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +"분";
       }
 
       _weeklyWorkingTime.refresh();
