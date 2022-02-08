@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable, no_logic_in_create_state
-
-import 'dart:math';
+import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
+import 'package:awesomethink/ui/page/admon_member_work_manage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +17,7 @@ class WeeklyWorkTile extends StatefulWidget {
 class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
   Member? member;
   late final WorkController workController;
+  late final UserController userController;
 
   _WeeklyWorkTileState(this.member);
 
@@ -28,11 +29,13 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
     workController.getWeeklyWorkingTime();
   }
 
-  void moveDetailPage() {
-    Get.snackbar(
-      "test",
-      "",
-    );
+  void moveDetailPage() async {
+    userController = Get.put(UserController(), tag: member!.uid);
+    await userController.getUserInfo(member!.uid);
+    Get.to(WorkManagePage(member!.uid), binding: BindingsBuilder(() {
+      userController;
+      workController;
+    }));
   }
 
   @override
@@ -43,7 +46,7 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
         padding: const EdgeInsets.symmetric(horizontal: 5),
         height: MediaQuery.of(context).size.height * 0.1,
         decoration: BoxDecoration(
-          color: Color.fromRGBO(200, 240, 200, 1),
+          color: const Color.fromRGBO(200, 240, 200, 1),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
@@ -55,7 +58,7 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                 child: Icon(
                   Icons.person,
                   size: MediaQuery.of(context).size.width * 0.12,
-                  color: Color.fromRGBO(60, 140, 60, 1),
+                  color: const Color.fromRGBO(60, 140, 60, 1),
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
@@ -82,15 +85,15 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                     ),
                   ],
                 )),
-            Material(
-              borderRadius: BorderRadius.circular(15),
-              color: Color.fromRGBO(200, 240, 200, 1),
-              child: InkWell(
-                splashColor: Color.fromRGBO(130, 230, 130, 1),
+            Expanded(
+              flex: 2,
+              child: Material(
                 borderRadius: BorderRadius.circular(15),
-                onTap: moveDetailPage,
-                child: Expanded(
-                  flex: 2,
+                color: const Color.fromRGBO(200, 240, 200, 1),
+                child: InkWell(
+                  splashColor: const Color.fromRGBO(130, 230, 130, 1),
+                  borderRadius: BorderRadius.circular(15),
+                  onTap: moveDetailPage,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

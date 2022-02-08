@@ -1,7 +1,4 @@
 // ignore_for_file: must_be_immutable, no_logic_in_create_state
-
-import 'dart:math';
-
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/utils/constants.dart';
@@ -84,7 +81,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
       padding: const EdgeInsets.symmetric(horizontal: 5),
       height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(200, 220, 248, 1.0),
+        color: const Color.fromRGBO(200, 220, 248, 1.0),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
@@ -100,7 +97,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: Color.fromRGBO(104,198,250,1),
+                color: const Color.fromRGBO(104,198,250,1),
               ),
             ),
           ),
