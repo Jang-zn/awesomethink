@@ -28,19 +28,24 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
     workController.getWeeklyWorkingTime();
   }
 
+  void moveDetailPage(){
+    Get.snackbar("test", "",);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Container(
-          margin: const EdgeInsets.symmetric(vertical: 3),
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          height: MediaQuery.of(context).size.height * 0.1,
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(200, 240, 200, 1),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        margin: const EdgeInsets.symmetric(vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        height: MediaQuery.of(context).size.height * 0.1,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(200, 240, 200, 1),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Expanded(
               flex: 1,
               child: Container(
@@ -63,7 +68,8 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                     Text(
                       member!.name!,
                       style: const TextStyle(
-                          fontSize: 17,),
+                        fontSize: 17,
+                      ),
                     ),
                     Text(
                       workController.weeklyWorkingTime.value,
@@ -73,15 +79,18 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                     ),
                   ],
                 )),
-            Expanded(
+            InkWell(
+              onTap: moveDetailPage,
+              child: Expanded(
                 flex: 2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
                       "남은시간",
-                      style:
-                          TextStyle(fontSize: 17,),
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
                     ),
                     Text(
                       workController.requiredWorkingTime.value,
@@ -90,8 +99,12 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                       ),
                     ),
                   ],
-                )),
-          ])),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
