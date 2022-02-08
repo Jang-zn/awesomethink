@@ -16,12 +16,12 @@ class VacationListTile extends StatelessWidget {
   final AdminController adminController = Get.find<AdminController>();
 
   //TODO 휴가 승인
-  void vacationAuth() async {
+  void acceptVacation() async {
     await adminController.acceptVacation(vacation);
   }
 
   //TODO 휴가 반려
-  void vacationCancle() async {
+  void rejectVacation() async {
     await adminController.rejectVacation(vacation);
   }
 
@@ -60,7 +60,7 @@ class VacationListTile extends StatelessWidget {
                       padding:EdgeInsets.zero,
                       backgroundColor: Colors.lightGreen
                     ),
-                    onPressed: vacationAuth
+                    onPressed: acceptVacation
                   )
                 ),
                 SizedBox(
@@ -78,7 +78,7 @@ class VacationListTile extends StatelessWidget {
                             padding:EdgeInsets.zero,
                             backgroundColor: Colors.redAccent
                         ),
-                        onPressed: vacationCancle
+                        onPressed: rejectVacation
                     )
                 )
               ]

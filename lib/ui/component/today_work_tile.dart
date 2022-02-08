@@ -84,8 +84,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
       padding: const EdgeInsets.symmetric(horizontal: 5),
       height: MediaQuery.of(context).size.height * 0.1,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(Random().nextInt(50), Random().nextInt(200),
-            Random().nextInt(255), 0.3),
+        color: Color.fromRGBO(200, 220, 248, 1.0),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
@@ -97,13 +96,11 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
               child: Icon(
                 Icons.person,
                 size: MediaQuery.of(context).size.width * 0.12,
-                color: Color.fromRGBO(Random().nextInt(50),
-                    Random().nextInt(150), Random().nextInt(150), 0.8),
+                color: Colors.blueAccent,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: Color.fromRGBO(Random().nextInt(255),
-                    Random().nextInt(255), Random().nextInt(255), 0.5),
+                color: Color.fromRGBO(104,198,250,1),
               ),
             ),
           ),

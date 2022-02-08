@@ -36,8 +36,7 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
           padding: const EdgeInsets.symmetric(horizontal: 5),
           height: MediaQuery.of(context).size.height * 0.1,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(Random().nextInt(255), Random().nextInt(50),
-                Random().nextInt(255), 0.3),
+            color: Color.fromRGBO(200, 240, 200, 1),
             borderRadius: BorderRadius.circular(15),
           ),
           child:
@@ -48,13 +47,11 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
                 child: Icon(
                   Icons.person,
                   size: MediaQuery.of(context).size.width * 0.12,
-                  color: Color.fromRGBO(Random().nextInt(50),
-                      Random().nextInt(150), Random().nextInt(150), 0.8),
+                  color: Color.fromRGBO(60, 140, 60, 1),
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
-                  color: Color.fromRGBO(Random().nextInt(255),
-                      Random().nextInt(255), Random().nextInt(255), 0.5),
+                  color: Colors.lime,
                 ),
               ),
             ),
