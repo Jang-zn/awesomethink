@@ -35,7 +35,6 @@ class AdminController extends GetxController{
   get memberList => _memberList;
   set memberList(value) => _memberList;
 
-
   Future<void> getNewbieList() async{
     _newbieList.value = await (await adminRepository.getNewbieList()).first;
     _newbieList.refresh();
@@ -116,6 +115,9 @@ class AdminController extends GetxController{
     }
     _vacationList.value =result;
     _vacationList.refresh();
+    await Future.wait([
+      getTodayWorkList(),
+    ]);
   }
 
   Future<void> rejectVacation(Work? vacation) async{
@@ -141,6 +143,9 @@ class AdminController extends GetxController{
     }
     _vacationList.value =result;
     _vacationList.refresh();
+    await Future.wait([
+      getTodayWorkList(),
+    ]);
   }
   
 }

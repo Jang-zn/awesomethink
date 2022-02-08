@@ -62,7 +62,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                 Get.to(const AdminMainPage(), binding: BindingsBuilder(() {
                   Get.put(authController);
                   Get.put(userController);
-                  Get.put(workController);
                   Get.put(adminController);
                 }));
               } else if((userController.userInfo as Member?)!.state == false){

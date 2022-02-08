@@ -23,9 +23,7 @@ class _VacationAuthPageState extends State<VacationAuthPage> {
     adminController = Get.find<AdminController>();
   }
 
-  void backPage() async{
-    await Future.wait(
-        [FirebaseFirestore.instance.clearPersistence()]);
+  void backPage() {
     Get.offAll(const AdminMainPage(), arguments: "build" ,binding: BindingsBuilder((){
       Get.find<AuthController>();
     }));
