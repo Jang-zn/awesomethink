@@ -1,5 +1,4 @@
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 

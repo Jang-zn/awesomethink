@@ -1,6 +1,5 @@
 import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/auth_controller.dart';
-import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/member_weekly_work_tile.dart';

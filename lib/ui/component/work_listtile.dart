@@ -1,7 +1,8 @@
+// ignore_for_file: must_be_immutable, no_logic_in_create_state
+
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/work_listtile_checkbtn.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,6 +30,7 @@ class _WorkListTileState extends State<WorkListTile> {
           return i;
         }
       }
+      return null;
     }
 
     return Obx(

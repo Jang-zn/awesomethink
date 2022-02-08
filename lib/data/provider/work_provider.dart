@@ -1,5 +1,6 @@
+// ignore_for_file: avoid_print
+
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorkProvider {

@@ -1,4 +1,6 @@
 
+// ignore_for_file: avoid_print
+
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/data/repository/work_repo.dart';
 import 'package:get/get.dart';

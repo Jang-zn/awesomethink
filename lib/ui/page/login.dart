@@ -71,7 +71,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                   Get.put(userController);
                 }))));
               }else{
-                Get.to(AwesomeMainPage(), binding: BindingsBuilder(() {
+                Get.to(const AwesomeMainPage(), binding: BindingsBuilder(() {
                   Get.lazyPut<AuthController>(() => authController);
                   Get.put(userController);
                   Get.put(workController);
@@ -104,6 +104,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     }else{
       try {
         await Future.wait([
+          userController.getUserInfo(authController.getCurrentUser()!.uid),
           adminController.getMemberList(),
           adminController.getNewbieList(),
           adminController.getTodayWorkList(),

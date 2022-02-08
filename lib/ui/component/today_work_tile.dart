@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, no_logic_in_create_state
+
 import 'dart:math';
 
 import 'package:awesomethink/data/model/member.dart';
@@ -20,7 +22,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
 
   _TodayWorkTileState(this.member, this.work);
 
-  Widget? memberState() {
+  Widget memberState() {
     double? fontSize = 18;
     //출근
     if (work!.endTime == null) {
@@ -72,6 +74,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
             color: Colors.redAccent, fontSize: fontSize),
       );
     }
+    return Container();
   }
 
   @override
@@ -124,7 +127,7 @@ class _TodayWorkTileState extends State<TodayWorkTile> {
               )),
           Expanded(
             flex: 1,
-            child: memberState()!,
+            child: memberState(),
           ),
         ],
       ),

@@ -1,7 +1,5 @@
 import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/auth_controller.dart';
-import 'package:awesomethink/controller/user_controller.dart';
-import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/ui/component/vacation_listtile.dart';
 import 'package:awesomethink/ui/page/admin_main.dart';
@@ -51,9 +49,9 @@ class _VacationAuthPageState extends State<VacationAuthPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(children: [
-            Text("휴무 신청 현황", style:TextStyle(fontSize: 20)),
+            const Text("휴무 신청 현황", style:TextStyle(fontSize: 20)),
             Obx(
-              () => Container(
+              () => SizedBox(
                 height: MediaQuery.of(context).size.height*0.7,
                 child:ListView.builder(
                   shrinkWrap: true,

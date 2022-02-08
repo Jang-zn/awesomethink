@@ -1,9 +1,8 @@
-import 'dart:math';
+// ignore_for_file: must_be_immutable, no_logic_in_create_state
 
+import 'dart:math';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
@@ -24,6 +26,7 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
 
   @override
   void initState() {
+    super.initState();
     authController = Get.find<AuthController>();
     userController = Get.find<UserController>();
     workController =

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:collection';
 import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';

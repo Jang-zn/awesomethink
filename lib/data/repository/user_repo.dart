@@ -1,5 +1,4 @@
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/data/provider/user_provider.dart';
 
 class UserRepository {
