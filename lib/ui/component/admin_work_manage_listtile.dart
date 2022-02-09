@@ -22,7 +22,7 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
 
   @override
   Widget build(BuildContext context) {
-    WorkController workController = Get.find<WorkController>();
+    WorkController workController = Get.find<WorkController>(tag:work!.userUid);
 
     int? getIndex(){
       for(int i=0;i<workController.weeklyWorkList.length;i++){
