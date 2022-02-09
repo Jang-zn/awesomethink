@@ -2,7 +2,7 @@
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/ui/page/admon_member_work_manage.dart';
+import 'package:awesomethink/ui/page/admin_member_work_manage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

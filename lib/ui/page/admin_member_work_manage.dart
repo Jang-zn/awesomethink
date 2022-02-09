@@ -3,6 +3,7 @@ import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/ui/component/admin_work_manage_listtile.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -136,23 +137,23 @@ class _WorkManagePageState extends State<WorkManagePage> {
                     ),
                   ),
                   //TODO Tile 만들어주고, 수정/삭제기능 추가
-                  // Expanded(
-                  //   child: GetBuilder<WorkController>(
-                  //     builder: (wc) => ListView.builder(
-                  //       shrinkWrap: true,
-                  //       itemCount: (wc.weeklyWorkList as List<Work?>).length,
-                  //       scrollDirection: Axis.vertical,
-                  //       itemBuilder: (context, index) {
-                  //         Work? w = wc.weeklyWorkList.value[index];
-                  //         //UniqueKey 넣어줘야 완전 새로 빌드됨
-                  //         return WorkListTile(
-                  //           w,
-                  //           key: UniqueKey(),
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
+                  Expanded(
+                    child: GetBuilder<WorkController>(
+                      builder: (wc) => ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: (wc.weeklyWorkList as List<Work?>).length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) {
+                          Work? w = wc.weeklyWorkList.value[index];
+                          //UniqueKey 넣어줘야 완전 새로 빌드됨
+                          return WorkManageListTile(
+                            w,
+                            key: UniqueKey(),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
