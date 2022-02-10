@@ -84,7 +84,7 @@ class _WorkManagePageState extends State<WorkManagePage> {
                                   Container(
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 4),
-                                      child: const Text("이번주 근무시간 ")),
+                                      child: const Text("주간 근무시간 ")),
 
                                   //주간 근무시간 계산후 출력
                                   Container(

@@ -64,6 +64,19 @@ class WorkRepository{
     );
   }
 
+  Future<Stream<List<Work?>>> updateWorkByAdmin(Work? work, DateTime start, DateTime end) async {
+    return (await workProvider.updateWorkByAdmin(work, start, end)).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          for(var element in snapshot.docs) {
+            list.add(Work.fromJson(element.data()));
+          }
+          return list;
+        }
+    );
+  }
+
+
   Future<Work?> getWorkByStartTime(Work? work) async {
     return await (workProvider.getWorkByStartTime(work)).map(
             (snapshot)=>snapshot.docs.map(

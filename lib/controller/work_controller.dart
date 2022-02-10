@@ -74,6 +74,13 @@ class WorkController extends GetxController{
     refresh();
   }
 
+  Future<void> updateWorkByAdmin(Work? work, DateTime start, DateTime end) async{
+    _weeklyWorkList.value = await (await workRepository.updateWorkByAdmin(work, start, end)).first;
+    getWeeklyWorkingTime();
+    checkInOut();
+    refresh();
+  }
+
   Future<void> setWork(Work? work) async{
     await Future.wait([
       workRepository.setWork(work),

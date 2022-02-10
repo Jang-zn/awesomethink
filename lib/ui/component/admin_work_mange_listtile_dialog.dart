@@ -127,9 +127,8 @@ class UpdateWorkDialog extends StatelessWidget {
           dateMap["startYear"]!, dateMap["startMonth"]!, dateMap["startDay"]!, dateMap["sh"]!, dateMap["sm"]!);
       DateTime newEndWorkingTime = DateTime(
           dateMap["endYear"]!, dateMap["endMonth"]!, dateMap["endDay"]!, dateMap["eh"]!, dateMap["em"]!);
-      work!.startTime = newStartWorkingTime;
-      work!.endTime = newEndWorkingTime;
-      await workController.updateWork(work);
+
+      await workController.updateWorkByAdmin(work, newStartWorkingTime, newEndWorkingTime);
       Get.back();
       Get.snackbar("수정완료", "");
     }else{

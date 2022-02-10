@@ -97,6 +97,28 @@ class WorkProvider {
     return await getWeeklyWorkList(work!.userUid);
   }
 
+  //Work 수정2
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> updateWorkByAdmin(
+      Work? work, DateTime start, DateTime end) async {
+    Future.wait([
+      firestore
+          .collection("work")
+          .where("startTime", isEqualTo: work?.startTime)
+          .get()
+          .then((value) {
+            work!.startTime=start;
+            work.endTime=end;
+        value.docs.first.reference
+            .set(work.toJson())
+            .onError((error, stackTrace) {
+          print(stackTrace);
+        });
+      })
+    ]);
+    return await getWeeklyWorkList(work!.userUid);
+  }
+
+
   //uid 로 work정보 가져옴
   Stream<QuerySnapshot<Map<String, dynamic>?>> getWorkByStartTime(Work? work) {
     return firestore
