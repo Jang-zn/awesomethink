@@ -33,7 +33,7 @@ class AdminProvider{
     DateTime now = DateTime.now();
     DateTime todayStart = DateTime(now.year,now.month,now.day);
     DateTime todayEnd = DateTime(now.year,now.month,now.day+1);
-    return Future.delayed(const Duration(milliseconds: 500),()=>firestore.collection("work")
+    return Future.delayed(const Duration(milliseconds: 300),()=>firestore.collection("work")
         .where("startTime", isGreaterThan: todayStart, isLessThan: todayEnd) //'오늘 근무만 호출'
         .orderBy("startTime",descending: true).snapshots());
   }

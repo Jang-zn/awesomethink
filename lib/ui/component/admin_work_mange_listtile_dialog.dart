@@ -11,6 +11,11 @@ class UpdateWorkDialog extends StatelessWidget {
   late final WorkController workController =
       Get.find<WorkController>(tag: work!.userUid);
 
+  late TextEditingController startHour = TextEditingController(text:work!.startTime!.hour.toString());
+  late TextEditingController startMinute = TextEditingController(text:work!.startTime!.minute.toString());
+  late TextEditingController endHour = TextEditingController(text:work!.endTime!.hour.toString());
+  late TextEditingController endMinute = TextEditingController(text:work!.endTime!.minute.toString());
+
   Widget getWorkingTimeStateBtn(Work? work) {
     const double left = 20;
     const double top = 0;
@@ -98,9 +103,53 @@ class UpdateWorkDialog extends StatelessWidget {
         ),
         style: TextButton.styleFrom(
             padding: EdgeInsets.zero, backgroundColor: Colors.lime),
-        onPressed: () {},
+        onPressed: acceptFunction,
       ),
     );
+  }
+
+  void acceptFunction() async {
+    Map<String, int> dateMap = {
+      "startYear" : work!.startTime!.year,
+      "startMonth" : work!.startTime!.month,
+      "startDay" : work!.startTime!.day,
+      "sh" : int.parse(startHour.text),
+      "sm" :  int.parse(startMinute.text),
+      "endYear" : work!.endTime!.year,
+      "endMonth" : work!.endTime!.month,
+      "endDay" : work!.endTime!.day,
+      "eh" : int.parse(endHour.text),
+      "em" : int.parse(endMinute.text),
+
+    };
+    if(acceptValidation(dateMap)) {
+      DateTime newStartWorkingTime = DateTime(
+          dateMap["startYear"]!, dateMap["startMonth"]!, dateMap["startDay"]!, dateMap["sh"]!, dateMap["sm"]!);
+      DateTime newEndWorkingTime = DateTime(
+          dateMap["endYear"]!, dateMap["endMonth"]!, dateMap["endDay"]!, dateMap["eh"]!, dateMap["em"]!);
+      work!.startTime = newStartWorkingTime;
+      work!.endTime = newEndWorkingTime;
+      await workController.updateWork(work);
+      Get.back();
+      Get.snackbar("수정완료", "");
+    }else{
+      Get.snackbar("입력 오류", "시작시간, 종료시간을 확인해주세요", colorText: Colors.red);
+    }
+  }
+
+  bool acceptValidation(Map<String, int> dateMap){
+    // case 1 : 시간 0~24 분 0~59
+    if(dateMap["sh"]!<0||dateMap["sh"]!>24){return false;}
+    if(dateMap["eh"]!<0||dateMap["eh"]!>24){return false;}
+    if(dateMap["sm"]!<0||dateMap["sm"]!>59){return false;}
+    if(dateMap["em"]!<0||dateMap["em"]!>59){return false;}
+    // case 2 : 시간시작이 종료시간 이후일때 (종료시간이 시작시간 이전일때)
+      // 시간비교
+    if(dateMap["sh"]!>dateMap["eh"]!){return false;}
+      // 같은시간일때 분 비교
+    if(dateMap["sh"]==dateMap["eh"] && dateMap["sm"]!>dateMap["em"]!){return false;}
+
+    return true;
   }
 
   Widget cancleBtn() {
@@ -127,15 +176,8 @@ class UpdateWorkDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double textFieldWidth = 30;
+    double textFieldWidth = 33;
     double textFieldHeight = 20;
-
-    TextEditingController startHour = TextEditingController();
-    TextEditingController startMinute = TextEditingController();
-    TextEditingController endHour = TextEditingController();
-    TextEditingController endMinute = TextEditingController();
-
-    print(work.toString());
 
     return Scaffold(
         backgroundColor: const Color.fromRGBO(50, 50, 50, 0.3),
@@ -174,7 +216,7 @@ class UpdateWorkDialog extends StatelessWidget {
                     child: TextFormField(
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      controller: startHour..text=work!.startTime!.hour.toString()
+                      controller: startHour,
                     ),
                   ),
                   const Text(" : ", style: TextStyle(fontSize: 18)),
@@ -184,7 +226,7 @@ class UpdateWorkDialog extends StatelessWidget {
                     child: TextFormField(
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      controller: startMinute..text=work!.startTime!.minute.toString(),
+                      controller: startMinute,
                     ),
                   ),
                   const Text(" ~ ", style: TextStyle(fontSize: 18)),
@@ -194,7 +236,7 @@ class UpdateWorkDialog extends StatelessWidget {
                     child: TextFormField(
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      controller: endHour..text=work!.endTime!.hour.toString(),
+                      controller: endHour,
                     ),
                   ),
                   const Text(" : ", style: TextStyle(fontSize: 18)),
@@ -204,7 +246,7 @@ class UpdateWorkDialog extends StatelessWidget {
                     child: TextFormField(
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      controller: endMinute..text=work!.endTime!.minute.toString(),
+                      controller: endMinute,
                     ),
                   ),
                   getWorkingTimeStateBtn(work!),
