@@ -4,8 +4,6 @@ import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/admin_work_manage_listtile.dart';
-import 'package:awesomethink/ui/component/work_listtile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -40,7 +38,6 @@ class _WorkManagePageState extends State<WorkManagePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("memeberMain build");
     return Obx(
       () => WillPopScope(
           child: Scaffold(
@@ -58,7 +55,7 @@ class _WorkManagePageState extends State<WorkManagePage> {
             body: SafeArea(
               child: Column(
                 children: [
-                  //XXX 사원님 이번주 근무시간은 xx시간 xx분, 잔여 의무 근로시간은 xx시간 xx분 남았습니다 멘트치는곳
+                  //XXX 사원의 이번주 근무시간은 xx시간 xx분, 잔여 의무 근로시간은 xx시간 xx분 남았습니다 멘트치는곳
                   Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       padding: const EdgeInsets.all(10),
@@ -74,7 +71,7 @@ class _WorkManagePageState extends State<WorkManagePage> {
                                 children: [
                                   Text("${userController.userInfo.name} ",
                                       style: const TextStyle(fontSize: 25)),
-                                  Text("${userController.userInfo.position} 님",
+                                  Text("${userController.userInfo.position} 의",
                                       style: const TextStyle(fontSize: 18))
                                 ],
                               )),
@@ -128,7 +125,25 @@ class _WorkManagePageState extends State<WorkManagePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("이번주 근무 현황"),
+                        //TODO 좌우버튼 눌러서 주 기간 교체
+                        Expanded(
+                          flex:1,
+                          child:IconButton(
+                            icon: Icon(Icons.arrow_left),
+                            onPressed: (){},
+                          ),
+                        ),
+                        Expanded(
+                          flex:3,
+                          child: Text("yy.mm.dd ~ yy.mm.dd"),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child:IconButton(
+                            icon: Icon(Icons.arrow_right),
+                            onPressed: (){},
+                          ),
+                        ),
                         // ElevatedButton(
                         //   onPressed: () {},
                         //   child: const Text("근태 관리"),
@@ -139,6 +154,7 @@ class _WorkManagePageState extends State<WorkManagePage> {
                   //TODO Tile 만들어주고, 수정/삭제기능 추가
                   Expanded(
                     child: GetBuilder<WorkController>(
+                      tag:uid,
                       builder: (wc) => ListView.builder(
                         shrinkWrap: true,
                         itemCount: (wc.weeklyWorkList as List<Work?>).length,
