@@ -132,12 +132,16 @@ class UpdateWorkDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     double textFieldWidth = 20;
     double textFieldHeight = 20;
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 50, vertical: 150),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(50, 50, 50, 0.3),
+        resizeToAvoidBottomInset: false,
+        body:Center(child:Container(
+          width:MediaQuery.of(context).size.width*0.8,
+          height:MediaQuery.of(context).size.height*0.3,
+      decoration:BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
-      backgroundColor: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -204,6 +208,6 @@ class UpdateWorkDialog extends StatelessWidget {
           ),
         ],
       ),
-    );
+    )));
   }
 }
