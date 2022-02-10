@@ -54,9 +54,9 @@ class Work{
   }
 
   String workingTimeToHHMM(){
-    String startHour = startTime!.hour.toString();
+    String startHour = startTime!.hour<10?"0"+startTime!.hour.toString():startTime!.hour.toString();
     String startMinute = startTime!.minute<10?"0"+startTime!.minute.toString():startTime!.minute.toString();
-    String endHour = endTime==null?"":endTime!.hour.toString();
+    String endHour = endTime==null?"":endTime!.hour<10?"0"+endTime!.hour.toString():endTime!.hour.toString();
     String endMinute = endTime==null?"":endTime!.minute<10?"0"+endTime!.minute.toString():endTime!.minute.toString();
     String result = startHour+":"+startMinute+" ~ "+endHour+":"+endMinute;
     return result;

@@ -105,7 +105,7 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
   }
 
   Widget updateBtn(int? state) {
-    if(state==WorkingTimeState.vacation.index){
+    if(state==WorkingTimeState.vacation.index||state==WorkingTimeState.wait.index){
       return Container();
     }
     return Container(
@@ -125,7 +125,6 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
         onPressed: () {
           Get.dialog(
             UpdateWorkDialog(work),
-
           );
         },
       ),
@@ -187,7 +186,8 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
                           ],
                         ),
                       ),
-                      updateBtn(work!.workingTimeState),
+                      updateBtn(workController.weeklyWorkList[getIndex()]
+                          .workingTimeState),
                       deleteBtn(),
                     ],
                   )
