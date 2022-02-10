@@ -41,6 +41,7 @@ class _WorkManagePageState extends State<WorkManagePage> {
     return Obx(
       () => WillPopScope(
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               backgroundColor: Colors.white,
               elevation: 0,

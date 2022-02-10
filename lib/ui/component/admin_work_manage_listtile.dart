@@ -123,7 +123,10 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
         style: TextButton.styleFrom(
             padding: EdgeInsets.zero, backgroundColor: Colors.lime),
         onPressed: () {
-          Get.dialog(UpdateWorkDialog(work));
+          Get.dialog(
+            UpdateWorkDialog(work),
+
+          );
         },
       ),
     );
