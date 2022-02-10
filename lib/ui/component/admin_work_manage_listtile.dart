@@ -146,9 +146,13 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
         ),
         style: TextButton.styleFrom(
             padding: EdgeInsets.zero, backgroundColor: Colors.blueGrey),
-        onPressed: () {},
+        onPressed: alertDelete,
       ),
     );
+  }
+
+  void alertDelete() async {
+    bool check = await Get.dialog(widget);
   }
 
   @override
