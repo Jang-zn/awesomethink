@@ -16,6 +16,30 @@ class WorkRepository{
               }
       );
   }
+  Future<Stream<List<Work?>>> getNextWeekWorkList(String? uid) async {
+    return (await workProvider.getNextWeekWorkList(uid)).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          for(var element in snapshot.docs) {
+            list.add(Work.fromJson(element.data()));
+          }
+          return list;
+        }
+    );
+  }
+  Future<Stream<List<Work?>>> getPrevWeekWorkList(String? uid) async {
+    return (await workProvider.getPrevWeekWorkList(uid)).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          for(var element in snapshot.docs) {
+            list.add(Work.fromJson(element.data()));
+          }
+          return list;
+        }
+    );
+  }
+
+
 
   Future<Stream<List<Work?>>> getMonthlyWorkList(String? uid, DateTime dateTime) async {
     return (await workProvider.getMonthlyWorkList(uid, dateTime)).map(

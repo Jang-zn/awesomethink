@@ -17,6 +17,17 @@ class WorkController extends GetxController{
   final RxString _monthlyWorkingTime ="0시간 00분".obs;
   final RxString _requiredWorkingTime ="40시간 00분".obs;
 
+  //시작일 ~ 종료일
+  final RxString _startWeekDay = "00. 00. 00".obs;
+  final RxString _endWeekDay = "00. 00. 00".obs;
+
+  get startWeekDay => _startWeekDay;
+  set startWeekDay(value) => _startWeekDay;
+
+  get endWeekDay => _endWeekDay;
+  set endWeekDay(value) => _endWeekDay;
+
+
   get monthlyWorkList => _monthlyWorkList;
   set monthlyWorkList(value) => _monthlyWorkList;
 
@@ -49,9 +60,29 @@ class WorkController extends GetxController{
     _weeklyWorkList.value = await (await workRepository.getWeeklyWorkList(uid)).first;
     getWeeklyWorkingTime();
     checkInOut();
+    getWeekDay();
     refresh();
   }
 
+  //다음
+  Future<void> getNextWeekWorkList(String? uid) async{
+    _weeklyWorkList.value = await (await workRepository.getNextWeekWorkList(uid)).first;
+    getWeeklyWorkingTime();
+    checkInOut();
+    getWeekDay();
+    refresh();
+  }
+
+  //이전
+  Future<void> getPrevWeekWorkList(String? uid) async{
+    _weeklyWorkList.value = await (await workRepository.getPrevWeekWorkList(uid)).first;
+    getWeeklyWorkingTime();
+    checkInOut();
+    getWeekDay();
+    refresh();
+  }
+
+  //나중에 달력에서 사용
   Future<void> getMonthlyWorkList(String? uid, DateTime dateTime) async {
     _monthlyWorkList.value = await (await workRepository.getMonthlyWorkList(uid, dateTime)).first;
     _monthlyWorkList.refresh();
@@ -71,6 +102,7 @@ class WorkController extends GetxController{
     _weeklyWorkList.value = await (await workRepository.updateWork(work)).first;
     getWeeklyWorkingTime();
     checkInOut();
+    getWeekDay();
     refresh();
   }
 
@@ -78,6 +110,7 @@ class WorkController extends GetxController{
     _weeklyWorkList.value = await (await workRepository.deleteWork(work)).first;
     getWeeklyWorkingTime();
     checkInOut();
+    getWeekDay();
     refresh();
   }
 
@@ -85,6 +118,7 @@ class WorkController extends GetxController{
     _weeklyWorkList.value = await (await workRepository.updateWorkByAdmin(work, start, end)).first;
     getWeeklyWorkingTime();
     checkInOut();
+    getWeekDay();
     refresh();
   }
 
@@ -159,6 +193,22 @@ class WorkController extends GetxController{
     }
     _inOut(true);
     _inOut.refresh();
+  }
+
+  void getWeekDay(){
+    try {
+      _startWeekDay.value = _weeklyWorkList.last!.getWorkingDay();
+      _endWeekDay.value =_weeklyWorkList.first!.getWorkingDay();
+    }catch(e){
+      DateTime now = DateTime.now();
+      DateTime lastMonday =
+      DateTime(now.year, now.month, now.day - (now.weekday - 1));
+      DateTime thisSunday =
+      DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
+      _startWeekDay.value = lastMonday.year.toString()+". "+lastMonday.month.toString()+". "+lastMonday.day.toString();
+      _endWeekDay.value =thisSunday.year.toString()+". "+thisSunday.month.toString()+". "+thisSunday.day.toString();
+    }
+
   }
 
   // //임시기능

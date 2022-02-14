@@ -16,7 +16,7 @@ class WorkProvider {
     DateTime thisSunday =
         DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
     return Future.delayed(
-        const Duration(milliseconds: 500),
+        const Duration(milliseconds: 300),
         () => firestore
             .collection("work")
             .where("userUid", isEqualTo: uid) //User id에 해당하는 work들
@@ -27,6 +27,54 @@ class WorkProvider {
             .snapshots());
   }
 
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getNextWeekWorkList(
+      String? uid) async {
+    //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
+    DateTime now = DateTime.now();
+    DateTime lastMonday =
+    DateTime(now.year, now.month, now.day - (now.weekday - 1));
+    DateTime thisSunday =
+    DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
+    //다음주처리
+    lastMonday.add(const Duration(days:7));
+    thisSunday.add(const Duration(days:7));
+
+    return Future.delayed(
+        const Duration(milliseconds: 400),
+            () => firestore
+            .collection("work")
+            .where("userUid", isEqualTo: uid) //User id에 해당하는 work들
+            .where("startTime",
+            isGreaterThan: lastMonday,
+            isLessThan: thisSunday) //중에서 월요일부터 일요일까지
+            .orderBy("startTime", descending: true)
+            .snapshots());
+  }
+
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getPrevWeekWorkList(
+      String? uid) async {
+    //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
+    DateTime now = DateTime.now();
+    //지난주처리
+    DateTime lastMonday =
+    DateTime(now.year, now.month, now.day - (now.weekday - 1));
+    DateTime thisSunday =
+    DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
+
+    return Future.delayed(
+        const Duration(milliseconds: 400),
+            () => firestore
+            .collection("work")
+            .where("userUid", isEqualTo: uid) //User id에 해당하는 work들
+            .where("startTime",
+            isGreaterThan: lastMonday,
+            isLessThan: thisSunday) //중에서 월요일부터 일요일까지
+            .orderBy("startTime", descending: true)
+            .snapshots());
+  }
+
+
+
   //uid에 해당하는 유저의 월간 업무일정
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getMonthlyWorkList(
       String? uid, DateTime dateTime) {
@@ -36,7 +84,7 @@ class WorkProvider {
         DateTime(dateTime.year, dateTime.month, nextMonthFirst.day - 1);
 
     return Future.delayed(
-        const Duration(milliseconds: 500),
+        const Duration(milliseconds: 400),
         () => firestore
             .collection("work")
             .where("userUid", isEqualTo: uid) //User id에 해당하는 work들

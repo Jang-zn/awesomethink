@@ -53,6 +53,12 @@ class Work{
     return result;
   }
 
+  String getWorkingDay(){
+    String result=startTime!.year.toString()+". "+startTime!.month.toString()+". "+startTime!.day.toString();
+    return result;
+  }
+
+
   String workingTimeToHHMM(){
     String startHour = startTime!.hour<10?"0"+startTime!.hour.toString():startTime!.hour.toString();
     String startMinute = startTime!.minute<10?"0"+startTime!.minute.toString():startTime!.minute.toString();

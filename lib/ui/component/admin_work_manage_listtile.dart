@@ -110,7 +110,7 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
       return Container();
     }
     return Container(
-      margin: const EdgeInsets.only(top: 20, left: 220),
+      margin: const EdgeInsets.only(top: 20, left: 190),
       width: 45,
       height: 30,
       child: TextButton(
@@ -134,7 +134,7 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
 
   Widget deleteBtn() {
     return Container(
-      margin: const EdgeInsets.only(top: 20, left: 280),
+      margin: const EdgeInsets.only(top: 20, left: 245),
       width: 45,
       height: 30,
       child: TextButton(
@@ -165,6 +165,7 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
       () => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5.0),

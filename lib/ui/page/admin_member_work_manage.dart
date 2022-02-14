@@ -36,6 +36,25 @@ class _WorkManagePageState extends State<WorkManagePage> {
     Get.back();
   }
 
+  void prevWeek()async {
+    await workController.getPrevWeekWorkList(uid);
+    print(workController.startWeekDay);
+  }
+
+  void nextWeek() async {
+    String thisWeek = DateTime.now().year.toString()+". "+DateTime.now().month.toString()+". "+DateTime.now().day.toString();
+    if(thisWeek==workController.startWeekDay){
+      return;
+    }
+    await workController.getNextWeekWorkList(uid);
+    print(workController.startWeekDay);
+  }
+
+  void thisWeek() async {
+    await workController.getWeeklyWorkList(uid);
+    print(workController.startWeekDay);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -131,18 +150,25 @@ class _WorkManagePageState extends State<WorkManagePage> {
                           flex:1,
                           child:IconButton(
                             icon: Icon(Icons.arrow_left),
-                            onPressed: (){},
+                            onPressed: prevWeek,
                           ),
                         ),
                         Expanded(
-                          flex:3,
-                          child: Text("yy.mm.dd ~ yy.mm.dd"),
+                          flex:4,
+                          child: Text("${workController.startWeekDay}  ~  ${workController.endWeekDay}"),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child:IconButton(
+                            icon: Icon(Icons.calendar_today_rounded),
+                            onPressed: thisWeek,
+                          ),
                         ),
                         Expanded(
                           flex: 1,
                           child:IconButton(
                             icon: Icon(Icons.arrow_right),
-                            onPressed: (){},
+                            onPressed: nextWeek,
                           ),
                         ),
                         // ElevatedButton(
