@@ -110,7 +110,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
           adminController.getVacationList(),
         ]);
       }catch(e){
-        print("admin init error");
         e.printError();
       }
     }

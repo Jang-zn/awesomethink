@@ -3,7 +3,6 @@ import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/ui/component/vacation_listtile.dart';
 import 'package:awesomethink/ui/page/admin_main.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

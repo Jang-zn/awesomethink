@@ -165,7 +165,7 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
       () => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
         child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5.0),

@@ -45,7 +45,6 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("memeberMain build");
     return Obx(
       () => WillPopScope(
           child: Scaffold(

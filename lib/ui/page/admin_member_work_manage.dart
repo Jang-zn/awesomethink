@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, must_be_immutable, no_logic_in_create_state
 import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/controller/work_controller.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WorkManagePage extends StatefulWidget {
-  WorkManagePage(this.uid);
+  WorkManagePage(this.uid, {Key? key}) : super(key: key);
   String? uid;
   @override
   _WorkManagePageState createState() => _WorkManagePageState(uid);
@@ -38,23 +38,18 @@ class _WorkManagePageState extends State<WorkManagePage> {
 
   void prevWeek()async {
     await workController.getPrevWeekWorkList(uid);
-    print(workController.startWeekDay);
-    print(workController.endWeekDay);
   }
 
   void nextWeek() async {
     try {
       await workController.getNextWeekWorkList(uid);
-      print(workController.startWeekDay);
-      print(workController.endWeekDay);
     }catch(e){
+      e.printError();
     }
   }
 
   void thisWeek() async {
     await workController.getWeeklyWorkList(uid);
-    print(workController.startWeekDay);
-    print(workController.endWeekDay);
   }
 
   @override
@@ -151,7 +146,7 @@ class _WorkManagePageState extends State<WorkManagePage> {
                         Expanded(
                           flex:1,
                           child:IconButton(
-                            icon: Icon(Icons.arrow_left),
+                            icon: const Icon(Icons.arrow_left),
                             onPressed: prevWeek,
                           ),
                         ),
@@ -162,14 +157,14 @@ class _WorkManagePageState extends State<WorkManagePage> {
                         Expanded(
                           flex: 1,
                           child:IconButton(
-                            icon: Icon(Icons.calendar_today_rounded),
+                            icon: const Icon(Icons.calendar_today_rounded),
                             onPressed: thisWeek,
                           ),
                         ),
                         Expanded(
                           flex: 1,
                           child:IconButton(
-                            icon: Icon(Icons.arrow_right),
+                            icon: const Icon(Icons.arrow_right),
                             onPressed: nextWeek,
                           ),
                         ),

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
 import 'package:flutter/material.dart';
@@ -137,8 +139,6 @@ class DeleteWorkDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double textFieldWidth = 33;
-    double textFieldHeight = 20;
 
     return Scaffold(
         backgroundColor: const Color.fromRGBO(50, 50, 50, 0.3),
