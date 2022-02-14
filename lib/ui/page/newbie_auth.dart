@@ -1,6 +1,6 @@
 import 'package:awesomethink/controller/admin_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
-import 'package:awesomethink/ui/component/newbie_listtile.dart';
+import 'package:awesomethink/ui/component/admin_newbie_listtile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

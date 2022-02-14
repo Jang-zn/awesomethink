@@ -2,7 +2,7 @@
 
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
-import 'package:awesomethink/ui/component/admin_work_mange_listtile_dialog.dart';
+import 'package:awesomethink/ui/component/admin_work_manage_listtile_dialog.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

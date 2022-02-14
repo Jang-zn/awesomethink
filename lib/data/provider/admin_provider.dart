@@ -9,7 +9,7 @@ class AdminProvider{
 
   //신규가입 목록
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getNewbieList() async{
-    return Future.delayed(const Duration(milliseconds: 500),()=>firestore.collection("user")
+    return Future.delayed(const Duration(milliseconds: 400),()=>firestore.collection("user")
         .where("state",isEqualTo: false)
         .snapshots());
   }
@@ -33,7 +33,7 @@ class AdminProvider{
     DateTime now = DateTime.now();
     DateTime todayStart = DateTime(now.year,now.month,now.day);
     DateTime todayEnd = DateTime(now.year,now.month,now.day+1);
-    return Future.delayed(const Duration(milliseconds: 300),()=>firestore.collection("work")
+    return Future.delayed(const Duration(milliseconds: 400),()=>firestore.collection("work")
         .where("startTime", isGreaterThan: todayStart, isLessThan: todayEnd) //'오늘 근무만 호출'
         .orderBy("startTime",descending: true).snapshots());
   }
@@ -42,7 +42,7 @@ class AdminProvider{
   //휴무신청한 리스트 조회
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getVacationList() async {
     return Future.delayed(
-        const Duration(milliseconds: 500),
+        const Duration(milliseconds: 400),
             () => firestore
             .collection("work")
             .where("workingTimeState",

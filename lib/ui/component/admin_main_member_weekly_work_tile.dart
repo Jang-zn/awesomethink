@@ -89,7 +89,7 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
               flex: 2,
               child: Material(
                 borderRadius: BorderRadius.circular(15),
-                color: const Color.fromRGBO(200, 240, 200, 1),
+                color: const Color.fromRGBO(180, 220, 180, 1),
                 child: InkWell(
                   splashColor: const Color.fromRGBO(130, 230, 130, 1),
                   borderRadius: BorderRadius.circular(15),
