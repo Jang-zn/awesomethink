@@ -117,7 +117,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   }
 
   void signUp(){
-    Get.offAll(const SignUpPage(), binding: BindingsBuilder(
+    Get.to(const SignUpPage(), binding: BindingsBuilder(
     (){
       Get.lazyPut<AuthController>(()=>authController);
     }));
