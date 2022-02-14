@@ -64,6 +64,18 @@ class WorkRepository{
     );
   }
 
+  Future<Stream<List<Work?>>> deleteWork(Work? work) async {
+    return (await workProvider.deleteWork(work)).map(
+            (snapshot) {
+          final List<Work?> list = <Work?>[];
+          for(var element in snapshot.docs) {
+            list.add(Work.fromJson(element.data()));
+          }
+          return list;
+        }
+    );
+  }
+
   Future<Stream<List<Work?>>> updateWorkByAdmin(Work? work, DateTime start, DateTime end) async {
     return (await workProvider.updateWorkByAdmin(work, start, end)).map(
             (snapshot) {

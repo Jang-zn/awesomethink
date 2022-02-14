@@ -2,6 +2,7 @@
 
 import 'package:awesomethink/controller/work_controller.dart';
 import 'package:awesomethink/data/model/work.dart';
+import 'package:awesomethink/ui/component/admin_work_manage_listtile_delete_dialog.dart';
 import 'package:awesomethink/ui/component/admin_work_manage_listtile_dialog.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -152,7 +153,10 @@ class _WorkManageListTileState extends State<WorkManageListTile> {
   }
 
   void alertDelete() async {
-    bool check = await Get.dialog(widget);
+    bool check = await Get.dialog(DeleteWorkDialog(work));
+    if(check){
+      workController.deleteWork(work);
+    }
   }
 
   @override

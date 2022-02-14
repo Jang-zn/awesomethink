@@ -35,7 +35,7 @@ class _WeeklyWorkTileState extends State<WeeklyWorkTile> {
     Get.to(WorkManagePage(member!.uid), binding: BindingsBuilder(() {
       userController;
       workController;
-    }));
+    },),);
   }
 
   @override
