@@ -44,7 +44,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
   void login() async {
     FocusScopeNode currentFocus = FocusScope.of(context);
     currentFocus.unfocus();
-    //TODO snackBar custom
     Get.snackbar(
       "Login....",
       "",
@@ -177,11 +176,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                       child:ElevatedButton(onPressed: signUp,
                           child: const Text("SignUp")),
                   ),
-                  // SizedBox(
-                  //   width:MediaQuery.of(context).size.width*0.5,
-                  //   child:ElevatedButton(onPressed: deleteAllWork,
-                  //       child: const Text("DeleteAllWork")),
-                  // ),
                 ],
               )
             )

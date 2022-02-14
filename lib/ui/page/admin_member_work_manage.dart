@@ -142,7 +142,6 @@ class _WorkManagePageState extends State<WorkManagePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        //TODO 좌우버튼 눌러서 주 기간 교체
                         Expanded(
                           flex:1,
                           child:IconButton(
@@ -175,7 +174,6 @@ class _WorkManagePageState extends State<WorkManagePage> {
                       ],
                     ),
                   ),
-                  //TODO Tile 만들어주고, 수정/삭제기능 추가
                   Expanded(
                     child: GetBuilder<WorkController>(
                       tag:uid,

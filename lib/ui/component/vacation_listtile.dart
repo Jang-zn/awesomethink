@@ -15,12 +15,10 @@ class VacationListTile extends StatelessWidget {
 
   final AdminController adminController = Get.find<AdminController>();
 
-  //TODO 휴가 승인
   void acceptVacation() async {
     await adminController.acceptVacation(vacation);
   }
 
-  //TODO 휴가 반려
   void rejectVacation() async {
     await adminController.rejectVacation(vacation);
   }
