@@ -9,6 +9,7 @@ import 'package:awesomethink/ui/page/signUp.dart';
 import 'package:awesomethink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'admin_main.dart';
@@ -24,22 +25,40 @@ class AwesomeThinkLoginPage extends StatefulWidget {
 }
 
 class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController pwController = TextEditingController();
+  late TextEditingController emailController = TextEditingController(text:_id);
+  late TextEditingController pwController = TextEditingController(text:_pw);
 
   late final AuthController authController;
   late final UserController userController;
   late final WorkController workController;
   late final AdminController adminController;
+  late final SharedPreferences _prefs;
+  late String? _id="";
+  late String? _pw="";
+  late bool? _isChecked;
 
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      await _loadId();
+    });
     authController = Get.put(AuthController());
     userController = Get.put(UserController());
     adminController = Get.put(AdminController());
   }
+
+  Future<void> _loadId() async {
+    _prefs = await SharedPreferences.getInstance(); // 캐시에 저장되어있는 값 호출
+    setState(() { // 캐시에 저장된 값을 반영하여 현재 상태를 설정한다.
+      // SharedPreferences에 id, pw로 저장된 값을 읽어 필드에 저장. 없을 경우 0으로 대입
+      _id = (_prefs.getString('id') ?? '');
+      _pw = (_prefs.getString('pw') ?? '');
+      _isChecked = _prefs.getBool("isChecked") ?? false;
+    });
+  }
+
 
   void login() async {
     FocusScopeNode currentFocus = FocusScope.of(context);
@@ -54,6 +73,12 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
     //로그인 후 에러 안나면
       try {
         await authController.signInWithEmail(emailController.text, pwController.text);
+        //체크여부로 preference 저장결정
+        if(_isChecked!){
+          _prefs.setString('id', emailController.text);
+          _prefs.setString('pw', pwController.text);
+          _prefs.setBool('isChecked', _isChecked!);
+        }
           if(authController.getCurrentUser()!.email==emailController.text) {
             await initController().whenComplete(() {
               //Admin / Normal 구분
@@ -160,17 +185,35 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
                   ),
                   obscureText:true,
               ),
-
             ),
+
+            //TODO shared_preference 써서 자동로그인 or 로그인정보 저장
             Container(
               padding:const EdgeInsets.symmetric(horizontal: 30),
               child:Column(
                 children: [
-                  SizedBox(
+                  Row(
+                    children:[
+                      SizedBox(
+                        width:MediaQuery.of(context).size.width*0.15
+                      ),
+                      Checkbox(
+                      value: _isChecked,
+                      onChanged: (value){
+                        setState(() {
+                          _isChecked=value;
+                        });
+                      },
+                    ),
+                      const Text("로그인정보 저장하기"),
+                    ]
+                  ),
+                    SizedBox(
                       width:MediaQuery.of(context).size.width*0.5,
                       child:ElevatedButton(onPressed: login,
                           child: const Text("Login")),
-                  ),
+                    ),
+
                   SizedBox(
                       width:MediaQuery.of(context).size.width*0.5,
                       child:ElevatedButton(onPressed: signUp,
