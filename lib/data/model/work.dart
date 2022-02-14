@@ -54,7 +54,9 @@ class Work{
   }
 
   String getWorkingDay(){
-    String result=startTime!.year.toString()+". "+startTime!.month.toString()+". "+startTime!.day.toString();
+    String result=startTime!.year.toString()+". ";
+    result+= startTime!.month<10 ? "0"+startTime!.month.toString()+". " : startTime!.month.toString()+". ";
+    result+=startTime!.day<10 ? "0"+startTime!.day.toString() : startTime!.day.toString();
     return result;
   }
 

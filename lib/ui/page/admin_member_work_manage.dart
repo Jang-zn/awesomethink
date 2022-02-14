@@ -39,20 +39,22 @@ class _WorkManagePageState extends State<WorkManagePage> {
   void prevWeek()async {
     await workController.getPrevWeekWorkList(uid);
     print(workController.startWeekDay);
+    print(workController.endWeekDay);
   }
 
   void nextWeek() async {
-    String thisWeek = DateTime.now().year.toString()+". "+DateTime.now().month.toString()+". "+DateTime.now().day.toString();
-    if(thisWeek==workController.startWeekDay){
-      return;
+    try {
+      await workController.getNextWeekWorkList(uid);
+      print(workController.startWeekDay);
+      print(workController.endWeekDay);
+    }catch(e){
     }
-    await workController.getNextWeekWorkList(uid);
-    print(workController.startWeekDay);
   }
 
   void thisWeek() async {
     await workController.getWeeklyWorkList(uid);
     print(workController.startWeekDay);
+    print(workController.endWeekDay);
   }
 
   @override
@@ -141,7 +143,7 @@ class _WorkManagePageState extends State<WorkManagePage> {
                   //근태관리하는곳
                   Container(
                     margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                        horizontal: 10, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

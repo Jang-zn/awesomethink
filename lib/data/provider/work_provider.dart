@@ -28,47 +28,44 @@ class WorkProvider {
   }
 
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getNextWeekWorkList(
-      String? uid) async {
-    //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
-    DateTime now = DateTime.now();
-    DateTime lastMonday =
-    DateTime(now.year, now.month, now.day - (now.weekday - 1));
-    DateTime thisSunday =
-    DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
-    //다음주처리
-    lastMonday.add(const Duration(days:7));
-    thisSunday.add(const Duration(days:7));
+      String? uid, String start, String end) async {
+    //시작일 / 종료일 받음
+    //시작일을 DateTime으로 0000. 00. 00
+    DateTime startDay =
+    DateTime(int.parse(start.substring(0,4)), int.parse(start.substring(6,8)), int.parse(start.substring(10))+7);
+    DateTime endDay =
+    DateTime(int.parse(end.substring(0,4)), int.parse(end.substring(6,8)), int.parse(end.substring(10))+7, 23, 59);
 
     return Future.delayed(
-        const Duration(milliseconds: 400),
+        const Duration(milliseconds: 200),
             () => firestore
             .collection("work")
             .where("userUid", isEqualTo: uid) //User id에 해당하는 work들
             .where("startTime",
-            isGreaterThan: lastMonday,
-            isLessThan: thisSunday) //중에서 월요일부터 일요일까지
+            isGreaterThan: startDay,
+            isLessThan: endDay) //중에서 월요일부터 일요일까지
             .orderBy("startTime", descending: true)
             .snapshots());
   }
 
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getPrevWeekWorkList(
-      String? uid) async {
-    //현재 기준으로 지난 월요일 날짜 구하기 (월:1 ~ 일:7)
-    DateTime now = DateTime.now();
-    //지난주처리
-    DateTime lastMonday =
-    DateTime(now.year, now.month, now.day - (now.weekday - 1));
-    DateTime thisSunday =
-    DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
+      String? uid, String start, String end) async {
+    //시작일 / 종료일 받음
+    //시작일을 DateTime으로 0000. 00. 00
+    DateTime startDay =
+    DateTime(int.parse(start.substring(0,4)), int.parse(start.substring(6,8)), int.parse(start.substring(10))-7);
+    DateTime endDay =
+    DateTime(int.parse(end.substring(0,4)), int.parse(end.substring(6,8)), int.parse(end.substring(10))-7, 23, 59);
+
 
     return Future.delayed(
-        const Duration(milliseconds: 400),
+        const Duration(milliseconds: 200),
             () => firestore
             .collection("work")
             .where("userUid", isEqualTo: uid) //User id에 해당하는 work들
             .where("startTime",
-            isGreaterThan: lastMonday,
-            isLessThan: thisSunday) //중에서 월요일부터 일요일까지
+            isGreaterThan: startDay,
+            isLessThan: endDay) //중에서 월요일부터 일요일까지
             .orderBy("startTime", descending: true)
             .snapshots());
   }
@@ -84,7 +81,7 @@ class WorkProvider {
         DateTime(dateTime.year, dateTime.month, nextMonthFirst.day - 1);
 
     return Future.delayed(
-        const Duration(milliseconds: 400),
+        const Duration(milliseconds: 200),
         () => firestore
             .collection("work")
             .where("userUid", isEqualTo: uid) //User id에 해당하는 work들

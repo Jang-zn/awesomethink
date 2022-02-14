@@ -16,8 +16,8 @@ class WorkRepository{
               }
       );
   }
-  Future<Stream<List<Work?>>> getNextWeekWorkList(String? uid) async {
-    return (await workProvider.getNextWeekWorkList(uid)).map(
+  Future<Stream<List<Work?>>> getNextWeekWorkList(String? uid, String start, String end) async {
+    return (await workProvider.getNextWeekWorkList(uid, start, end)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
           for(var element in snapshot.docs) {
@@ -27,8 +27,8 @@ class WorkRepository{
         }
     );
   }
-  Future<Stream<List<Work?>>> getPrevWeekWorkList(String? uid) async {
-    return (await workProvider.getPrevWeekWorkList(uid)).map(
+  Future<Stream<List<Work?>>> getPrevWeekWorkList(String? uid, String start, String end) async {
+    return (await workProvider.getPrevWeekWorkList(uid, start, end)).map(
             (snapshot) {
           final List<Work?> list = <Work?>[];
           for(var element in snapshot.docs) {
