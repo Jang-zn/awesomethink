@@ -43,11 +43,25 @@ class VacationBtn extends StatelessWidget {
     selectedDate.then(
             (dateTime)  {
               if(soe=="start"){
-                vacationStart=dateTime;
+                //중복등록 못하게 validation
+                bool check = vacationValidation(dateTime!);
+                //유효한 날짜인 경우
+                if (check) {
+                  vacationStart=dateTime;
+                } else {
+                  Get.snackbar("잘못된 날짜", "날짜를 다시 선택해주세요");
+                  return;
+                }
               }else{
-                vacationEnd=dateTime;
+                bool check = vacationValidation(dateTime!);
+                if (check) {
+                  vacationEnd=dateTime;
+                } else {
+                  Get.snackbar("잘못된 날짜", "날짜를 다시 선택해주세요");
+                  return;
+                }
               }
-              if(dateTime!=null&&vacationEnd==null) {
+              if(vacationEnd==null) {
                 showCalendar("end");
               }
               if(vacationEnd!=null&&vacationEnd!=null) {
@@ -56,6 +70,29 @@ class VacationBtn extends StatelessWidget {
             }
           );
     }
+
+  //TODO 휴무 시작일은 근무가 없는날 && 오늘부터 가능 (이전일 신청 불가) - Validation 추가
+  bool vacationValidation(DateTime date){
+    //이번주 근무기록이 비어있으면 true 리턴
+    if((workController.weeklyWorkList as List<Work?>).isEmpty){
+      return true;
+    }
+    int? year = date.year;
+    int? month = date.month;
+    int? day = date.day;
+    bool result = true;
+    for(Work? w in workController.weeklyWorkList){
+      //중복이면 false 하고 반복 중단
+      if(w?.startTime!.year==year&&w?.startTime!.month==month&&w?.startTime!.day==day){
+        result = false;
+        break;
+        //아니면
+      }else{
+        result = true;
+      }
+    }
+    return result;
+  }
 
 
   void requestVacation() async {
