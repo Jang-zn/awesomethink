@@ -25,17 +25,17 @@ class AwesomeThinkLoginPage extends StatefulWidget {
 }
 
 class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
-  late TextEditingController emailController = TextEditingController(text:_id);
-  late TextEditingController pwController = TextEditingController(text:_pw);
+  late TextEditingController emailController = TextEditingController();
+  late TextEditingController pwController = TextEditingController();
 
   late final AuthController authController;
   late final UserController userController;
   late final WorkController workController;
   late final AdminController adminController;
   late final SharedPreferences _prefs;
-  late String? _id="";
-  late String? _pw="";
-  late bool? _isChecked;
+  String? _id="";
+  String? _pw="";
+  bool? _isChecked = false;
 
 
   @override
@@ -74,7 +74,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       try {
         await authController.signInWithEmail(emailController.text, pwController.text);
         //체크여부로 preference 저장결정
-        if(_isChecked!){
+        if(!_isChecked!){
+          print("shared");
           _prefs.setString('id', emailController.text);
           _prefs.setString('pw', pwController.text);
           _prefs.setBool('isChecked', _isChecked!);
@@ -152,6 +153,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    emailController.text = _id!;
+    pwController.text = _pw!;
     return Scaffold(
       //키보드가 화면 밀게 함. 대신 리스트뷰로 스크롤 가능하게 해야 사용 가능
       resizeToAvoidBottomInset : true,
