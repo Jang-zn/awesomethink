@@ -56,6 +56,8 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       _id = (_prefs.getString('id') ?? '');
       _pw = (_prefs.getString('pw') ?? '');
       _isChecked = _prefs.getBool("isChecked") ?? false;
+      emailController.text = _id!;
+      pwController.text = _pw!;
     });
   }
 
@@ -74,7 +76,7 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
       try {
         await authController.signInWithEmail(emailController.text, pwController.text);
         //체크여부로 preference 저장결정
-        if(!_isChecked!){
+        if(_isChecked!){
           print("shared");
           _prefs.setString('id', emailController.text);
           _prefs.setString('pw', pwController.text);
@@ -153,8 +155,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    emailController.text = _id!;
-    pwController.text = _pw!;
     return Scaffold(
       //키보드가 화면 밀게 함. 대신 리스트뷰로 스크롤 가능하게 해야 사용 가능
       resizeToAvoidBottomInset : true,
@@ -190,7 +190,6 @@ class _AwesomeThinkLoginPageState extends State<AwesomeThinkLoginPage> {
               ),
             ),
 
-            //TODO shared_preference 써서 자동로그인 or 로그인정보 저장
             Container(
               padding:const EdgeInsets.symmetric(horizontal: 30),
               child:Column(
