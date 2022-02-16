@@ -171,13 +171,13 @@ class WorkController extends GetxController{
       }
 
       //출력메세지 세팅
-      if(weeklyMinute>0){
+      if(weeklyMinute>9){
         _weeklyWorkingTime.value = weeklyHour.toString() + "시간 " + weeklyMinute.toString() + "분";
       }else{
         _weeklyWorkingTime.value = weeklyHour.toString() + "시간 " + "0" + weeklyMinute.toString() + "분";
       }
 
-      if(requiredMinute>0){
+      if(requiredMinute>9){
         _requiredWorkingTime.value = requiredHour.toString() + "시간 " + requiredMinute.toString()+"분";
       }else{
         _requiredWorkingTime.value = requiredHour.toString() + "시간 " + "0" + requiredMinute.toString() +"분";
@@ -225,7 +225,7 @@ class WorkController extends GetxController{
       // _endWeekDay.value =thisSunday.year.toString()+". ";
       // _endWeekDay.value += thisSunday.month<10 ? "0"+thisSunday.month.toString()+". " : thisSunday.month.toString()+". ";
       // _endWeekDay.value += thisSunday.day<10 ? "0"+thisSunday.day.toString() : thisSunday.day.toString();
-      throw Exception('NullWorkException');
+      print("admin main page Exception - getWeekDay");
     }
 
   }

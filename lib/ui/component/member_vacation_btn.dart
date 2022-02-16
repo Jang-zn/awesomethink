@@ -41,7 +41,7 @@ class VacationBtn extends StatelessWidget {
        },
    );
     selectedDate.then(
-            (dateTime)  {
+            (dateTime) {
               if(soe=="start"){
                 //중복등록 못하게 validation
                 bool check = vacationValidation(dateTime!);
@@ -72,11 +72,20 @@ class VacationBtn extends StatelessWidget {
     }
 
   //TODO 휴무 시작일은 근무가 없는날 && 오늘부터 가능 (이전일 신청 불가) - Validation 추가
-  bool vacationValidation(DateTime date){
-    //이번주 근무기록이 비어있으면 true 리턴
+  bool vacationValidation(DateTime date) {
+    //선택일이 오늘 이전이면 false
+    if(date.difference(DateTime.now()).inDays<0){
+      return false;
+    }
+    //휴가 시작일보다 종료일이 이전이면 false
+    if(vacationStart!=null&&date.difference(vacationStart!).inDays<0){
+      return false;
+    }
+    //이번주 근무기록이 비어있으면 true 리턴 (오늘 근무 있나 확인하기 위함)
     if((workController.weeklyWorkList as List<Work?>).isEmpty){
       return true;
     }
+    //이번주 근무기록에서 확인 (오늘 근무 있나 확인하기 위함)
     int? year = date.year;
     int? month = date.month;
     int? day = date.day;
