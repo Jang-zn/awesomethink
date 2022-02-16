@@ -5,7 +5,7 @@ import 'package:awesomethink/controller/auth_controller.dart';
 import 'package:awesomethink/controller/user_controller.dart';
 import 'package:awesomethink/data/model/member.dart';
 import 'package:awesomethink/service/signup_validation.dart';
-import 'package:awesomethink/ui/page/login.dart';
+import 'package:awesomethink/ui/page/common_login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

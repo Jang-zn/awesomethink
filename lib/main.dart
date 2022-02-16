@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:awesomethink/ui/page/login.dart';
+import 'package:awesomethink/ui/page/common_login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';

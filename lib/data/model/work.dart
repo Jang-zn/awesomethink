@@ -1,5 +1,6 @@
 import 'package:awesomethink/data/model/vacation.dart';
 import 'package:awesomethink/utils/constants.dart';
+import 'package:awesomethink/utils/time_format_converter.dart';
 
 class Work{
   String? userUid; //User uid
@@ -133,8 +134,11 @@ class Work{
   }
 
   //휴가 기간 String으로 변환
+  //TODO 주말빼는법 연구
   String getVacationPeriod(){
-    return "${vacation!.startVacation!.month}/${vacation!.startVacation!.day} ~ ${vacation!.endVacation!.month}/${vacation!.endVacation!.day} : ${vacation!.endVacation!.difference(vacation!.startVacation!).inDays+1}일";
+    return "${TimeFormatConverter.dateTimeToMMDDW(vacation!.startVacation!)}"
+        " ~ "
+        "${TimeFormatConverter.dateTimeToMMDDW(vacation!.endVacation!)} : ${vacation!.endVacation!.difference(vacation!.startVacation!).inDays+1}일";
   }
 
 

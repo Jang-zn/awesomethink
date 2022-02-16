@@ -7,7 +7,7 @@ import 'package:awesomethink/data/model/work.dart';
 import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
 import 'package:awesomethink/ui/component/member_vacation_btn.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
-import 'package:awesomethink/ui/page/login.dart';
+import 'package:awesomethink/ui/page/common_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
