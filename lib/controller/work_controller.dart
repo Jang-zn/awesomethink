@@ -205,26 +205,43 @@ class WorkController extends GetxController{
 
   void getWeekDay(){
     try {
-      _startWeekDay.value = _weeklyWorkList.last!.getWorkingDay();
+      if(_weeklyWorkList.last!.startTime!.weekday==1) {
+        _startWeekDay.value = _weeklyWorkList.last!.getWorkingDay();
+      }else{
+        DateTime lastMonday =
+          DateTime(_weeklyWorkList.last!.startTime!.year, //연도
+              _weeklyWorkList.last!.startTime!.month, //월
+              _weeklyWorkList.last!.startTime!.day - (_weeklyWorkList.last!.startTime!.weekday-1) //첫 근무 해당하는 주 월요일
+          );
+        //String 처리 후 반영
+        String startString=lastMonday.year.toString()+". ";
+        startString+= lastMonday.month<10 ? "0"+lastMonday.month.toString()+". " : lastMonday.month.toString()+". ";
+        startString+= lastMonday.day<10 ? "0"+lastMonday.day.toString() : lastMonday.day.toString();
+        _startWeekDay.value = startString;
+      }
       DateTime endDay =
       DateTime(int.parse(_startWeekDay.value.substring(0,4)), int.parse(_startWeekDay.value.substring(6,8)), int.parse(_startWeekDay.value.substring(10))+6);
       _endWeekDay.value = endDay.year.toString()+". ";
       _endWeekDay.value += endDay.month<10 ? "0"+endDay.month.toString()+". " : endDay.month.toString()+". ";
       _endWeekDay.value += endDay.day<10 ? "0"+endDay.day.toString() : endDay.day.toString();
+
     }catch(e){
-      // DateTime now = DateTime.now();
-      // DateTime lastMonday =
-      // DateTime(now.year, now.month, now.day - (now.weekday - 1));
-      // DateTime thisSunday =
-      // DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
-      // _startWeekDay.value = lastMonday.year.toString()+". ";
-      // _startWeekDay.value += lastMonday.month<10 ? "0"+lastMonday.month.toString()+". " : lastMonday.month.toString()+". ";
-      // _startWeekDay.value += lastMonday.day<10 ? "0"+lastMonday.day.toString() : lastMonday.day.toString();
-      //
-      //
-      // _endWeekDay.value =thisSunday.year.toString()+". ";
-      // _endWeekDay.value += thisSunday.month<10 ? "0"+thisSunday.month.toString()+". " : thisSunday.month.toString()+". ";
-      // _endWeekDay.value += thisSunday.day<10 ? "0"+thisSunday.day.toString() : thisSunday.day.toString();
+      DateTime now = DateTime.now();
+      DateTime lastMonday =
+      DateTime(now.year, now.month, now.day - (now.weekday - 1));
+      DateTime thisSunday =
+      DateTime(now.year, now.month, now.day + (7 - now.weekday), 23, 59);
+
+      String startString=lastMonday.year.toString()+". ";
+      startString+= lastMonday.month<10 ? "0"+lastMonday.month.toString()+". " : lastMonday.month.toString()+". ";
+      startString+= lastMonday.day<10 ? "0"+lastMonday.day.toString() : lastMonday.day.toString();
+      _startWeekDay.value = startString;
+
+      String endString=thisSunday.year.toString()+". ";
+      endString+= thisSunday.month<10 ? "0"+thisSunday.month.toString()+". " : thisSunday.month.toString()+". ";
+      endString+= thisSunday.day<10 ? "0"+thisSunday.day.toString() : thisSunday.day.toString();
+      _endWeekDay.value = endString;
+
       print("admin main page Exception - getWeekDay");
     }
 
