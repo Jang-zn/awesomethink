@@ -136,9 +136,17 @@ class Work{
   //휴가 기간 String으로 변환
   //TODO 주말빼는법 연구
   String getVacationPeriod(){
+    List<DateTime> list = [];
+    DateTime  newDate=vacation!.startVacation!;
+    while(vacation!.endVacation!.difference(newDate).inDays>=0){
+      if(newDate.weekday<=5) {
+        list.add(newDate);
+      }
+      newDate = DateTime(newDate.year,newDate.month,newDate.day+1);
+    }
     return "${TimeFormatConverter.dateTimeToMMDDW(vacation!.startVacation!)}"
         " ~ "
-        "${TimeFormatConverter.dateTimeToMMDDW(vacation!.endVacation!)} : ${vacation!.endVacation!.difference(vacation!.startVacation!).inDays+1}일";
+        "${TimeFormatConverter.dateTimeToMMDDW(vacation!.endVacation!)} : ${list.length}일";
   }
 
 
