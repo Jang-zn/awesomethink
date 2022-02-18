@@ -59,20 +59,30 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.25,
+                            width: MediaQuery.of(context).size.width * 0.22,
                             child: WorkInOutBtn(
                                 inout: workController.inOut, key: UniqueKey())),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.25,
+                            width: MediaQuery.of(context).size.width * 0.23,
                             child: VacationBtn(context: context)),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.25,
+                            width: MediaQuery.of(context).size.width * 0.22,
                             child: ElevatedButton(
                               onPressed: logout,
                               child: const Text("로그아웃"),
                             )),
                         //TODO 회원정보 페이지로 이동 / 회원정보 수정/탈퇴처리할 수 있는곳 작업 진행
-
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          child:ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.lightBlue,
+                                padding: const EdgeInsets.all(0),
+                              ),
+                              child:Icon(Icons.person_pin_circle_outlined, size:MediaQuery.of(context).size.width * 0.1,),
+                              onPressed: (){},
+                          )
+                        )
                       ],
                     ),
                   ),
