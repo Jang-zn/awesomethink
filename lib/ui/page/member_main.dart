@@ -70,7 +70,9 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                             child: ElevatedButton(
                               onPressed: logout,
                               child: const Text("로그아웃"),
-                            ))
+                            )),
+                        //TODO 회원정보 페이지로 이동 / 회원정보 수정/탈퇴처리할 수 있는곳 작업 진행
+
                       ],
                     ),
                   ),
