@@ -8,6 +8,7 @@ import 'package:awesomethink/ui/component/member_main_inout_btn.dart';
 import 'package:awesomethink/ui/component/member_vacation_btn.dart';
 import 'package:awesomethink/ui/component/work_listtile.dart';
 import 'package:awesomethink/ui/page/common_login.dart';
+import 'package:awesomethink/ui/page/member_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,7 +81,11 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                                 padding: const EdgeInsets.all(0),
                               ),
                               child:Icon(Icons.person_pin_circle_outlined, size:MediaQuery.of(context).size.width * 0.1,),
-                              onPressed: (){},
+                              onPressed: (){
+                                Get.to(MemberInfoPage(), binding: BindingsBuilder((){
+                                  Get.put()
+                                },),);
+                              },
                           )
                         )
                       ],
