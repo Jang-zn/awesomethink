@@ -134,7 +134,7 @@ class Work{
   }
 
   //휴가 기간 String으로 변환
-  //TODO 주말빼는법 연구
+  //TODO 주말빼는법 연구.. 이거 하지 않았나?
   String getVacationPeriod(){
     List<DateTime> list = [];
     DateTime  newDate=vacation!.startVacation!;
