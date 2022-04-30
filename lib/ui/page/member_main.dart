@@ -83,7 +83,7 @@ class _AwesomeMainPageState extends State<AwesomeMainPage> {
                               child:Icon(Icons.person_pin_circle_outlined, size:MediaQuery.of(context).size.width * 0.1,),
                               onPressed: (){
                                 Get.to(MemberInfoPage(), binding: BindingsBuilder((){
-                                  Get.put()
+
                                 },),);
                               },
                           )
